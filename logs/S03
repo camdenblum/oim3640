@@ -1,0 +1,61 @@
+## What I learned today
+Setup:
+I learned how to download and unzip a zip file into Git hub to the notebook section in my Git Hub Repository. 
+Download --> Open --> select the correct folder --> import 
+
+Chapter 1:
+arithmetic operator is a symbol that represents an arithmetic computation
+minus sign, -, is the operator that performs subtraction.
+*, performs multiplication.
+forward slash, /, performs division:
+integers, which represent numbers with no fractional or decimal part, and
+floating-point numbers, which represent integers and numbers with a decimal point.
+// performs integer division (floor division)
+** raises to x power
+collection of operators and numbers is called an expression.
+round function takes a floating-point number and rounds it off to the nearest integer.
+abs does absolute value
+must write abs(x)
+syntax error means something is wrong
+strings - sequence of letters
+'hello' or "hello"
++ can add words together to form a sentence 
+* repeat the same work x times
+len shows length of a string
+type(x) shows the value
+the types int, float, and str can be used as functions
+Natural languages are the languages people speak
+Formal languages are languages that are designed by people for specific applications.
+programming errors are called bugs and the process of tracking them down is called debugging.
+
+Chapter 2:
+variable is a name that refers to a value
+assigment statement - n = 17
+After creating a variable you can use it as an expression 
+state diagram shows what state each of the variables is in (think of it as the variable’s state of mind).
+underscores can be the only punctuation in a variable 
+keyword is a special word used to specify the structure of a program
+In order to use some Python features, you have to import them
+module is a collection of variables and functions
+To use a variable in a module, you have to use the dot operator     
+pow raises one number to the power of a second number
+math.pow(5, 2) = 15
+To display more than one value, you can use the print function.
+When you call a function, the expression in parenthesis is called an argument
+# allows comments as seen why this is blue!
+
+## Code/work I'm proud of (optional)
+
+N/A
+
+## Challenges I faced
+
+I still struggle with knowing when committing and pushing is executed successfully. 
+
+## AI usage (if any)
+none 
+
+## Questions for next time
+
+Why are there multiple ways to achive the same output, ex. exponential math?
+How often should we use comments? when is it too litte or too much?
