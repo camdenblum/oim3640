@@ -23,7 +23,7 @@ ny_rate = 0.0875
 tax_computer = calc_tax(computer_price, mass_rate)
 tax_iphone = calc_tax(iphone_price, ny_rate)
 
-total_tax = calc_tax(computer_price) + calc_tax(iphone_price)
+total_tax = calc_tax(computer_price, mass_rate) + calc_tax(iphone_price, ny_rate)
 print(total_tax)
 
 
