@@ -42,11 +42,17 @@ def triangle(s, height):
 
 triangle("+", 4)
 
-def square(s, width, height):
-    for i in range(height):
-        print(s * width)
+#def square(s, width, height):
+ #   for i in range(height):
+#        print(s * width)
 
-square("O", 4, 4)
+#square("O", 4, 4)
+
+def backwards_triangle(size):
+    for i in range(size):
+        print(" " * (size - i -1) + "#" * (i+1))
+
+backwards_triangle(5)
 
 
 
