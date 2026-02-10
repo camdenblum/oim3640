@@ -5,12 +5,10 @@ for i in range(1, 4):
 
 for i in range(1, 6, 2):
     print(i)
+    name = "ABCDEFGHIJK"
+    name[0]
 
-#name = "ABCDEFGHIJK"
-
-#name[0]
-
-#name[1, 5, 2]
+name[1: 5: 2]
 
 a = 5
 b = a
@@ -54,8 +52,11 @@ def backwards_triangle(size):
 
 backwards_triangle(5)
 
+def pyramid(size):
+    for i in range(size):
+        print(" " * (size - i -1) + "#" * (2*i +1))
 
-
+pyramid(5)
 
 
 
