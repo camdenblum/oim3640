@@ -7,8 +7,6 @@ choice_balance = input("How much would you like to deposit?")
 balance = int(choice_balance)
 choice = input("which game would you like to play?")
 
-if choice == "blackjack":
-    print("Great choice! Let's play some blackjack!")
 ## Add a section that displays overall win percentage in each game and how much credit won/lost
 
 
@@ -18,16 +16,16 @@ import random
 
 playing = True
 
-#allows user to place a bet
-choice_blackjack_bet = input("how much would you like to bet?") 
-blackjack_bet = int(choice_blackjack_bet)
-print("Your remaining balance is $", balance - blackjack_bet)
-
-
 if choice == "blackjack":
 
 #while loops allows the user to play as many hands as they like until they want to stop. Randit allows for random card selection.
     while playing:
+
+        #allows user to place a bet
+        choice_blackjack_bet = input("how much would you like to bet?") 
+        blackjack_bet = int(choice_blackjack_bet)
+        print("Your remaining balance is $", balance - blackjack_bet)
+
         player_card = random.randint(1,11)
         dealer_card = random.randint(1,11)
 
@@ -35,6 +33,12 @@ if choice == "blackjack":
         print("Dealer drew:", dealer_card)
         player_card = player_card + random.randint(1,11)
         print("You drew:", player_card)
+        if player_card == 21:
+                print("Blackjack!")
+                print("You won $", blackjack_bet*2)
+                balance += blackjack_bet * 2
+                print("Your remaining balance is $", balance)
+                break
         #Note: we do not print dealers second card as in the rules the player does not see it
         dealer_card = random.randint(1, 11) + dealer_card
       
@@ -46,10 +50,7 @@ if choice == "blackjack":
             if player_card > 21:
                 print("you bust!")
                 print("Your remaining balance is $", balance - blackjack_bet)
-            if player_card == 21:
-                print("Blackjack!")
-                print("You won $", blackjack_bet*2)
-                balance += blackjack_bet * 2
+                balance -= blackjack_bet
                 print("Your remaining balance is $", balance)
                 break
             choice = input("Would you like to hit or stand?: ")
@@ -63,17 +64,20 @@ if choice == "blackjack":
         if player_card > dealer_card and player_card <= 21:
             print("You win!")
             print("You won $", blackjack_bet*2)
-            balance += blackjack_bet * 2
+            balance += blackjack_bet 
             print("Your remaining balance is $", balance)
 
         elif dealer_card > 21:
             print("You win!")
             print("You won $", blackjack_bet*2)
-            balance += blackjack_bet * 2
+            balance += blackjack_bet 
             print("Your remaining balance is $", balance)
         elif player_card < dealer_card:
             print("You lose")
             print("Your remaining balance is $", balance - blackjack_bet)
+            balance -= blackjack_bet
+            print("Your remaining balance is $", balance)
+
 #allows the user to play as many hands as they like until they want to stop.
         choice = input("Play another hand? (yes/no): ")
         if choice == "no":
@@ -114,7 +118,8 @@ while playing:
             print("Your remaining balance is $", balance)
         else:
             print("You lose!")
-            print("Your remaining balance is $", balance - roulette_bet)
+            balance -= roulette_bet
+            print("Your remaining balance is $", balance)
 
     if choice == "color":
         choice_color = input("What color would you like to bet on? (red or black)")
@@ -128,7 +133,8 @@ while playing:
             print("Your remaining balance is $", balance)
         else:
             print("You lose!")
-            print("Your remaining balance is $", balance - roulette_bet)
+            balance -= roulette_bet
+            print("Your remaining balance is $", balance)
 
     if choice == "odd/even":
         choice_odd_even = input("What would you like to bet on? (odd or even)")
@@ -146,7 +152,9 @@ while playing:
             print("Your remaining balance is $", balance)
         else:
             print("You lose!")
-            print("Your remaining balance is $", balance - roulette_bet)
+            balance -= roulette_bet
+            print("Your remaining balance is $", balance)
+
 #allows the user to play as many rounds as they would like 
     choice = input("Play another hand? (yes/no): ")
     if choice == "no":
