@@ -10,108 +10,122 @@ choice = input("which game would you like to play?")
 ## Add a section that displays overall win percentage in each game and how much credit won/lost
 
 
-#Blackjack Game
-
+#Blackjack Game ##USE RICH LIBRARY
 import random
+import time
+from rich.console import Console
+from rich.table import Table
 
-playing = True
+console = Console()
 
-def create_deck(shuffle=True):
-    ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
-    suits = ['♠','♥','♦','♣']
-    deck = [(r,s) for r in ranks for s in suits]
-    if shuffle:
-        random.shuffle(deck)
+def slow_print(lines, delay=0.4):
+    for line in lines:
+        console.print(line)
+        time.sleep(delay)
+
+def create_deck():
+    ranks = [str(n) for n in range(2, 11)] + ["J", "Q", "K", "A"]
+    suits = ["♠", "♥", "♦", "♣"]
+    deck = [r + s for r in ranks for s in suits]
+    random.shuffle(deck)
     return deck
 
-def deal_card(deck):
-    if not deck:
-        deck.extend(create_deck())  # reshuffle if empty
-        random.shuffle(deck)
-    return deck.pop()
+def card_rank(card):
+    return card[:-1]
 
 def card_value(rank):
-    if rank in ['J','Q','K']:
+    if rank in ("J", "Q", "K"):
         return 10
-    if rank == 'A':
-        return 11  # simple handling; adjust for soft/hard aces as needed
+    if rank == "A":
+        return 11
     return int(rank)
 
-deck = create_deck()
-player_card = [deal_card(deck), deal_card(deck)]
-dealer_card = [deal_card(deck), deal_card(deck)]
+def hand_value(cards):
+    total = 0
+    aces = 0
+    for c in cards:
+        r = card_rank(c)
+        v = card_value(r)
+        total += v
+        if r == "A":
+            aces += 1
+    # convert A from 11 to 1 as needed
+    while total > 21 and aces:
+        total -= 10
+        aces -= 1
+    return total
 
-player_total = sum(card_value(r) for r,_ in player_card)
-dealer_total = sum(card_value(r) for r,_ in dealer_card)
+def show_hand(title, cards, hide_first=False):
+    table = Table(show_header=False, box=None)
+    table.add_column()
+    table.add_column(justify="right")
+    if hide_first:
+        table.add_row(title, f"[bold]{cards[0]}[/bold] + [grey42]??[/grey42]")
+    else:
+        for i, c in enumerate(cards):
+            r = card_rank(c)
+            v = "1/11" if r == "A" else str(card_value(r))
+            table.add_row(title if i == 0 else "", f"{c}  ({v})")
+    console.print(table)
 
 if choice == "blackjack":
-
-#while loops allows the user to play as many hands as they like until they want to stop. Randit allows for random card selection.
-    while playing:
-
-        
-        #allows user to place a bet
-        choice_blackjack_bet = input("how much would you like to bet?") 
-        blackjack_bet = int(choice_blackjack_bet)
-        print("Your remaining balance is $", balance - blackjack_bet)
-
-        print("You drew:", player_card)
-        print("Dealer drew:", dealer_card)
-        player_card = player_card + random.randint(1,11)
-        print("You drew:", player_card)
-        if player_card == 21:
-                print("Blackjack!")
-                print("You won $", blackjack_bet*2)
-                balance += blackjack_bet * 2
-                print("Your remaining balance is $", balance)
-                break
-        #Note: we do not print dealers second card as in the rules the player does not see it
-        dealer_card = random.randint(1, 11) + dealer_card
-      
-#allows the user to make a decision on how they want to play, along with the functions that determine if they win or lose
-        choice = input("Would you like to hit or stand?: ")
-        while choice == "hit":
-            player_card = player_card + random.randint(1,11)
-            print("You drew:", player_card)
-            if player_card > 21:
-                print("you bust!")
-                print("Your remaining balance is $", balance - blackjack_bet)
-                balance -= blackjack_bet
-                print("Your remaining balance is $", balance)
-                break
-            choice = input("Would you like to hit or stand?: ")
-
-        if choice == "stand":
-            print("Dealer has:", dealer_card)
-            while dealer_card < 17:
-                dealer_card = dealer_card + random.randint(1,11)
-                print("Dealer drew:", dealer_card)
-
-        if player_card > dealer_card and player_card <= 21:
-            print("You win!")
-            print("You won $", blackjack_bet*2)
-            balance += blackjack_bet 
-            print("Your remaining balance is $", balance)
-
-        elif dealer_card > 21:
-            print("You win!")
-            print("You won $", blackjack_bet*2)
-            balance += blackjack_bet 
-            print("Your remaining balance is $", balance)
-        elif player_card < dealer_card:
-            print("You lose")
-            print("Your remaining balance is $", balance - blackjack_bet)
-            balance -= blackjack_bet
-            print("Your remaining balance is $", balance)
-
-#allows the user to play as many hands as they like until they want to stop.
-        choice = input("Play another hand? (yes/no): ")
-        if choice == "no":
-            playing = False
-        if choice == "yes":
+    slow_print(["Starting Blackjack...", "Good luck!"])
+    while True:
+        deck = create_deck()
+        # bet
+        try:
+            bet = int(input("How much would you like to bet? "))
+        except ValueError:
+            console.print("[red]Please enter a whole number.[/red]")
             continue
+        if bet <= 0:
+            console.print("[red]Bet must be positive.[/red]")
+            continue
+        if bet > balance:
+            console.print(f"[red]You only have ${balance}.[/red]")
+            continue
+        balance -= bet
+
+        # initial deal
+        player = [deck.pop(), deck.pop()]
+        dealer = [deck.pop(), deck.pop()]
+        slow_print(["Dealing cards..."])
+        show_hand("Player", player)
+        console.print(f"Player total: {hand_value(player)}")
+        show_hand("Dealer", dealer, hide_first=True)
+
+        # immediate blackjack check
+        if hand_value(player) == 21:
+            console.print("[bold green]Blackjack! You win 1.5x your bet.[/bold green]")
+            payout = int(bet * 1.5)
+            balance += bet + payout
+            console.print(f"New balance: {balance}")
         else:
-            print("Thank's for playing!")
+            # player turn
+            while True:
+                action = input("Hit or stand? ").strip().lower()
+                if action == "hit":
+                    player.append(deck.pop())
+                    show_hand("Player", player)
+                    p_total = hand_value(player)
+                    console.print(f"Player total: {p_total}")
+                    if p_total > 21:
+                        console.print("[red]Bust! You lose your bet.[/red]")
+                        break
+                elif action == "stand":
+                    break
+                else:
+                    console.print("[yellow]Type 'hit' or 'stand'.[/yellow]")
+
+            # dealer turn
+            console.print("Dealer reveals hand:")
+            show_hand("Dealer", dealer)
+            while hand_value(dealer) < 17:
+                time.sleep(0.6)
+                dealer.append(deck.pop())
+                console.print("Dealer hits:")
+                show_hand("Dealer", dealer)
+x
 
 # Roulette Game
 
