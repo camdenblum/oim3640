@@ -37,5 +37,5 @@ def main():
     valid_words = find_words(Letters, Required)
     print("Valid words:", valid_words)
 
-if__main__ = = "__main__":
+if __name__ == "__main__":
     main()
