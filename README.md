@@ -13,7 +13,10 @@ This is the  course work for OIM3640
 
  # Mt Projects 
 
- --First Project (./miniproject00/miniproject01)
+[Folder Name](./folder-name/)
+
+ -Mini Project 00 miniproject00./miniproject00/oim3640
+ -Mini Project 01 ()
 
 
 
