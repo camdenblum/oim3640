@@ -15,7 +15,7 @@ This is the  course work for OIM3640
 
 [Folder Name](./folder-name/)
 
- -Mini Project 00 [miniproject00](./miniproject00/oim3640/oim3640)
+ -Mini Project 00 [miniproject00](./miniproject00/oim3640/)
 
  -Mini Project 01 ()
 
