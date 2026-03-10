@@ -27,6 +27,19 @@ Another uncertainty is working with lists and dictionaries, since this will be t
 
 Because of these unknowns, I expect that the first version of my code may not work perfectly. Part of the project will involve experimenting, debugging, and improving the program until it successfully reads the text files, stores the words in lists, counts them with dictionaries, and compares the results across the three albums.
 
+## AI Prompts to help write the proposal to make them more clear
 
+Prompt 1:
 
+ I am working on a miniproject for my BEGGINER python coding class this is the insyrtcutions Direction Take a body of text and find something interesting in it. Count words, discover patterns, compare authors, generate new text, or extract meaning from raw language. Text is everywhere - books, lyrics, tweets, emails, news articles. Python is excellent at taking messy text and turning it into structured insight. Pick a text source you're genuinely curious about. The question matters more than the technique. "Which artist has the biggest vocabulary?" is more interesting than "I counted words." To start I have to write a project proposal following these orginizational guidelines My idea is to analyze Noah Kahans setlist from his 3 main albums, Busyhead, part of me, and stick season. Inlcude in the proposal the differnt parts of the code that we will write and wjat they will do. We need to defietly include llibrary and dictionary functions. Make sure to keep this at a begginer level as well. Also mention I am makng my own text files that we will use by gathering the data for the lyrics myself
+
+ Prompt 2: 
+ make the parts of the code section and pythin skll sused into paragraph format
+
+ Prompt 3: 
+
+ now make a section for what I dont know yet. Make sure to mentin that I am not sure how i will be able to compare from 3 differnt text files and that since this is the first time using list and dictionary it will be difficult to gather the text form the data file easily  on the first try
+
+Prompt 4: 
+now make a section for why I chose this and talk about how he is my favorite artsit and I may even be interning with his mental health foundation. This wil lallow making the app to be fun to keep me passionate and engaged in the coding
 
