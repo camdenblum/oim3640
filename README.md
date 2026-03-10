@@ -17,7 +17,7 @@ This is the  course work for OIM3640
 
  -Mini Project 00 [miniproject00](./miniproject00/miniproject00.py)
 
- -Mini Project 01 - [Miniproject01](./Miniproject01/Miniproject01.py)
+ -Mini Project 01 - [miniproject01](./miniproject01/miniproject01.py)
 
 
 
