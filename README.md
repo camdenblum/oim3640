@@ -11,13 +11,16 @@ This is the  course work for OIM3640
 
  - Name: Zhi Li
 
- # Mt Projects 
+ # Mini Projects 
 
 [Folder Name](./folder-name/)
 
- -Mini Project 00 [miniproject00](./miniproject00/miniproject00.py)
+- Mini Project 00 proposal - [miniproject00](./miniproject00/proposal00.md)
+ -Mini Project 00 code -  [miniproject00](./miniproject00/miniproject00.py)
 
- -Mini Project 01 - [miniproject01](./miniproject01/miniproject01.py)
+ -Mini Project 01 proposal - [miniproject01](./miniproject01/proposal01.md)
+ Mini Project 01 code - [miniproject01](./miniproject01/miniproject01.py)
+ 
 
 
 
