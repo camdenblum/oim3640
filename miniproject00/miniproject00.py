@@ -1,81 +1,74 @@
-"""
-Simple Blackjack game (beginner-friendly) using Rich for a nicer console UI.
 
-Rules implemented:
-- Standard single-deck style (deck is shuffled each hand).
-- Dealer reveals second card and hits while total < 17 (stands on 17 and soft 17).
-- Blackjack (Ace + 10-value on initial two cards) pays 3:2.
-- Player may `hit` or `stand` only (no splits, no insurance, no doubles).
-- Bets are placed before each hand; balance is updated after outcome.
+import random #lets the program shuffle the deck randomly
+import time   # Allows the program to pause between messages
+from rich.console import Console    # Used to print styled text to the terminal
+from rich.table import Table    # Allows the program to display cards in a table format
+from rich.panel import Panel    # Used to create boxed sections or messages in the interface
 
-This script focuses only on the blackjack game and provides clear prompts and balance updates.
-"""
-
-import random
-import time
-from rich.console import Console
-from rich.table import Table
-from rich.panel import Panel
-
-console = Console()
+console = Console() # Creates a console object so we can use Rich formatting when printing
 
 
+# This function prints text and pauses briefly to make the game feel more interactive
 def slow_print(text, delay=0.35):
-    console.print(text)
-    time.sleep(delay)
+    console.print(text) # Prints the message to the screen
+    time.sleep(delay)    # Waits a short time before continuing
 
-
+# This function creates and shuffles a full 52 card deck
 def create_deck():
-    ranks = [str(n) for n in range(2, 11)] + ["J", "Q", "K", "A"]
-    suits = ["♠", "♥", "♦", "♣"]
-    deck = [r + s for r in ranks for s in suits]
-    random.shuffle(deck)
+    ranks = [str(n) for n in range(2, 11)] + ["J", "Q", "K", "A"]    # List of all possible card ranks in blackjack
+    suits = ["♠", "♥", "♦", "♣"]     # List of the four card suits
+    deck = [r + s for r in ranks for s in suits]     # Combines every rank with every suit to create a full deck of cards
+    random.shuffle(deck)        # Randomly shuffles the deck so the order is unpredictable
     return deck
 
-
+# This function extracts the rank from a card
+# Example: "10♠" becomes "10" and "A♥" becomes "A"
 def card_rank(card):
-    return card[:-1]
+    return card[:-1]    # Removes the last character (the suit symbol)
 
-
+# This function converts a card rank into its blackjack value
 def card_value(rank):
-    if rank in ("J", "Q", "K"):
+    if rank in ("J", "Q", "K"):     # Face cards are worth 10
         return 10
-    if rank == "A":
+    if rank == "A":     # Ace is initially worth 11
         return 11
     return int(rank)
 
-
+# This function calculates the total value of a hand
 def hand_value(cards):
-    total = 0
-    aces = 0
-    for c in cards:
-        r = card_rank(c)
-        v = card_value(r)
+    total = 0   # Keeps track of the total hand value
+    aces = 0    # Counts how many Aces are in the hand
+    for c in cards:     # Loop through every card in the player's hand
+        r = card_rank(c)    # Get the card's rank
+        v = card_value(r)    # Get the blackjack value of the rank
         total += v
-        if r == "A":
+        if r == "A":            # If the card is an Ace, increase the Ace counter
             aces += 1
+     # If the hand is over 21 and there are Aces,
+    # convert an Ace from 11 to 1 by subtracting 10
     while total > 21 and aces:
         total -= 10
         aces -= 1
     return total
 
-
+# This function prints the player's or dealer's hand to the screen
 def show_hand(title, cards, hide_first=False):
-    table = Table(show_header=False, box=None)
-    table.add_column()
-    table.add_column(justify="right")
+    table = Table(show_header=False, box=None)      # Create a table without borders for clean formatting
+    table.add_column()      # First column shows the hand label (Player or Dealer)
+    table.add_column(justify="right")       # Second column shows the cards aligned to the right
     if hide_first:
-        table.add_row(title, f"[bold]{cards[0]}[/bold] + [grey42]??[/grey42]")
+        table.add_row(title, f"[bold]{cards[0]}[/bold] + [grey42]??[/grey42]")          # Show one card and hide the other with ??
     else:
-        for i, c in enumerate(cards):
+        for i, c in enumerate(cards):   # Show every card in the hand
             r = card_rank(c)
-            v = "1/11" if r == "A" else str(card_value(r))
-            table.add_row(title if i == 0 else "", f"{c}  ({v})")
-    console.print(table)
+            v = "1/11" if r == "A" else str(card_value(r))  # Get the card rank
+            table.add_row(title if i == 0 else "", f"{c}  ({v})")   # Only print the title on the first row for cleaner formatting
 
+    console.print(table)        # Print the table to the terminal
 
+# This function formats money values nicely for the game display
 def format_money(x):
-    return f"${x:,.2f}"
+    return f"${x:,.2f}"     # Converts a number into currency format (ex: 25 -> $25.00)
 
 
 def get_float_input(prompt):
