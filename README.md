@@ -20,6 +20,9 @@ This is the  course work for OIM3640
 
  -Mini Project 01 proposal - [miniproject01](./miniproject01/proposal01.md)
  Mini Project 01 code - [miniproject01](./miniproject01/miniproject01.py)
+
+ Mini Project 02 proposal - [miniproject02](./miniproject02/miniproject02.proposal.md)
+ Mini Project 02 code - [miniproject02](./miniproject02/miniproject02.py)
  
 
 
