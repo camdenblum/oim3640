@@ -1,6 +1,4 @@
-file = open("../data/noahkahanbusyhead.txt")
-file = open("../data/noahkahaniamiwas.txt")
-file = open("../data/noahkahanstickseason.txt")
+
 
 ## Use pure python way to read the file and count the number of words in the file.
 ##refer to the instrutions in canvas
@@ -9,15 +7,15 @@ file = open("../data/noahkahanstickseason.txt")
 #  1: Open and read the files 
 # .read() turns the whole file into one big string
 
-busyhead = open("../data/noahkahanbusyhead.txt")
+busyhead = open("../data/NKB.txt")
 busyhead_lyrics = busyhead.read()
 busyhead.close()
 
-iamiwas = open("../data/noahkahaniamiwas.txt")
+iamiwas = open("../data/NKIAIW.txt")
 iamiwas_lyrics = iamiwas.read()
 iamiwas.close()
 
-stickseason = open("../data/noahkahanstickseason.txt")
+stickseason = open("../data/NKSS.txt")
 stickseason_lyrics = stickseason.read()
 stickseason.close()
 
