@@ -1,0 +1,62 @@
+## What I learned today 
+
+Learning how to store data into differnt formats and how to read it as well.
+
+We learned how to create web applications.
+
+Review from session 19: 
+
+# Code A
+requests.get('https://oim.108122.xyz/mass')
+
+# Code B
+requests.post('https://oim.108122.xyz/echo',
+              json={'name': 'Alice'})
+
+What's the difference between GET and POST?
+    Get opens up the app and reading it, where post is actually pushing it to the backend
+When would you use each one?
+    Use get almost everyday when we requst a search, (open a website sents a hhtp reuqest to the server)
+Where does the data go in each case? www.google/search?q=(word)
+    We use posts when we want to sign up for something 
+
+from openai import OpenAI
+client = OpenAI()  # reads OPENAI_API_KEY from .env
+
+response = client.responses.create(
+    model="gpt-5-nano",
+    input="What is the capital of France?"
+)
+print(response.output_text)
+What does this code do?
+    This uses a open ai chat bot to anwser questions we may have, using a set budget
+Why do we use .env instead of writing the key directly in code?
+    We use .env to keep our personalized API keys secure, so when we push the code it cannot be seen by the public. 
+How would you change this to ask a different question?
+    Change the text after input =
+
+We can use AI to expand on the origonal chat bot code, to allow it to have a conversation with us which makes it much better
+    system will start with using a list so it can be remembered and adds it to the first list in the code with each prompt.
+        (why it starts to get slower as the conversation goes on)
+
+How to find Babsons Coordinates/weather info?
+
+CANNOT USE AI BECAUSE IT CANNOT REMMEBER ALL LOCATIONS IN THE WORLD EXACTLT --> SIMILAR TO HOW ITS NOT PERFECT AT MATH
+Can use Google Maps API to go around this 
+
+I/O Programming
+
+# Read entire file
+with open('data.txt') as f:
+    text = f.read()
+
+# Read line by line (best for large files)
+with open('data.txt') as f:
+    for line in f:
+        print(line.strip())  # strip() removes \n
+
+# Write to file ('w' = overwrite, 'a' = append)
+with open('output.txt', 'w') as f:
+    f.write('Hello, World!\n')
+Always use with - it closes the file automatically.
+

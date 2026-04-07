@@ -9,3 +9,9 @@ for msg in data:
 requests.post('https://oim.108122.xyz/message',
               json={'message': 'Hello from Cam!'},
               headers={'X-Token': 'camdencamden'})
+
+url = 'http://api.open-notify.org/astros.json'
+data = requests.get(url).json()
+print(f"{data['number']} people in space right now!")
+for p in data['people']:
+    print(f"  {p['name']} on {p['craft']}")
