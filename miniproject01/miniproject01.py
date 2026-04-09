@@ -1,12 +1,3 @@
-# ============================================================
-# Milestone 3 - Polish
-# New this milestone:
-#   - Formatted, readable output (like a report)
-#   - Interactive menu so users can explore the data
-#   - Results saved to a text file
-#   - Pandas comparison (the "library" version of our work)
-#   - Code is fully cleaned up and organized
-# ============================================================
 
 import matplotlib.pyplot as plt  # bar charts
 import pandas as pd              # the "easier way" — for comparison

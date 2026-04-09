@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Boston Game Finder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red:   #BD3039;
+      --green: #007A33;
+      --gold:  #FFB81C;
+      --navy:  #002244;
+      --cream: #F5F0E8;
+      --ink:   #111111;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink);
+      color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(-45deg, transparent, transparent 80px,
+        rgba(255,255,255,0.018) 80px, rgba(255,255,255,0.018) 81px);
+      pointer-events: none; z-index: 0;
+    }
+    .hero {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 2rem 1.5rem 3rem;
+      max-width: 680px; width: 100%;
+    }
+    .team-dots {
+      display: flex; justify-content: center; gap: 14px;
+      margin-bottom: 2.4rem;
+      animation: fadeDown 0.6s ease both;
+    }
+    .dot { width: 13px; height: 13px; border-radius: 50%; }
+    .dot.red   { background: var(--red); }
+    .dot.green { background: var(--green); }
+    .dot.gold  { background: var(--gold); }
+    .dot.navy  { background: var(--navy); box-shadow: 0 0 0 1.5px #4a6fa5; }
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.6rem, 10vw, 6.2rem);
+      letter-spacing: 0.04em; line-height: 0.95;
+      animation: fadeDown 0.65s 0.1s ease both;
+    }
+    h1 span.accent { display: block; color: var(--gold); font-size: 0.78em; }
+    .tagline {
+      margin: 1.2rem 0 2.8rem;
+      color: rgba(245,240,232,0.55); font-size: 1rem;
+      animation: fadeDown 0.65s 0.2s ease both;
+    }
+    .card {
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 18px; padding: 2rem;
+      backdrop-filter: blur(12px);
+      animation: fadeDown 0.7s 0.3s ease both;
+    }
+    label {
+      display: block; font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.6rem;
+    }
+    .input-row { display: flex; gap: 10px; }
+    input[type="text"] {
+      flex: 1; padding: 0.85rem 1.1rem;
+      border: 1.5px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.07);
+      color: var(--cream);
+      font-family: 'DM Sans', sans-serif; font-size: 1rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    input[type="text"]::placeholder { color: rgba(245,240,232,0.3); }
+    input[type="text"]:focus { border-color: var(--gold); }
+    button[type="submit"] {
+      padding: 0.85rem 1.6rem;
+      background: var(--gold); color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700; font-size: 0.95rem;
+      border: none; border-radius: 10px;
+      cursor: pointer; white-space: nowrap;
+      transition: background 0.18s, transform 0.12s;
+    }
+    button[type="submit"]:hover  { background: #ffc835; transform: translateY(-1px); }
+    button[type="submit"]:active { transform: translateY(0); }
+    .error-banner {
+      margin-top: 1.2rem; padding: 0.8rem 1.1rem;
+      background: rgba(189,48,57,0.18);
+      border: 1px solid rgba(189,48,57,0.45);
+      border-radius: 10px; font-size: 0.9rem; color: #f2a0a6;
+    }
+    .team-pills {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 8px; margin-top: 2rem;
+      animation: fadeDown 0.7s 0.45s ease both;
+    }
+    .pill {
+      font-size: 0.75rem; font-weight: 600;
+      padding: 4px 12px; border-radius: 999px; letter-spacing: 0.05em; opacity: 0.8;
+    }
+    .pill.mlb  { background: rgba(189,48,57,0.2);  color: #f48e95; border: 1px solid rgba(189,48,57,0.35); }
+    .pill.nba  { background: rgba(0,122,51,0.2);   color: #55c880; border: 1px solid rgba(0,122,51,0.35); }
+    .pill.nhl  { background: rgba(255,184,28,0.2); color: var(--gold); border: 1px solid rgba(255,184,28,0.35); }
+    .pill.nfl  { background: rgba(0,34,68,0.4);    color: #8aaed6; border: 1px solid rgba(74,111,165,0.4); }
+    .setup-note {
+      margin-top: 1.6rem;
+      padding: 0.9rem 1.1rem;
+      background: rgba(255,184,28,0.08);
+      border: 1px solid rgba(255,184,28,0.25);
+      border-radius: 10px;
+      font-size: 0.82rem;
+      color: rgba(245,240,232,0.55);
+      text-align: left;
+      line-height: 1.6;
+    }
+    .setup-note strong { color: var(--gold); }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <main class="hero">
+    <div class="team-dots">
+      <div class="dot red"></div>
+      <div class="dot green"></div>
+      <div class="dot gold"></div>
+      <div class="dot navy"></div>
+    </div>
+
+    <h1>Boston<span class="accent">Game Finder</span></h1>
+    <p class="tagline">Enter your location — find the nearest upcoming Boston home game.</p>
+
+    <div class="card">
+      <form action="/find" method="POST">
+        <label for="location">Your starting location</label>
+        <div class="input-row">
+          <input
+            id="location" name="location" type="text"
+            placeholder="e.g. Babson College, Boston Common, 800 Boylston St…"
+            autocomplete="off" required
+          />
+          <button type="submit">Find Game →</button>
+        </div>
+        {% if error %}
+          <div class="error-banner">⚠ {{ error }}</div>
+        {% endif %}
+      </form>
+
+      {% if google_maps_key == "YOUR_GOOGLE_MAPS_KEY" %}
+      <div class="setup-note">
+        <strong>⚙ Setup needed:</strong> Set your <code>GOOGLE_MAPS_KEY</code> environment variable
+        before running. Get a free key at
+        <a href="https://console.cloud.google.com/" target="_blank" style="color:var(--gold);">console.cloud.google.com</a>
+        — enable the <em>Geocoding API</em> and <em>Maps JavaScript API</em>.
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="team-pills">
+      <span class="pill mlb">⚾ Red Sox</span>
+      <span class="pill nba">🏀 Celtics</span>
+      <span class="pill nhl">🏒 Bruins</span>
+      <span class="pill nfl">🏈 Patriots</span>
+    </div>
+  </main>
+</body>
+</html>
+

@@ -1,0 +1,245 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ game.team }} — Boston Game Finder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --accent: {{ game.color }};
+      --cream:  #F5F0E8;
+      --ink:    #111111;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ink); color: var(--cream);
+      min-height: 100vh; overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background: repeating-linear-gradient(-45deg, transparent, transparent 80px,
+        rgba(255,255,255,0.018) 80px, rgba(255,255,255,0.018) 81px);
+      pointer-events: none; z-index: 0;
+    }
+    .top-bar { height: 5px; background: var(--accent); width: 100%; position: fixed; top: 0; left: 0; z-index: 100; }
+    .page {
+      position: relative; z-index: 1;
+      max-width: 900px; margin: 0 auto;
+      padding: 4rem 1.5rem 3rem;
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: rgba(245,240,232,0.45); text-decoration: none;
+      font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em;
+      margin-bottom: 2.2rem; transition: color 0.18s;
+    }
+    .back-link:hover { color: var(--cream); }
+    .sport-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 5px 14px; border-radius: 999px;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      background: rgba(255,255,255,0.09);
+      border: 1.5px solid var(--accent); color: var(--accent);
+      margin-bottom: 1rem;
+      animation: fadeIn 0.5s ease both;
+    }
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 7vw, 4.8rem);
+      line-height: 0.96; letter-spacing: 0.03em;
+      animation: fadeIn 0.55s 0.05s ease both;
+    }
+    .vs { color: rgba(245,240,232,0.35); font-size: 0.65em; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 14px; margin: 2rem 0;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px; padding: 1.1rem 1.3rem;
+      animation: fadeIn 0.6s ease both;
+    }
+    .stat-card:nth-child(2) { animation-delay: 0.06s; }
+    .stat-card:nth-child(3) { animation-delay: 0.12s; }
+    .stat-card:nth-child(4) { animation-delay: 0.18s; }
+    .stat-label {
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.35rem;
+    }
+    .stat-value { font-size: 1.05rem; font-weight: 600; }
+    .stat-sub   { font-size: 0.8rem; color: rgba(245,240,232,0.5); margin-top: 2px; }
+    .directions-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 0.5rem; padding: 0.75rem 1.4rem;
+      background: var(--accent); color: #fff;
+      font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.92rem;
+      border-radius: 10px; text-decoration: none;
+      transition: opacity 0.18s, transform 0.12s;
+      animation: fadeIn 0.6s 0.25s ease both;
+    }
+    .directions-btn:hover  { opacity: 0.88; transform: translateY(-1px); }
+    .directions-btn:active { transform: translateY(0); }
+    #map {
+      width: 100%; height: 420px;
+      border-radius: 18px; overflow: hidden; margin-top: 2rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      animation: fadeIn 0.7s 0.3s ease both;
+    }
+    .divider { height: 1px; background: rgba(255,255,255,0.08); margin: 2.2rem 0; }
+    .footer-note { font-size: 0.78rem; color: rgba(245,240,232,0.3); text-align: center; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="page">
+    <a href="/" class="back-link">← Search again</a>
+
+    <div class="sport-badge">{{ game.logo }} {{ game.sport }} · {{ game.league }}</div>
+
+    <h1>
+      {{ game.team }}<br>
+      <span class="vs">vs</span> {{ game.opponent }}
+    </h1>
+
+    <div class="stats-grid" style="margin-top:1.8rem;">
+      <div class="stat-card">
+        <div class="stat-label">📅 Date</div>
+        <div class="stat-value">{{ game.display_date }}</div>
+        <div class="stat-sub">{{ game.display_time }}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">🏟 Venue</div>
+        <div class="stat-value">{{ game.venue }}</div>
+        <div class="stat-sub">Home ground</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">📍 From You</div>
+        <div class="stat-value">{{ game.distance_mi }} mi</div>
+        <div class="stat-sub">{{ place_name }}</div>
+      </div>
+      {% if game.round %}
+      <div class="stat-card">
+        <div class="stat-label">🗓 Round / Status</div>
+        <div class="stat-value">Round {{ game.round }}</div>
+        <div class="stat-sub">{{ game.status }}</div>
+      </div>
+      {% endif %}
+    </div>
+
+    
+      class="directions-btn"
+      href="https://www.google.com/maps/dir/?api=1&origin={{ user_lat }},{{ user_lng }}&destination={{ game.venue_lat }},{{ game.venue_lng }}&travelmode=driving"
+      target="_blank" rel="noopener"
+    >
+      🗺 Get Directions
+    </a>
+
+    <div id="map"></div>
+
+    <div class="divider"></div>
+    <p class="footer-note">Schedule data via TheSportsDB · Maps by Google · Boston Game Finder</p>
+  </div>
+
+  <script>
+    const USER_LAT   = {{ user_lat }};
+    const USER_LNG   = {{ user_lng }};
+    const VENUE_LAT  = {{ game.venue_lat }};
+    const VENUE_LNG  = {{ game.venue_lng }};
+    const ACCENT     = "{{ game.color }}";
+    const TEAM_NAME  = {{ game.team | tojson }};
+    const VENUE_NAME = {{ game.venue | tojson }};
+    const PLACE_NAME = {{ place_name | tojson }};
+
+    function initMap() {
+      const userPos  = { lat: USER_LAT,  lng: USER_LNG };
+      const venuePos = { lat: VENUE_LAT, lng: VENUE_LNG };
+
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 11,
+        center: {
+          lat: (USER_LAT + VENUE_LAT) / 2,
+          lng: (USER_LNG + VENUE_LNG) / 2,
+        },
+        mapTypeId: "roadmap",
+        styles: [
+          { elementType: "geometry",           stylers: [{ color: "#1a1a2e" }] },
+          { elementType: "labels.text.fill",   stylers: [{ color: "#8ec3b0" }] },
+          { elementType: "labels.text.stroke", stylers: [{ color: "#1a3646" }] },
+          { featureType: "road",               elementType: "geometry",         stylers: [{ color: "#304a7d" }] },
+          { featureType: "road",               elementType: "labels.text.fill", stylers: [{ color: "#98a5be" }] },
+          { featureType: "water",              elementType: "geometry",          stylers: [{ color: "#0e1626" }] },
+          { featureType: "poi",                elementType: "labels",            stylers: [{ visibility: "off" }] },
+          { featureType: "transit",            elementType: "labels",            stylers: [{ visibility: "off" }] },
+          { featureType: "administrative",     elementType: "geometry.stroke",   stylers: [{ color: "#4b6878" }] },
+          { featureType: "landscape.man_made", elementType: "geometry.stroke",   stylers: [{ color: "#334e87" }] },
+        ],
+      });
+
+      const bounds = new google.maps.LatLngBounds();
+      bounds.extend(userPos);
+      bounds.extend(venuePos);
+      map.fitBounds(bounds, { top: 60, right: 60, bottom: 60, left: 60 });
+
+      const userMarker = new google.maps.Marker({
+        position: userPos, map, title: PLACE_NAME,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 9, fillColor: "#ffffff", fillOpacity: 1,
+          strokeColor: "#555555", strokeWeight: 2.5,
+        },
+        zIndex: 1,
+      });
+
+      const venueMarker = new google.maps.Marker({
+        position: venuePos, map, title: VENUE_NAME + " — " + TEAM_NAME,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 12, fillColor: ACCENT, fillOpacity: 1,
+          strokeColor: "#ffffff", strokeWeight: 2.5,
+        },
+        zIndex: 2,
+      });
+
+      const infoUser = new google.maps.InfoWindow({
+        content: `<div style="font-family:'DM Sans',sans-serif;font-size:13px;color:#111;padding:2px 4px;">
+                    <strong>Your Location</strong><br>${PLACE_NAME}
+                  </div>`,
+      });
+      const infoVenue = new google.maps.InfoWindow({
+        content: `<div style="font-family:'DM Sans',sans-serif;font-size:13px;color:#111;padding:2px 4px;">
+                    <strong>${VENUE_NAME}</strong><br>${TEAM_NAME}
+                  </div>`,
+      });
+
+      userMarker.addListener("click",  () => { infoVenue.close(); infoUser.open(map, userMarker); });
+      venueMarker.addListener("click", () => { infoUser.close();  infoVenue.open(map, venueMarker); });
+
+      infoVenue.open(map, venueMarker);
+
+      new google.maps.Polyline({
+        path: [userPos, venuePos], map,
+        strokeColor: ACCENT, strokeOpacity: 0,
+        icons: [{
+          icon: { path: "M 0,-1 0,1", strokeOpacity: 0.6, scale: 3 },
+          offset: "0", repeat: "16px",
+        }],
+      });
+    }
+  </script>
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_key }}&callback=initMap"
+    async defer
+  ></script>
+</body>
+</html>
