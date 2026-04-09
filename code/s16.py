@@ -58,3 +58,36 @@ stocks = {} #{'NVDA': [open, currentPrice, volume]}
 for t in tickers:
     stocks[t] = yf.Ticker(t).info['open'], yf.Ticker(t).info['currentPrice'], yf.Ticker(t).info['volume']
 print(stocks)
+
+info_list = []
+for name in ['open', 'currentPrice', 'volume']:
+    info_list[name] = yf.Ticker(t).info[name]
+stocks[t] = info_list
+
+## Sets 
+
+stocks = {'AAPL', 'NVDA', 'MSFT'}
+
+unique_stocks = set(stocks)
+
+unique_stocks 
+
+unique_stocks.add('NVDA')
+
+unique_stocks 
+
+## difference in speed 
+
+import timeit
+words = open('data/words.txt').read().split()
+word_set = set(words)     # 113K+ words
+
+def search_list():
+    return 'python' in words
+def search_set():
+    return 'python' in word_set
+
+print('List:', timeit.timeit(search_list, number=1000))
+print('Set: ', timeit.timeit(search_set, number=1000))
+# List: 0.8500s  Set: 0.0003s
+

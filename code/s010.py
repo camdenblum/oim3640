@@ -34,13 +34,13 @@ print(count)
 #what keywordcs can exit a loop early? Skip to next iterattion?
     #Break and continue
 
-n = 5
+n = 6
 while n!=0:
       print(n)
       n = n - 2
 #Last output will be 2
 
-n = 6 
+n = 5
 while n !=0:
       print(n)
       n = n - 2

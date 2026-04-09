@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Square Calculator</title>
+    <style>
+      body { font-family: Arial, sans-serif; padding: 1.5rem; }
+      .card { max-width: 420px; margin: 1rem auto; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);} 
+      label { display:block; margin-bottom:0.5rem; }
+      input[type="number"], input[type="text"] { width:100%; padding:0.5rem; margin-bottom:0.75rem; box-sizing:border-box; }
+      button { padding:0.5rem 0.9rem; }
+      .result { background:#f6ffed; border:1px solid #e1f6d8; padding:0.75rem; border-radius:6px; margin-top:0.5rem; }
+      .error { color:#b00020; margin-top:0.5rem; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Square Calculator</h1>
+      <form method="post" action="/square">
+        <label for="number">Enter a number</label>
+        <input id="number" name="number" type="text" inputmode="numeric" pattern="-?[0-9]*" placeholder="e.g. 7" value="{{ number if number is not none else '' }}">
+        <button type="submit">Compute Square</button>
+      </form>
+
+      {% if error %}
+        <div class="error">{{ error }}</div>
+      {% endif %}
+
+      {% if result is not none %}
+        <div class="result">
+          <strong>Result:</strong>
+          <div>The square of <strong>{{ number }}</strong> is <strong>{{ result }}</strong>.</div>
+        </div>
+      {% endif %}
+    </div>
+  </body>
+</html>
