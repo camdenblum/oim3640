@@ -1,0 +1,175 @@
+# ============================================================
+# Agentic Trading Bot - Central Configuration
+# ============================================================
+# SAFETY NOTE: Never put real credentials here.
+# Use environment variables for secrets (see README.md).
+# Default mode is paper trading — set mode: live only when ready.
+
+mode: paper  # Options: paper | live
+
+# ----------------------------------------------------------
+# Data settings
+# ----------------------------------------------------------
+data:
+  tickers:
+    - AAPL
+    - MSFT
+    - NVDA
+    - AMZN
+    - GOOGL
+  data_window: 1095        # days of historical data for backtest (3 years)
+  granularity: "1d"        # "1d" for daily, "60m" for hourly (live only)
+  cache_dir: ".cache/data"
+  max_retries: 3
+  retry_backoff: 2.0       # seconds between retries
+
+# ----------------------------------------------------------
+# Feature engineering
+# ----------------------------------------------------------
+features:
+  indicators:
+    - RSI
+    - MACD
+    - BBands
+    - EMA_cross
+    - ATR
+    - Stochastic
+    - MOM
+    - ROC
+  feature_params:
+    RSI:
+      period: 14
+    MACD:
+      fast: 12
+      slow: 26
+      signal: 9
+    BBands:
+      period: 20
+      std_dev: 2.0
+    EMA_cross:
+      fast: 9
+      slow: 21
+    ATR:
+      period: 14
+    Stochastic:
+      k_period: 14
+      d_period: 3
+    MOM:
+      period: 10
+    ROC:
+      period: 10
+  lookback_periods:
+    short: 5
+    medium: 20
+    long: 60
+  normalize: true
+
+# ----------------------------------------------------------
+# Strategy / signal generation
+# ----------------------------------------------------------
+strategy:
+  scoring_model: linear    # Options: linear | tree | neural
+  model_params:
+    linear:
+      regularization: 0.01
+    tree:
+      n_estimators: 100
+      max_depth: 5
+    neural:
+      hidden_layers: [64, 32]
+      dropout: 0.2
+  signal_thresholds:
+    buy: 0.52              # score above this → buy signal
+    sell: 0.48             # score below this → sell signal
+  position_sizing:
+    method: percent_of_equity  # Options: fixed | percent_of_equity | risk_parity
+    default_pct: 0.05          # 5% of equity per position
+    max_position_size_pct: 0.15
+  target_allocations: {}   # e.g. AAPL: 0.10 — leave empty for dynamic sizing
+  rebalancing_frequency: 5 # trading days
+
+# ----------------------------------------------------------
+# Learning / adaptation
+# ----------------------------------------------------------
+learning:
+  enable_learning: true
+  offline_epochs: 20       # training passes over historical trade logs
+  online_update_interval: 10  # update model every N live trades
+  learning_rate: 0.001
+  validation_window: 90    # days held out for validation
+  feature_selection: true
+  regularization: 0.01
+  revert_threshold: 0.05   # revert online update if Sharpe degrades by this much
+  artifacts_dir: ".state/learning"
+
+# ----------------------------------------------------------
+# Risk management
+# ----------------------------------------------------------
+risk:
+  max_total_drawdown_pct: 10.0   # halt trading if portfolio draws down 10%
+  max_daily_loss_pct: 2.0        # circuit breaker: max loss in one trading day
+  max_positions: 8               # max concurrent holdings
+  stop_loss_pct: 5.0             # per-position stop loss (% below entry)
+  take_profit_pct: 15.0          # per-position take profit (% above entry)
+  slippage_model: fixed_pct
+  slippage_params:
+    fixed_pct: 0.05              # 0.05% per trade
+  commission_per_trade: 0.0      # set to broker's actual rate (e.g. 0.0 for Alpaca)
+  min_cash_reserve_pct: 5.0      # keep at least 5% as cash buffer
+
+# ----------------------------------------------------------
+# Execution / broker
+# ----------------------------------------------------------
+execution:
+  broker_module: broker_alpaca   # module name inside execution/
+  broker_config:
+    # Fill these via environment variables — do NOT hard-code here
+    api_key_env: ALPACA_API_KEY
+    api_secret_env: ALPACA_SECRET_KEY
+    base_url_env: ALPACA_BASE_URL
+    # Paper trading endpoint: https://paper-api.alpaca.markets
+    # Live trading endpoint:  https://api.alpaca.markets
+  paper_trading: true
+  order_type: market             # market | limit
+  order_timeout_secs: 30
+  retry_backoff: 2.0
+  max_retries: 3
+
+# ----------------------------------------------------------
+# Portfolio
+# ----------------------------------------------------------
+portfolio:
+  initial_cash: 100000.0  # starting cash for paper trading
+  currency: USD
+
+# ----------------------------------------------------------
+# Backtesting
+# ----------------------------------------------------------
+backtest:
+  start_date: "2022-01-01"
+  end_date: "2024-12-31"
+  initial_cash: 100000.0
+  walk_forward: false
+  walk_forward_windows: 4
+  benchmark: SPY             # ticker to use as benchmark
+
+# ----------------------------------------------------------
+# Observability
+# ----------------------------------------------------------
+observability:
+  log_level: INFO            # DEBUG | INFO | WARNING | ERROR
+  log_format: json           # json | text
+  log_dir: ".logs"
+  enable_metrics_export: false
+  metrics_endpoint: ""       # optional HTTP endpoint for metrics push
+  trade_log_csv: ".logs/trades.csv"
+  performance_log: ".logs/performance.jsonl"
+
+# ----------------------------------------------------------
+# Compliance and safety
+# ----------------------------------------------------------
+compliance:
+  require_approval_for_live_trades: true
+  audit_logging: true
+  data_retention_days: 180
+  audit_log_path: ".logs/audit.jsonl"

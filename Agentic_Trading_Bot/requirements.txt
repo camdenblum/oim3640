@@ -1,0 +1,38 @@
+# Core data & numerics
+yfinance>=0.2.36
+pandas>=2.0.0
+numpy>=1.26.0
+scipy>=1.11.0
+
+# Machine learning
+scikit-learn>=1.4.0
+joblib>=1.3.0
+
+# Configuration
+PyYAML>=6.0.1
+
+# Broker SDK (Alpaca) — comment out if using a different broker
+alpaca-py>=0.20.0
+
+# Utilities
+python-dotenv>=1.0.0
+requests>=2.31.0
+urllib3>=2.0.0
+tenacity>=8.2.3       # retry / backoff
+
+# Structured logging
+python-json-logger>=2.0.7
+
+# Persistence
+# SQLite is part of the stdlib — no extra install needed
+
+# Testing
+pytest>=8.0.0
+pytest-cov>=4.1.0
+
+# Static analysis (optional, for development)
+mypy>=1.8.0
+ruff>=0.3.0
+
+# Visualization (optional, for performance dashboards)
+matplotlib>=3.8.0

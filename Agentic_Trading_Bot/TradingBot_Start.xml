@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Description>Starts the Agentic Trading Bot at market open Mon-Fri 9:00 AM</Description>
+  </RegistrationInfo>
+  <Triggers>
+    <CalendarTrigger>
+      <StartBoundary>2026-01-01T09:00:00</StartBoundary>
+      <Enabled>true</Enabled>
+      <ScheduleByWeek>
+        <WeeksInterval>1</WeeksInterval>
+        <DaysOfWeek>
+          <Monday />
+          <Tuesday />
+          <Wednesday />
+          <Thursday />
+          <Friday />
+        </DaysOfWeek>
+      </ScheduleByWeek>
+    </CalendarTrigger>
+  </Triggers>
+  <Settings>
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <ExecutionTimeLimit>PT8H</ExecutionTimeLimit>
+    <Enabled>true</Enabled>
+    <RunOnlyIfNetworkAvailable>true</RunOnlyIfNetworkAvailable>
+    <StartWhenAvailable>true</StartWhenAvailable>
+  </Settings>
+  <Actions Context="Author">
+    <Exec>
+      <Command>C:\Users\cblum2\OneDrive - Babson College\Documents\GitHub\oim3640\Agentic_Trading_Bot\run_bot.bat</Command>
+      <WorkingDirectory>C:\Users\cblum2\OneDrive - Babson College\Documents\GitHub\oim3640\Agentic_Trading_Bot</WorkingDirectory>
+    </Exec>
+  </Actions>
+  <Principals>
+    <Principal id="Author">
+      <UserId>cblum2</UserId>
+      <LogonType>InteractiveToken</LogonType>
+      <RunLevel>HighestAvailable</RunLevel>
+    </Principal>
+  </Principals>
+</Task>
