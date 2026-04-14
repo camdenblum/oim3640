@@ -216,7 +216,7 @@ class AlpacaBroker(BrokerBase):
 
             alpaca_order = self._client.submit_order(req)  # type: ignore[union-attr]
             order.order_id = str(alpaca_order.id)
-            order.status = self._map_status(str(alpaca_order.status))
+            order.status = self._map_status(alpaca_order.status.value)
             order.submitted_at = str(alpaca_order.submitted_at or "")
             logger.info(
                 "Order submitted",
@@ -244,10 +244,10 @@ class AlpacaBroker(BrokerBase):
             alpaca_order = self._client.get_order_by_id(order_id)  # type: ignore[union-attr]
             order = Order(
                 symbol=str(alpaca_order.symbol),
-                side=OrderSide.BUY if str(alpaca_order.side) == "buy" else OrderSide.SELL,
+                side=OrderSide.BUY if alpaca_order.side.value == "buy" else OrderSide.SELL,
                 quantity=float(alpaca_order.qty or 0),
                 order_id=order_id,
-                status=self._map_status(str(alpaca_order.status)),
+                status=self._map_status(alpaca_order.status.value),
                 filled_qty=float(alpaca_order.filled_qty or 0),
                 filled_avg_price=float(alpaca_order.filled_avg_price or 0),
                 filled_at=str(alpaca_order.filled_at or ""),

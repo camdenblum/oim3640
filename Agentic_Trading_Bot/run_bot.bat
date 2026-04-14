@@ -15,5 +15,5 @@ for /f "tokens=1,2 delims==" %%a in (%BOT_DIR%\.env) do (
 
 cd /d "%BOT_DIR%"
 echo [%date% %time%] Bot starting >> "%LOG%"
-"%PYTHON%" main.py --mode paper >> "%LOG%" 2>&1
+start /b "" "%PYTHON%" main.py --mode paper >> "%LOG%" 2>&1
 echo [%date% %time%] Bot stopped >> "%LOG%"

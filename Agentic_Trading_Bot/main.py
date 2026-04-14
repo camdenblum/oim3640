@@ -321,11 +321,25 @@ def run_trading(cfg: Dict[str, Any], mode: str) -> None:
 
     state.audit("bot_start", f"Bot started in {mode} mode", extra={"tickers": tickers})
 
+    # Sync actual account state from broker on startup
+    account = broker.get_account_summary()
+    portfolio.cash = account.cash
+    portfolio.initial_cash = account.equity  # baseline from actual account value
+    for pos in account.positions:
+        portfolio.positions[pos.symbol] = pos
+    if account.positions:
+        logger.info("Synced account from broker", extra={
+            "cash": account.cash,
+            "equity": account.equity,
+            "positions": [p.symbol for p in account.positions],
+        })
+
     # Load or train model
     if not learning_loop.load_latest_or_baseline():
         # Train from scratch using historical data
         start_hist = str(date.today() - timedelta(days=data_window))
-        price_dict = fetcher.fetch_multi(tickers, start=start_hist)
+        granularity = cfg["data"].get("granularity", "1d")
+        price_dict = fetcher.fetch_multi(tickers, start=start_hist, interval=granularity)
         feature_dict = {t: feature_eng.compute(df) for t, df in price_dict.items()}
         learning_loop.run_offline_learning(feature_dict, price_dict)
 
@@ -340,7 +354,7 @@ def run_trading(cfg: Dict[str, Any], mode: str) -> None:
         while True:
             try:
                 # Check if market is open (live only)
-                if mode == "live" and not broker.is_market_open():
+                if not broker.is_market_open():
                     logger.info("Market closed — sleeping 60s")
                     time.sleep(60)
                     continue
@@ -351,8 +365,9 @@ def run_trading(cfg: Dict[str, Any], mode: str) -> None:
                     continue
 
                 # Fetch fresh data
-                start_hist = str(date.today() - timedelta(days=max(data_window, 120)))
-                price_dict = fetcher.fetch_multi(tickers, start=start_hist, use_cache=(mode == "paper"))
+                start_hist = str(date.today() - timedelta(days=data_window))
+                granularity = cfg["data"].get("granularity", "1d")
+                price_dict = fetcher.fetch_multi(tickers, start=start_hist, interval=granularity, use_cache=False)
 
                 if not price_dict:
                     logger.warning("No price data — sleeping")
@@ -421,11 +436,16 @@ def run_trading(cfg: Dict[str, Any], mode: str) -> None:
 
                 bar_count += 1
 
-                # Sleep between bars
-                # Daily bars: re-check once per hour during market hours.
-                # The market-open check at the top of the loop prevents placing
-                # orders outside trading hours.
-                sleep_sec = 3600 if cfg["data"].get("granularity", "1d") == "1d" else 300
+                # Sleep between bars based on granularity
+                granularity = cfg["data"].get("granularity", "1d")
+                if granularity == "1d":
+                    sleep_sec = 3600
+                elif granularity in ("60m", "1h"):
+                    sleep_sec = 3600
+                elif granularity in ("15m",):
+                    sleep_sec = 900
+                else:  # 5m or finer
+                    sleep_sec = 60
                 logger.debug(f"Sleeping {sleep_sec}s")
                 time.sleep(sleep_sec)
 

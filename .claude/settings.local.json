@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(powershell -Command \"schtasks /query /tn TradingBot_Start 2>&1; schtasks /query /tn TradingBot_Stop 2>&1\")"
+      "Bash(powershell -Command \"schtasks /query /tn TradingBot_Start 2>&1; schtasks /query /tn TradingBot_Stop 2>&1\")",
+      "Bash(powershell -Command \"Stop-Process -Id 11996, 37348, 37416 -Force -ErrorAction SilentlyContinue; Write-Host 'Stopped'\")"
     ]
   }
 }

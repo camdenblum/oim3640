@@ -17,8 +17,8 @@ data:
     - NVDA
     - AMZN
     - GOOGL
-  data_window: 1095        # days of historical data for backtest (3 years)
-  granularity: "1d"        # "1d" for daily, "60m" for hourly (live only)
+  data_window: 59          # days of historical data (max 60 for 5m bars)
+  granularity: "5m"        # "1d" for daily, "60m" for hourly, "5m" for intraday
   cache_dir: ".cache/data"
   max_retries: 3
   retry_backoff: 2.0       # seconds between retries
@@ -79,14 +79,14 @@ strategy:
       hidden_layers: [64, 32]
       dropout: 0.2
   signal_thresholds:
-    buy: 0.52              # score above this → buy signal
-    sell: 0.48             # score below this → sell signal
+    buy: 0.50              # score above this → buy signal
+    sell: 0.45             # score below this → sell signal
   position_sizing:
     method: percent_of_equity  # Options: fixed | percent_of_equity | risk_parity
     default_pct: 0.05          # 5% of equity per position
-    max_position_size_pct: 0.15
+    max_position_size_pct: 15.0
   target_allocations: {}   # e.g. AAPL: 0.10 — leave empty for dynamic sizing
-  rebalancing_frequency: 5 # trading days
+  rebalancing_frequency: 1 # trading days
 
 # ----------------------------------------------------------
 # Learning / adaptation
@@ -106,8 +106,8 @@ learning:
 # Risk management
 # ----------------------------------------------------------
 risk:
-  max_total_drawdown_pct: 10.0   # halt trading if portfolio draws down 10%
-  max_daily_loss_pct: 2.0        # circuit breaker: max loss in one trading day
+  max_total_drawdown_pct: 25.0   # halt trading if portfolio draws down 25%
+  max_daily_loss_pct: 10.0       # circuit breaker: max loss in one trading day
   max_positions: 8               # max concurrent holdings
   stop_loss_pct: 5.0             # per-position stop loss (% below entry)
   take_profit_pct: 15.0          # per-position take profit (% above entry)
@@ -131,7 +131,7 @@ execution:
     # Live trading endpoint:  https://api.alpaca.markets
   paper_trading: true
   order_type: market             # market | limit
-  order_timeout_secs: 30
+  order_timeout_secs: 120
   retry_backoff: 2.0
   max_retries: 3
 

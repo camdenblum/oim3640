@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Interactive Dashboard</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <style>
+            :root{
+                --bg:#0f1724; --card:#0b1220; --muted:#94a3b8; --accent:#06b6d4; --glass: rgba(255,255,255,0.03);
+            }
+            *{box-sizing:border-box}
+            html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;color:#e6eef8;background:linear-gradient(180deg,#071026 0%, #071a2a 60%)}
+            .wrap{max-width:1100px;margin:3rem auto;padding:1rem}
+            header{display:flex;align-items:center;gap:1rem}
+            .brand{display:flex;align-items:center;gap:.75rem}
+            .logo{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),#7c3aed);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#021028}
+            nav{margin-left:auto;display:flex;gap:.5rem}
+            .btn{background:var(--glass);border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:.45rem .7rem;border-radius:8px;cursor:pointer}
+            .btn.primary{background:linear-gradient(90deg,var(--accent),#7c3aed);color:#021028;font-weight:600;border:none}
+
+            .hero{display:grid;grid-template-columns:1fr 420px;gap:1.25rem;align-items:start;margin-top:1rem}
+            .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:1rem;border:1px solid rgba(255,255,255,0.03)}
+            h1{margin:0 0 .25rem 0;font-size:1.6rem}
+            p.lead{color:var(--muted);margin-top:0}
+
+            .panel{display:grid;gap:.75rem}
+            .input{display:flex;gap:.5rem}
+            input[type=text]{flex:1;padding:.6rem .75rem;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#e6eef8}
+            .result{margin-top:.5rem;padding:.75rem;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.02)}
+            .muted{color:var(--muted);font-size:.95rem}
+
+            .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+            .stat{display:flex;flex-direction:column;gap:.5rem}
+            .big{font-size:1.4rem;font-weight:700}
+
+            footer{margin-top:2rem;color:var(--muted);text-align:center}
+
+            /* small screens */
+            @media (max-width:900px){
+                .hero{grid-template-columns:1fr}
+                .grid{grid-template-columns:1fr}
+                .logo{width:40px;height:40px}
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <header>
+                <div class="brand">
+                    <div class="logo">ID</div>
+                    <div>
+                        <div style="font-weight:700">Interactive Dashboard</div>
+                        <div style="font-size:.85rem;color:var(--muted)">Quick stock & weather tools — local demo</div>
+                    </div>
+                </div>
+                <nav>
+                    <button class="btn" onclick="scrollToSection('tools')">Tools</button>
+                    <button class="btn" onclick="scrollToSection('about')">About</button>
+                    <button class="btn primary" id="themeBtn">Toggle Theme</button>
+                </nav>
+            </header>
+
+            <section class="hero">
+                <div class="card">
+                    <h1>Fast lookups, smooth interactions</h1>
+                    <p class="lead">Use the panels on the right to fetch live stock prices or weather (requires the local backend endpoints to be running).</p>
+
+                    <div style="margin-top:1rem" class="grid">
+                        <div class="stat card">
+                            <div class="muted">Last action</div>
+                            <div id="lastAction" class="big">—</div>
+                        </div>
+                        <div class="stat card">
+                            <div class="muted">Status</div>
+                            <div id="status" class="big">Ready</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:1rem" class="muted">Tip: start by entering a ticker like <strong>AAPL</strong> or a city name like <strong>Boston</strong>.</div>
+                </div>
+
+                <aside>
+                    <div class="card panel" id="tools">
+                        <div>
+                            <div style="font-weight:600">Stock lookup</div>
+                            <div class="input" style="margin-top:.5rem">
+                                <input id="stockInput" type="text" placeholder="Ticker (e.g. AAPL)">
+                                <button class="btn primary" onclick="fetchStock()">Get</button>
+                            </div>
+                            <div id="stockResult" class="result muted">No result yet.</div>
+                        </div>
+
+                        <div style="margin-top:.8rem">
+                            <div style="font-weight:600">Weather lookup</div>
+                            <div class="input" style="margin-top:.5rem">
+                                <input id="weatherInput" type="text" placeholder="Location (e.g. Boston)">
+                                <button class="btn primary" onclick="fetchWeather()">Get</button>
+                            </div>
+                            <div id="weatherResult" class="result muted">No result yet.</div>
+                        </div>
+
+                        <div style="margin-top:.8rem;display:flex;gap:.5rem">
+                            <button class="btn" onclick="clearResults()">Clear</button>
+                            <button class="btn" onclick="openApiDocs()">API</button>
+                        </div>
+                    </div>
+                </aside>
+            </section>
+
+            <section style="margin-top:1.25rem" id="about">
+                <div class="card">
+                    <h2 style="margin-top:0">About this demo</h2>
+                    <p class="muted">This single-page demo provides a clean, responsive UI with client-side fetch calls to local backend endpoints. It expects the following endpoints to exist while running locally:</p>
+                    <ul class="muted">
+                        <li><code>/api/stock?symbol=...</code> — returns JSON {symbol,name,price}</li>
+                        <li><code>/api/weather?location=...</code> — returns weather JSON</li>
+                    </ul>
+                    <p class="muted">If those endpoints are not running, the UI will show helpful error messages.</p>
+                </div>
+            </section>
+
+            <footer>
+                Built for demo — run your local Flask services and use this UI. 
+            </footer>
+        </div>
+
+        <script>
+            function setStatus(s){ document.getElementById('status').textContent = s }
+            function setLast(s){ document.getElementById('lastAction').textContent = s }
+
+            async function fetchStock(){
+                const symbol = document.getElementById('stockInput').value.trim();
+                if(!symbol){ alert('Enter a ticker'); return }
+                setStatus('Fetching stock...'); setLast('Stock: '+symbol)
+                try{
+                    const res = await fetch(`/api/stock?symbol=${encodeURIComponent(symbol)}`)
+                    if(!res.ok){ const err = await res.json().catch(()=>({error:'Unknown'})); document.getElementById('stockResult').textContent = 'Error: '+(err.error||res.statusText); setStatus('Error'); return }
+                    const json = await res.json()
+                    document.getElementById('stockResult').innerHTML = `<div style="font-weight:700">${json.name||json.symbol}</div><div class="muted">${json.symbol}</div><div style="margin-top:.5rem;font-size:1.25rem;font-weight:700">$${Number(json.price).toFixed(2)}</div>`
+                    setStatus('OK')
+                }catch(e){ document.getElementById('stockResult').textContent = 'Request failed'; setStatus('Network error') }
+            }
+
+            async function fetchWeather(){
+                const loc = document.getElementById('weatherInput').value.trim();
+                if(!loc){ alert('Enter a location'); return }
+                setStatus('Fetching weather...'); setLast('Weather: '+loc)
+                try{
+                    const res = await fetch(`/api/weather?location=${encodeURIComponent(loc)}`)
+                    if(!res.ok){ const err = await res.json().catch(()=>({error:'Unknown'})); document.getElementById('weatherResult').textContent = 'Error: '+(err.error||res.statusText); setStatus('Error'); return }
+                    const j = await res.json()
+                    document.getElementById('weatherResult').innerHTML = `<div style="display:flex;align-items:center;gap:1rem"><img src="${j.icon_url||''}" style="width:72px;height:72px" alt="icon"><div><div style="font-weight:700">${j.location_name||loc}</div><div class="muted">${j.description||''}</div></div><div style="margin-left:auto;text-align:right"><div style="font-size:1.4rem;font-weight:700">${j.temp_c}°C</div><div class="muted">Feels like ${j.feels_c}°C</div></div></div>`
+                    setStatus('OK')
+                }catch(e){ document.getElementById('weatherResult').textContent = 'Request failed'; setStatus('Network error') }
+            }
+
+            function clearResults(){ document.getElementById('stockResult').textContent='No result yet.'; document.getElementById('weatherResult').textContent='No result yet.'; setLast('Cleared'); setStatus('Ready') }
+
+            function openApiDocs(){ window.open('/','_blank') }
+
+            function scrollToSection(id){ document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'}) }
+
+            // theme toggle (simple)
+            document.getElementById('themeBtn').addEventListener('click', ()=>{
+                const root = document.documentElement
+                if(root.style.getPropertyValue('--bg') === '#0f1724'){
+                    root.style.setProperty('--bg','#f8fafc'); root.style.setProperty('--card','#ffffff'); root.style.setProperty('--muted','#536878'); root.style.setProperty('--accent','#06b6d4'); document.body.style.color='#071022'
+                } else {
+                    root.style.setProperty('--bg','#0f1724'); root.style.setProperty('--card','#0b1220'); root.style.setProperty('--muted','#94a3b8'); root.style.setProperty('--accent','#06b6d4'); document.body.style.color='#e6eef8'
+                }
+            })
+        </script>
+    </body>
+</html>

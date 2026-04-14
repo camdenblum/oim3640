@@ -1,5 +1,5 @@
 
-from flask import Flask, request, jsonify, render_template_string
+from flask import Flask, render_template, request, jsonify, render_template_string
 import yfinance as yf
 
 app = Flask(__name__)
@@ -115,6 +115,10 @@ def stock_api():
     if error:
         return jsonify({'symbol': symbol, 'error': error}), 404
     return jsonify({'symbol': symbol, 'name': name, 'price': price})
+
+@app.get("/ticker")
+def ticker ():
+    return render_template("stock-form.html")
 
 
 if __name__ == '__main__':
