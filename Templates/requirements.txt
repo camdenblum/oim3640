@@ -1,0 +1,6 @@
+flask 
+yfinance 
+gunicorn
+python-dotenv
+openai
+    
