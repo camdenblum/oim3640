@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Overview — Campus Advocacy Toolkit{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Campus Advocacy Toolkit</h1>
+  <p>Connecting schools with the four most impactful artist-founded nonprofits serving young people today.</p>
+</div>
+
+<!-- Live pipeline stats -->
+<div class="stat-bar">
+  <div class="stat-card">
+    <div class="stat-number">{{ total_schools }}</div>
+    <div class="stat-label">Schools in Pipeline</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ active_partners }}</div>
+    <div class="stat-label">Active Partners</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ in_progress }}</div>
+    <div class="stat-label">In Progress</div>
+  </div>
+</div>
+
+<!-- Foundation cards -->
+<div class="foundation-grid">
+  {% for f in foundations %}
+  <div class="foundation-card">
+    <div class="card-accent-bar bg-{{ f.id }}"></div>
+    <div class="card-body">
+      <div class="foundation-name"><strong>{{ f.name }}</strong></div>
+      <div class="foundation-founder">Founded by {{ f.founder }}</div>
+      <span class="focus-badge badge-{{ f.id }}">{{ f.focus }}</span>
+      <p class="mission">{{ f.mission }}</p>
+      <ul class="impact-list text-{{ f.id }}">
+        {% for stat in f.impact_stats %}
+        <li>{{ stat }}</li>
+        {% endfor %}
+      </ul>
+      <a href="{{ url_for('resources', foundation=f.id) }}" class="btn btn-outline">View Resources</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

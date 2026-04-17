@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Resource Toolkit — Campus Advocacy Toolkit{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Resource Toolkit</h1>
+  <p>Downloadable guides, templates, and toolkits for counselors, teachers, administrators, and students.</p>
+</div>
+
+<!-- Filter bar -->
+<div class="filter-bar">
+  <a href="{{ url_for('resources', foundation='all') }}"
+     class="filter-btn {% if selected == 'all' %}active{% endif %}">All Foundations</a>
+  {% for fid, fname in foundation_choices %}
+  <a href="{{ url_for('resources', foundation=fid) }}"
+     class="filter-btn {% if selected == fid %}active{% endif %}">{{ fname }}</a>
+  {% endfor %}
+</div>
+
+<!-- Resource sections -->
+{% for fid, resource_list in resources.items() %}
+{% set f = foundations[fid] %}
+<div class="resource-section">
+  <div class="resource-section-header">
+    <span class="focus-badge badge-{{ fid }}">{{ f.focus }}</span>
+    <h2>{{ f.name }}</h2>
+  </div>
+
+  <div class="resource-grid">
+    {% for r in resource_list %}
+    <div class="resource-card border-{{ fid }}">
+      <div class="resource-type">{{ r.type }}</div>
+      <h3>{{ r.title }}</h3>
+      <p>{{ r.description }}</p>
+      <span class="audience-tag">{{ r.audience }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}

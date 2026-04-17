@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Generated Letter — Campus Advocacy Toolkit{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Your Outreach Letter</h1>
+  <p>
+    Generated for <strong>{{ school_name }}</strong>, addressed to <strong>{{ admin_name }}</strong>
+    — featuring
+    {% for name in foundation_names %}{{ name }}{% if not loop.last %}, {% endif %}{% endfor %}.
+  </p>
+</div>
+
+<div class="letter-box">{{ letter_text }}</div>
+
+<div class="letter-actions">
+  <a href="{{ url_for('letter_builder') }}" class="btn btn-outline">Build Another Letter</a>
+  <a href="{{ url_for('pipeline') }}" class="btn btn-primary">Track This School in Pipeline</a>
+</div>
+{% endblock %}

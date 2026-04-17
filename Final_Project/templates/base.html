@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Campus Advocacy Toolkit{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="{{ url_for('index') }}">Campus Advocacy Toolkit</a>
+  <ul class="nav-links">
+    <li><a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Overview</a></li>
+    <li><a href="{{ url_for('resources') }}" {% if request.endpoint == 'resources' %}class="active"{% endif %}>Resources</a></li>
+    <li><a href="{{ url_for('letter_builder') }}" {% if request.endpoint == 'letter_builder' %}class="active"{% endif %}>Letter Builder</a></li>
+    <li><a href="{{ url_for('pipeline') }}" {% if request.endpoint == 'pipeline' %}class="active"{% endif %}>Pipeline</a></li>
+  </ul>
+</nav>
+
+<div class="page">
+  {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

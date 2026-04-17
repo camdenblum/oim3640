@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}School Pipeline — Campus Advocacy Toolkit{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>School Pipeline Tracker</h1>
+  <p>Track every school in your outreach cycle — from first contact to active partnership.</p>
+</div>
+
+<div class="pipeline-layout">
+
+  <!-- Main table -->
+  <div>
+    <!-- Status filter -->
+    <div class="filter-bar" style="margin-bottom:1.25rem;">
+      <a href="{{ url_for('pipeline', status='all') }}"
+         class="filter-btn {% if status_filter == 'all' %}active{% endif %}">All Schools</a>
+      {% for s in statuses %}
+      <a href="{{ url_for('pipeline', status=s) }}"
+         class="filter-btn {% if status_filter == s %}active{% endif %}">{{ s }}</a>
+      {% endfor %}
+    </div>
+
+    {% if schools %}
+    <div class="pipeline-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>School</th>
+            <th>Contact</th>
+            <th>Status</th>
+            <th>Foundations</th>
+            <th>Added</th>
+            <th>Notes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for school in schools %}
+          <tr>
+            <td><strong>{{ school.name }}</strong></td>
+            <td>{{ school.contact or "—" }}</td>
+            <td>
+              <span class="status-badge status-{{ school.status | replace(' ', '.') }}">
+                {{ school.status }}
+              </span>
+            </td>
+            <td>
+              {% for fid in school.foundations %}
+                {% if fid in foundations %}
+                <span class="focus-badge badge-{{ fid }}" style="font-size:0.7rem; margin-bottom:2px; display:inline-block;">
+                  {{ foundations[fid].name | truncate(20, True, '…') }}
+                </span>
+                {% endif %}
+              {% endfor %}
+            </td>
+            <td style="white-space:nowrap; color:#888;">{{ school.date_added }}</td>
+            <td style="max-width:200px; font-size:0.82rem; color:#555;">{{ school.notes or "—" }}</td>
+            <td>
+              <!-- Update form -->
+              <form method="POST" action="{{ url_for('pipeline_update', school_id=school.id) }}" style="margin-bottom:0.4rem;">
+                <div class="inline-update">
+                  <select name="status" class="form-control-sm">
+                    {% for s in statuses %}
+                    <option value="{{ s }}" {% if school.status == s %}selected{% endif %}>{{ s }}</option>
+                    {% endfor %}
+                  </select>
+                  <input type="text" name="notes" class="form-control-sm" style="width:120px;"
+                         value="{{ school.notes or '' }}" placeholder="Notes…" />
+                  <button type="submit" class="btn btn-sm btn-outline">Save</button>
+                </div>
+              </form>
+              <!-- Delete form -->
+              <form method="POST" action="{{ url_for('pipeline_delete', school_id=school.id) }}" class="inline-form">
+                <button type="submit" class="btn btn-danger"
+                        onclick="return confirm('Remove {{ school.name }} from the pipeline?')">Remove</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <strong>No schools found.</strong>
+      <p>{% if status_filter != 'all' %}No schools with status "{{ status_filter }}". {% endif %}Add a school using the form on the right.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Add school sidebar -->
+  <div class="sidebar-card">
+    <h3>Add a School</h3>
+    <form method="POST" action="{{ url_for('pipeline_add') }}">
+
+      <div class="form-group">
+        <label for="name">School Name *</label>
+        <input type="text" id="name" name="name" class="form-control" required
+               placeholder="e.g. Westfield High School" />
+      </div>
+
+      <div class="form-group">
+        <label for="contact">Contact Name</label>
+        <input type="text" id="contact" name="contact" class="form-control"
+               placeholder="e.g. Dr. Torres" />
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select id="status" name="status" class="form-control">
+          {% for s in statuses %}
+          <option value="{{ s }}">{{ s }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Foundations</label>
+        <div class="checkbox-group">
+          {% for fid, fname in foundation_choices %}
+          <label class="checkbox-item">
+            <input type="checkbox" name="foundations" value="{{ fid }}" />
+            {{ fname | truncate(30, True, '…') }}
+          </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes" class="form-control" rows="3"
+                  placeholder="Any relevant context…"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%;">Add to Pipeline</button>
+    </form>
+  </div>
+
+</div>
+{% endblock %}
