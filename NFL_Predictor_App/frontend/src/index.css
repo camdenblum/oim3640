@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { box-sizing: border-box; }
+  body { @apply bg-nfl-dark text-gray-100 font-sans; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-nfl-dark; }
+  ::-webkit-scrollbar-thumb { @apply bg-gray-600 rounded-full; }
+}
+
+@layer components {
+  .card { @apply bg-nfl-card border border-nfl-border rounded-xl p-4; }
+  .card-hover { @apply card hover:border-gray-500 transition-colors cursor-pointer; }
+  .stat-value { @apply text-2xl font-bold text-white; }
+  .stat-label { @apply text-xs text-gray-400 uppercase tracking-wide mt-1; }
+  .tab-active { @apply border-b-2 border-nfl-gold text-nfl-gold; }
+  .tab-inactive { @apply border-b-2 border-transparent text-gray-400 hover:text-white; }
+  .badge { @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium; }
+  .badge-win { @apply badge bg-green-900 text-green-300; }
+  .badge-loss { @apply badge bg-red-900 text-red-300; }
+  .rank-badge { @apply badge bg-gray-700 text-gray-300; }
+  .btn { @apply px-4 py-2 rounded-lg font-medium transition-colors; }
+  .btn-primary { @apply btn bg-nfl-blue hover:bg-blue-700 text-white; }
+  .btn-ghost { @apply btn hover:bg-gray-800 text-gray-300; }
+}
+
+@layer utilities {
+  .text-shadow { text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+  .gradient-nfl { background: linear-gradient(135deg, #013369 0%, #D50A0A 100%); }
+}
