@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% block title %}Impact & Metrics — Campus Advocacy Toolkit{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>Impact &amp; Metrics</h1>
+  <p>Live data from your outreach pipeline and combined reach statistics from all four foundations.</p>
+</div>
+
+<!-- Summary stats -->
+<div class="stat-bar" style="margin-bottom: 2rem;">
+  <div class="stat-card">
+    <div class="stat-number">{{ total }}</div>
+    <div class="stat-label">Total Schools in Pipeline</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ status_counts.get('Active Partner', 0) }}</div>
+    <div class="stat-label">Active Partners</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-number">{{ (status_counts.get('Active Partner', 0) / total * 100) | round | int if total > 0 else 0 }}%</div>
+    <div class="stat-label">Conversion Rate</div>
+  </div>
+</div>
+
+{% if total > 0 %}
+<div class="impact-grid">
+
+  <!-- Status breakdown chart -->
+  <div class="impact-card">
+    <h3>Pipeline by Status</h3>
+    <div class="bar-chart">
+      {% for status in statuses %}
+      {% set count = status_counts.get(status, 0) %}
+      {% set pct = (count / total * 100) | round | int if total > 0 else 0 %}
+      {% set bar_color = '#1a6fa8' if status == 'Contacted' else ('#a87a1a' if status == 'Responding' else ('#1a8a45' if status == 'Active Partner' else '#6b6b6b')) %}
+      <div class="bar-row">
+        <div class="bar-label-row">
+          <span style="font-family: Arial, sans-serif; font-size: 0.83rem;">{{ status }}</span>
+          <span class="bar-count">{{ count }} school{% if count != 1 %}s{% endif %} ({{ pct }}%)</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: {{ pct }}%; background: {{ bar_color }};"></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Foundation coverage chart -->
+  <div class="impact-card">
+    <h3>Foundation Coverage in Pipeline</h3>
+    {% if active_foundations %}
+    <div class="bar-chart">
+      {% for fid, count in active_foundations.items() | sort(attribute='1', reverse=True) %}
+      {% set pct = (count / total * 100) | round | int if total > 0 else 0 %}
+      <div class="bar-row">
+        <div class="bar-label-row">
+          <span style="font-family: Arial, sans-serif; font-size: 0.83rem;">{{ foundations[fid].name | truncate(28, True, '…') }}</span>
+          <span class="bar-count">{{ count }} school{% if count != 1 %}s{% endif %}</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill bar-{{ fid }}" style="width: {{ pct }}%;"></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="impact-empty">
+      No foundation data yet. Add schools to the pipeline with foundations assigned to see this chart.
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% else %}
+<div class="impact-card" style="margin-bottom: 2rem;">
+  <div class="impact-empty">
+    <strong>Your pipeline is empty.</strong><br>
+    Add schools to the <a href="{{ url_for('pipeline') }}" style="color: var(--color-accent);">Pipeline Tracker</a>
+    to see live metrics here.
+  </div>
+</div>
+{% endif %}
+
+<!-- Combined foundation impact -->
+<div class="impact-card" style="margin-bottom: 2rem;">
+  <h3>Combined Foundation Reach</h3>
+  <p style="font-family: Arial, sans-serif; font-size: 0.83rem; color: var(--color-text-muted); margin-bottom: 1.25rem; line-height: 1.55;">
+    Cumulative impact statistics from all four foundations operating independently.
+    Together, they represent one of the most comprehensive youth-support ecosystems in the nonprofit arts space.
+  </p>
+  <div class="combined-stats-grid">
+    {% for fid, f in foundations.items() %}
+    {% for stat in f.impact_stats %}
+    <div class="combined-stat-card cs-{{ fid }}">
+      <div class="cs-stat">
+        <span class="focus-badge badge-{{ fid }}" style="font-size:0.68rem; margin-bottom:0.4rem; display:inline-block;">{{ f.name | truncate(22, True, '…') }}</span><br>
+        {{ stat }}
+      </div>
+    </div>
+    {% endfor %}
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Foundation detail links -->
+<div class="impact-card">
+  <h3>Explore Each Foundation</h3>
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 0.5rem;">
+    {% for fid, f in foundations.items() %}
+    <a href="{{ url_for('foundation_detail', fid=fid) }}"
+       style="text-decoration: none; display: block; padding: 1rem 1.1rem; background: var(--color-bg); border-radius: 8px; border-left: 4px solid {{ f.color }}; transition: box-shadow 0.2s;">
+      <div style="font-family: Arial, sans-serif; font-size: 0.85rem; font-weight: bold; color: var(--color-text); margin-bottom: 0.2rem;">{{ f.name }}</div>
+      <div style="font-family: Arial, sans-serif; font-size: 0.77rem; color: var(--color-text-muted);">{{ f.focus }}</div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

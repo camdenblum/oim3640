@@ -7,17 +7,39 @@
   <p>Track every school in your outreach cycle — from first contact to active partnership.</p>
 </div>
 
+<!-- Pipeline stats -->
+<div class="pipeline-stats-bar">
+  <div class="pipeline-stat">
+    <div class="ps-number ps-contacted">{{ status_counts.get('Contacted', 0) }}</div>
+    <div class="ps-label">Contacted</div>
+  </div>
+  <div class="pipeline-stat">
+    <div class="ps-number ps-responding">{{ status_counts.get('Responding', 0) }}</div>
+    <div class="ps-label">Responding</div>
+  </div>
+  <div class="pipeline-stat">
+    <div class="ps-number ps-active">{{ status_counts.get('Active Partner', 0) }}</div>
+    <div class="ps-label">Active Partners</div>
+  </div>
+  <div class="pipeline-stat">
+    <div class="ps-number ps-hold">{{ status_counts.get('On Hold', 0) }}</div>
+    <div class="ps-label">On Hold</div>
+  </div>
+</div>
+
 <div class="pipeline-layout">
 
   <!-- Main table -->
   <div>
     <!-- Status filter -->
-    <div class="filter-bar" style="margin-bottom:1.25rem;">
+    <div class="filter-bar" style="margin-bottom: 1.25rem;">
       <a href="{{ url_for('pipeline', status='all') }}"
-         class="filter-btn {% if status_filter == 'all' %}active{% endif %}">All Schools</a>
+         class="filter-btn {% if status_filter == 'all' %}active{% endif %}">All Schools ({{ total }})</a>
       {% for s in statuses %}
       <a href="{{ url_for('pipeline', status=s) }}"
-         class="filter-btn {% if status_filter == s %}active{% endif %}">{{ s }}</a>
+         class="filter-btn {% if status_filter == s %}active{% endif %}">
+        {{ s }} ({{ status_counts.get(s, 0) }})
+      </a>
       {% endfor %}
     </div>
 
@@ -37,44 +59,52 @@
         </thead>
         <tbody>
           {% for school in schools %}
-          <tr>
+          {% set row_class = 'row-active' if school.status == 'Active Partner' else ('row-responding' if school.status == 'Responding' else ('row-contacted' if school.status == 'Contacted' else 'row-hold')) %}
+          <tr class="{{ row_class }}">
             <td><strong>{{ school.name }}</strong></td>
             <td>{{ school.contact or "—" }}</td>
             <td>
-              <span class="status-badge status-{{ school.status | replace(' ', '.') }}">
+              {% set badge_class = school.status | replace(' ', '-') %}
+              <span class="status-badge status-{{ badge_class }}">
                 {{ school.status }}
               </span>
             </td>
             <td>
               {% for fid in school.foundations %}
                 {% if fid in foundations %}
-                <span class="focus-badge badge-{{ fid }}" style="font-size:0.7rem; margin-bottom:2px; display:inline-block;">
-                  {{ foundations[fid].name | truncate(20, True, '…') }}
+                <span class="focus-badge badge-{{ fid }}" style="font-size:0.68rem; margin-bottom:2px; display:inline-block;">
+                  {{ foundations[fid].name | truncate(18, True, '…') }}
                 </span>
                 {% endif %}
               {% endfor %}
+              {% if not school.foundations %}—{% endif %}
             </td>
-            <td style="white-space:nowrap; color:#888;">{{ school.date_added }}</td>
-            <td style="max-width:200px; font-size:0.82rem; color:#555;">{{ school.notes or "—" }}</td>
+            <td style="white-space:nowrap; color:#888; font-family: Arial, sans-serif; font-size:0.8rem;">
+              {{ school.date_added }}
+              {% if school.get('last_updated') and school.last_updated != school.date_added %}
+              <br><span style="font-size:0.72rem; color:#aaa;">upd {{ school.last_updated }}</span>
+              {% endif %}
+            </td>
+            <td style="max-width:180px; font-family: Arial, sans-serif; font-size:0.8rem; color:#555;">
+              {{ school.notes or "—" }}
+            </td>
             <td>
               <!-- Update form -->
-              <form method="POST" action="{{ url_for('pipeline_update', school_id=school.id) }}" style="margin-bottom:0.4rem;">
+              <form method="POST" action="{{ url_for('pipeline_update', school_id=school.id) }}" style="margin-bottom: 0.4rem;">
                 <div class="inline-update">
                   <select name="status" class="form-control-sm">
                     {% for s in statuses %}
                     <option value="{{ s }}" {% if school.status == s %}selected{% endif %}>{{ s }}</option>
                     {% endfor %}
                   </select>
-                  <input type="text" name="notes" class="form-control-sm" style="width:120px;"
+                  <input type="text" name="notes" class="form-control-sm" style="width:110px;"
                          value="{{ school.notes or '' }}" placeholder="Notes…" />
                   <button type="submit" class="btn btn-sm btn-outline">Save</button>
                 </div>
               </form>
-              <!-- Delete form -->
-              <form method="POST" action="{{ url_for('pipeline_delete', school_id=school.id) }}" class="inline-form">
-                <button type="submit" class="btn btn-danger"
-                        onclick="return confirm('Remove {{ school.name }} from the pipeline?')">Remove</button>
-              </form>
+              <!-- Delete (no JS: link to confirm page) -->
+              <a href="{{ url_for('pipeline_delete_confirm', school_id=school.id) }}"
+                 class="btn btn-danger">Remove</a>
             </td>
           </tr>
           {% endfor %}
@@ -84,7 +114,13 @@
     {% else %}
     <div class="empty-state">
       <strong>No schools found.</strong>
-      <p>{% if status_filter != 'all' %}No schools with status "{{ status_filter }}". {% endif %}Add a school using the form on the right.</p>
+      <p>
+        {% if status_filter != 'all' %}
+          No schools with status "{{ status_filter }}".
+        {% else %}
+          Add your first school using the form on the right.
+        {% endif %}
+      </p>
     </div>
     {% endif %}
   </div>
@@ -107,7 +143,7 @@
       </div>
 
       <div class="form-group">
-        <label for="status">Status</label>
+        <label for="status">Initial Status</label>
         <select id="status" name="status" class="form-control">
           {% for s in statuses %}
           <option value="{{ s }}">{{ s }}</option>
@@ -121,7 +157,7 @@
           {% for fid, fname in foundation_choices %}
           <label class="checkbox-item">
             <input type="checkbox" name="foundations" value="{{ fid }}" />
-            {{ fname | truncate(30, True, '…') }}
+            {{ fname | truncate(28, True, '…') }}
           </label>
           {% endfor %}
         </div>
@@ -133,8 +169,17 @@
                   placeholder="Any relevant context…"></textarea>
       </div>
 
-      <button type="submit" class="btn btn-primary" style="width:100%;">Add to Pipeline</button>
+      <button type="submit" class="btn btn-primary" style="width: 100%;">Add to Pipeline</button>
     </form>
+
+    <div style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--color-border);">
+      <p style="font-family: Arial, sans-serif; font-size: 0.78rem; color: var(--color-text-muted); line-height: 1.5;">
+        Use the Letter Builder to generate a personalized outreach letter before adding a school here.
+      </p>
+      <a href="{{ url_for('letter_builder') }}" class="btn btn-outline btn-sm" style="margin-top: 0.75rem; display: block; text-align: center;">
+        Build an Outreach Letter
+      </a>
+    </div>
   </div>
 
 </div>

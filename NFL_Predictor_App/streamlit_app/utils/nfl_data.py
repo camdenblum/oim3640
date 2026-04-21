@@ -13,7 +13,7 @@ def load_historical_elo(seasons: list[int] | None = None) -> str:
     Returns a status message.
     """
     if seasons is None:
-        seasons = [2022, 2023, 2024]
+        seasons = [2022, 2023, 2024, 2025]
 
     try:
         import nfl_data_py as nfl
@@ -73,7 +73,7 @@ def load_historical_elo(seasons: list[int] | None = None) -> str:
 def get_player_stats(seasons: list[int] | None = None, position: str | None = None) -> pd.DataFrame:
     """Load weekly player stats from nfl-data-py."""
     if seasons is None:
-        seasons = [2024]
+        seasons = [2025]
     try:
         import nfl_data_py as nfl
         df = nfl.import_weekly_data(seasons)
@@ -84,62 +84,93 @@ def get_player_stats(seasons: list[int] | None = None, position: str | None = No
         return pd.DataFrame()
 
 
-@st.cache_data(ttl=3600, show_spinner="Building 2026 player projections from 2024 data…")
+@st.cache_data(ttl=3600, show_spinner="Building 2026 player projections from 2025 data…")
 def get_2026_projections() -> pd.DataFrame:
     """
-    Project 2026 season stats for all offensive players using 2024 as the base year.
+    Project 2026 season stats using a 60/40 weighted blend of 2025 (primary) and 2024 data.
+    Players need ≥5 games in 2025. 2024 data blended in for stability where available.
     Applies 5% regression to mean and scales to 17 games.
-    Returns one row per player with season totals + per-game averages + floor/ceiling.
     """
     try:
         import nfl_data_py as nfl
-        df = nfl.import_weekly_data([2024])
-    except Exception as e:
+        df_2025 = nfl.import_weekly_data([2025])
+        df_2024 = nfl.import_weekly_data([2024])
+    except Exception:
         return pd.DataFrame()
 
     positions = ["QB", "RB", "WR", "TE"]
-    df = df[df["position"].isin(positions)].copy()
+    stat_map = {
+        "pass_yards": "passing_yards",
+        "pass_tds": "passing_tds",
+        "interceptions": "interceptions",
+        "completions": "completions",
+        "attempts": "attempts",
+        "rush_yards": "rushing_yards",
+        "rush_tds": "rushing_tds",
+        "carries": "carries",
+        "rec_yards": "receiving_yards",
+        "receptions": "receptions",
+        "rec_tds": "receiving_tds",
+        "targets": "targets",
+        "fantasy_std": "fantasy_points",
+        "fantasy_ppr": "fantasy_points_ppr",
+    }
+    stat_cols = list(stat_map.keys())
 
-    agg = df.groupby(["player_id", "player_name", "recent_team", "position"]).agg(
-        games=("week", "count"),
-        pass_yards=("passing_yards", "sum"),
-        pass_tds=("passing_tds", "sum"),
-        interceptions=("interceptions", "sum"),
-        completions=("completions", "sum"),
-        attempts=("attempts", "sum"),
-        rush_yards=("rushing_yards", "sum"),
-        rush_tds=("rushing_tds", "sum"),
-        carries=("carries", "sum"),
-        rec_yards=("receiving_yards", "sum"),
-        receptions=("receptions", "sum"),
-        rec_tds=("receiving_tds", "sum"),
-        targets=("targets", "sum"),
-        fantasy_std=("fantasy_points", "sum"),
-        fantasy_ppr=("fantasy_points_ppr", "sum"),
-    ).reset_index()
+    def aggregate_season(df: pd.DataFrame) -> pd.DataFrame:
+        df = df[df["position"].isin(positions)].copy()
+        agg_dict: dict = {"games": ("week", "count")}
+        for new_col, raw_col in stat_map.items():
+            if raw_col in df.columns:
+                agg_dict[new_col] = (raw_col, "sum")
+        agg = df.groupby(["player_id", "player_name", "recent_team", "position"]).agg(
+            **agg_dict
+        ).reset_index()
+        for col in stat_cols:
+            if col in agg.columns:
+                agg[f"{col}_pg"] = agg[col] / agg["games"].replace(0, 1)
+        return agg
 
-    # Only include players who played meaningful snaps
-    agg = agg[agg["games"] >= 5].copy()
+    agg_25 = aggregate_season(df_2025)
+    agg_24 = aggregate_season(df_2024)
+
+    # Require ≥5 games in 2025 to be included
+    agg_25 = agg_25[agg_25["games"] >= 5].copy()
+    agg_24_valid = agg_24[agg_24["games"] >= 5].copy()
+
+    # Pull 2024 per-game rates for blending
+    pg_cols_24 = {f"{c}_pg": f"{c}_pg_24" for c in stat_cols if f"{c}_pg" in agg_24_valid.columns}
+    agg = agg_25.merge(
+        agg_24_valid[["player_id"] + list(pg_cols_24.keys())].rename(columns=pg_cols_24),
+        on="player_id",
+        how="left",
+    )
+
+    # Weighted blend: 60% 2025, 40% 2024 where 2024 data exists
+    W25, W24 = 0.60, 0.40
+    for col in stat_cols:
+        pg_col = f"{col}_pg"
+        pg_24_col = f"{col}_pg_24"
+        if pg_24_col in agg.columns:
+            has_24 = agg[pg_24_col].notna()
+            agg[pg_col] = agg[pg_col].where(
+                ~has_24,
+                agg[pg_col] * W25 + agg[pg_24_col].fillna(0) * W24,
+            )
+            agg = agg.drop(columns=[pg_24_col])
 
     GAMES_2026 = 17
-    REGRESSION = 0.95  # slight regression to the mean
-
-    stat_cols = [
-        "pass_yards", "pass_tds", "interceptions", "completions", "attempts",
-        "rush_yards", "rush_tds", "carries",
-        "rec_yards", "receptions", "rec_tds", "targets",
-        "fantasy_std", "fantasy_ppr",
-    ]
+    REGRESSION = 0.95
 
     for col in stat_cols:
-        pg = agg[col] / agg["games"]
-        proj = pg * REGRESSION * GAMES_2026
-        agg[f"{col}_pg"] = pg.round(2)
-        agg[f"{col}_proj"] = proj.round(1)
-        agg[f"{col}_floor"] = (proj * 0.75).round(1)
-        agg[f"{col}_ceil"] = (proj * 1.30).round(1)
+        if f"{col}_pg" in agg.columns:
+            pg = agg[f"{col}_pg"]
+            proj = pg * REGRESSION * GAMES_2026
+            agg[f"{col}_pg"] = pg.round(2)
+            agg[f"{col}_proj"] = proj.round(1)
+            agg[f"{col}_floor"] = (proj * 0.75).round(1)
+            agg[f"{col}_ceil"] = (proj * 1.30).round(1)
 
-    # Completion percentage
     agg["comp_pct"] = (agg["completions"] / agg["attempts"].replace(0, 1) * 100).round(1)
     agg["ypc"] = (agg["rush_yards"] / agg["carries"].replace(0, 1)).round(2)
     agg["ypr"] = (agg["rec_yards"] / agg["receptions"].replace(0, 1)).round(2)
@@ -149,7 +180,7 @@ def get_2026_projections() -> pd.DataFrame:
 
 
 @st.cache_data(ttl=3600)
-def get_season_leaders(season: int = 2024) -> dict[str, pd.DataFrame]:
+def get_season_leaders(season: int = 2025) -> dict[str, pd.DataFrame]:
     """Return stat leaders by category for the season."""
     try:
         import nfl_data_py as nfl

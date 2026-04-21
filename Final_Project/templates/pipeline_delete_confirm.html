@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Remove School — Campus Advocacy Toolkit{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; padding: 2rem 0;">
+  <div class="confirm-card">
+    <h2>Remove from Pipeline?</h2>
+    <p>
+      Are you sure you want to remove <strong>{{ school.name }}</strong>
+      from the pipeline? This cannot be undone.
+    </p>
+    <div class="confirm-actions">
+      <form method="POST" action="{{ url_for('pipeline_delete', school_id=school.id) }}">
+        <button type="submit" class="btn btn-danger" style="font-size: 0.88rem; padding: 0.55rem 1.1rem;">
+          Yes, Remove
+        </button>
+      </form>
+      <a href="{{ url_for('pipeline') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

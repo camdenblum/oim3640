@@ -9,18 +9,46 @@
 <body>
 
 <nav>
-  <a class="nav-brand" href="{{ url_for('index') }}">Campus Advocacy Toolkit</a>
+  <a class="nav-brand" href="{{ url_for('index') }}">
+    Campus Advocacy Toolkit
+    <span class="nav-sub">Artist-Founded Foundations &amp; Schools</span>
+  </a>
   <ul class="nav-links">
     <li><a href="{{ url_for('index') }}" {% if request.endpoint == 'index' %}class="active"{% endif %}>Overview</a></li>
-    <li><a href="{{ url_for('resources') }}" {% if request.endpoint == 'resources' %}class="active"{% endif %}>Resources</a></li>
-    <li><a href="{{ url_for('letter_builder') }}" {% if request.endpoint == 'letter_builder' %}class="active"{% endif %}>Letter Builder</a></li>
-    <li><a href="{{ url_for('pipeline') }}" {% if request.endpoint == 'pipeline' %}class="active"{% endif %}>Pipeline</a></li>
+    <li><a href="{{ url_for('resources') }}" {% if request.endpoint in ('resources', 'resource_view') %}class="active"{% endif %}>Resources</a></li>
+    <li><a href="{{ url_for('letter_builder') }}" {% if request.endpoint in ('letter_builder', 'letter_result') %}class="active"{% endif %}>Letter Builder</a></li>
+    <li><a href="{{ url_for('pipeline') }}" {% if request.endpoint in ('pipeline', 'pipeline_delete_confirm') %}class="active"{% endif %}>Pipeline</a></li>
+    <li><a href="{{ url_for('impact') }}" {% if request.endpoint == 'impact' %}class="active"{% endif %}>Impact</a></li>
   </ul>
 </nav>
 
 <div class="page">
   {% block content %}{% endblock %}
 </div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-foundations">
+      <a href="{{ url_for('foundation_detail', fid='busyhead') }}">The Busyhead Project</a>
+      <a href="{{ url_for('foundation_detail', fid='ally') }}">The Ally Coalition</a>
+      <a href="{{ url_for('foundation_detail', fid='midwest_princess') }}">The Midwest Princess Project</a>
+      <a href="{{ url_for('foundation_detail', fid='laufey') }}">The Laufey Foundation</a>
+    </div>
+    <div>
+      <a href="{{ url_for('index') }}">Overview</a> &nbsp;&middot;&nbsp;
+      <a href="{{ url_for('resources') }}">Resources</a> &nbsp;&middot;&nbsp;
+      <a href="{{ url_for('letter_builder') }}">Letter Builder</a> &nbsp;&middot;&nbsp;
+      <a href="{{ url_for('pipeline') }}">Pipeline</a> &nbsp;&middot;&nbsp;
+      <a href="{{ url_for('impact') }}">Impact</a>
+    </div>
+    <p class="footer-note">
+      The Campus Advocacy Toolkit is an independent educational resource. All foundation names, missions,
+      and materials described herein are based on publicly available information and have not been formally
+      reviewed or endorsed by the respective organizations. Contact each foundation directly to establish
+      an official partnership.
+    </p>
+  </div>
+</footer>
 
 </body>
 </html>

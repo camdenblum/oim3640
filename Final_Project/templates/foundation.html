@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}{{ f.name }} — Campus Advocacy Toolkit{% endblock %}
+
+{% block content %}
+
+<!-- Foundation Hero -->
+<div class="foundation-hero bg-{{ fid }}" style="background: linear-gradient(135deg, {{ f.color }}, {{ f.color }}cc);">
+  <div style="margin-bottom: 0.5rem;">
+    <span class="focus-badge" style="background: rgba(255,255,255,0.2); color: #fff;">{{ f.focus }}</span>
+  </div>
+  <h1>{{ f.name }}</h1>
+  <div class="fh-founder">Founded by {{ f.founder }}</div>
+  <div class="fh-tagline">{{ f.tagline }}</div>
+  <div class="fh-stats">
+    {% for stat in f.impact_stats %}
+    <div class="fh-stat">
+      <span class="fh-stat-num">{{ stat.split(' ')[0] }}</span>
+      <span class="fh-stat-label">{{ stat.split(' ', 1)[1] if ' ' in stat else '' }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Breadcrumb -->
+<div style="margin-bottom: 1.5rem;">
+  <a href="{{ url_for('index') }}" class="btn btn-muted btn-sm">&#8592; Back to Overview</a>
+</div>
+
+<!-- Main layout -->
+<div class="foundation-layout">
+
+  <!-- Left column: mission + programs + resources -->
+  <div>
+
+    <div class="section-card">
+      <h2>Mission &amp; Story</h2>
+      <p class="long-description">{{ f.description_long }}</p>
+    </div>
+
+    <div class="section-card">
+      <h2>Key Programs</h2>
+      <ul class="program-list">
+        {% for prog in f.programs %}
+        <li class="program-item program-{{ fid }}">
+          <h4>{{ prog.name }}</h4>
+          <p>{{ prog.description }}</p>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="section-card">
+      <h2>Resource Toolkit ({{ resources | length }} resources)</h2>
+      <div class="resource-grid" style="grid-template-columns: repeat(2, 1fr);">
+        {% for r in resources %}
+        <div class="resource-card border-{{ fid }}">
+          <div class="resource-type">{{ r.type }}</div>
+          <h3>{{ r.title }}</h3>
+          <p class="description">{{ r.description }}</p>
+          <div class="resource-card-footer">
+            <span class="audience-tag">{{ r.audience }}</span>
+            <a href="{{ url_for('resource_view', fid=fid, idx=loop.index0) }}" class="btn btn-outline btn-sm">View Guide</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right column: quick start + CTA -->
+  <div>
+
+    <div class="section-card">
+      <h2>Start This Week</h2>
+      <p style="font-family: Arial, sans-serif; font-size: 0.83rem; color: var(--color-text-muted); margin-bottom: 1rem; line-height: 1.5;">
+        Three things your school can do immediately to begin a partnership with {{ f.name }}.
+      </p>
+      <ol class="quick-action-list">
+        {% for action in f.quick_actions %}
+        <li>{{ action }}</li>
+        {% endfor %}
+      </ol>
+    </div>
+
+    <div class="section-card">
+      <h2>Write an Outreach Letter</h2>
+      <p style="font-family: Arial, sans-serif; font-size: 0.83rem; color: var(--color-text-muted); margin-bottom: 1.2rem; line-height: 1.55;">
+        Generate a complete, professionally written letter to your principal, school board,
+        or grants office introducing {{ f.name }} and requesting a partnership.
+      </p>
+      <a href="{{ url_for('letter_builder') }}?foundation={{ fid }}" class="btn btn-primary" style="display:block; text-align:center;">
+        Build a Letter for {{ f.name }}
+      </a>
+    </div>
+
+    {% if f.website and f.website != '#' %}
+    <div class="section-card">
+      <h2>Official Website</h2>
+      <p style="font-family: Arial, sans-serif; font-size: 0.83rem; color: var(--color-text-muted); margin-bottom: 1rem; line-height: 1.55;">
+        Visit {{ f.name }}'s official website to learn more, access their materials directly,
+        and begin the formal partnership process.
+      </p>
+      <a href="{{ f.website }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="display:block; text-align:center;">
+        Visit {{ f.name }}
+      </a>
+    </div>
+    {% endif %}
+
+    <div class="section-card">
+      <h2>Track This Foundation</h2>
+      <p style="font-family: Arial, sans-serif; font-size: 0.83rem; color: var(--color-text-muted); margin-bottom: 1rem; line-height: 1.55;">
+        Add a school to your pipeline and associate it with {{ f.name }} to track your outreach progress.
+      </p>
+      <a href="{{ url_for('pipeline') }}" class="btn btn-outline" style="display:block; text-align:center;">
+        Go to Pipeline Tracker
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

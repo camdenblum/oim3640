@@ -4,17 +4,56 @@
 {% block content %}
 <div class="page-header">
   <h1>Your Outreach Letter</h1>
-  <p>
-    Generated for <strong>{{ school_name }}</strong>, addressed to <strong>{{ admin_name }}</strong>
-    — featuring
-    {% for name in foundation_names %}{{ name }}{% if not loop.last %}, {% endif %}{% endfor %}.
+  <p>Your partnership pitch letter is ready — copy, print, or email it directly with no further editing needed.</p>
+</div>
+
+<!-- Letter metadata -->
+<div class="letter-meta">
+  <div class="letter-meta-item">
+    <strong>School</strong>
+    {{ school_name }}
+  </div>
+  <div class="letter-meta-item">
+    <strong>Addressed To</strong>
+    {{ admin_name }}
+  </div>
+  <div class="letter-meta-item">
+    <strong>Letter Type</strong>
+    {{ letter_type_label }}
+  </div>
+  <div class="letter-meta-item">
+    <strong>Programs Pitched</strong>
+    {% for name in foundation_names %}{{ name }}{% if not loop.last %}, {% endif %}{% endfor %}
+  </div>
+</div>
+
+<div class="letter-box" id="letter-content">{{ letter_text }}</div>
+
+<div class="letter-actions">
+  <button onclick="copyLetter()" class="btn btn-primary" id="copy-btn">Copy Letter</button>
+  <a href="{{ url_for('letter_builder') }}" class="btn btn-outline">Build Another Letter</a>
+  <a href="{{ url_for('pipeline') }}" class="btn btn-outline">Track in Pipeline</a>
+  <a href="{{ url_for('resources') }}" class="btn btn-muted">Browse Resources to Attach</a>
+</div>
+
+<script>
+function copyLetter() {
+  var text = document.getElementById("letter-content").innerText;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.getElementById("copy-btn");
+    btn.textContent = "Copied!";
+    setTimeout(function() { btn.textContent = "Copy Letter"; }, 2000);
+  });
+}
+</script>
+
+<div style="margin-top: 1.5rem; padding: 1rem 1.25rem; background: #f8f7f4; border-radius: 8px; border: 1px solid var(--color-border);">
+  <p style="font-family: Arial, sans-serif; font-size: 0.8rem; color: var(--color-text-muted); line-height: 1.55;">
+    <strong>Next steps:</strong> Copy this letter into your email client or word processor.
+    Consider attaching relevant foundation resources to strengthen the pitch.
+    Once sent, add this institution to the Pipeline Tracker to monitor follow-up.
+    Use your browser's Print function (Ctrl+P / Cmd+P) to save a PDF copy.
   </p>
 </div>
 
-<div class="letter-box">{{ letter_text }}</div>
-
-<div class="letter-actions">
-  <a href="{{ url_for('letter_builder') }}" class="btn btn-outline">Build Another Letter</a>
-  <a href="{{ url_for('pipeline') }}" class="btn btn-primary">Track This School in Pipeline</a>
-</div>
 {% endblock %}

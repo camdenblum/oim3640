@@ -33,7 +33,7 @@ st.caption(
 )
 
 # ── Load merged projection + roster data (shared across tabs) ─────────────────
-@st.cache_data(ttl=1800, show_spinner="Loading 2024 stats + current rosters + injuries…")
+@st.cache_data(ttl=1800, show_spinner="Loading 2025 stats + current rosters + injuries…")
 def load_merged() -> pd.DataFrame:
     from utils.nfl_data import get_2026_projections
     proj = get_2026_projections()
@@ -149,7 +149,7 @@ with tab1:
 with tab2:
     st.subheader("2026 Season Player Projections")
     st.caption(
-        "Based on 2024 per-game averages × 17 games × 0.95 regression. "
+        "Based on a 60/40 weighted blend of 2025 (primary) and 2024 per-game averages × 17 games × 0.95 regression. "
         "**Current team** reflects April 2026 ESPN rosters (free agency, trades). "
         "**Projections are injury-adjusted** using live ESPN injury reports."
     )
@@ -268,7 +268,7 @@ with tab2:
 
     # ── Free Agency / Team changes ─────────────────────────────────────────────
     st.divider()
-    st.subheader("🔄 Notable Free Agency & Trade Moves (2024 → 2026)")
+    st.subheader("🔄 Notable Free Agency & Trade Moves (2025 → 2026)")
     moved_df = merged_df[merged_df["team_changed"] & merged_df["on_roster"]]\
                    .sort_values("fantasy_ppr_proj", ascending=False)
 
@@ -277,7 +277,7 @@ with tab2:
             "player_name","position","recent_team","current_team","inj_status","fantasy_ppr_proj"
         ]].rename(columns={
             "player_name": "Player", "position": "Pos",
-            "recent_team": "2024 Team", "current_team": "2026 Team",
+            "recent_team": "2025 Team", "current_team": "2026 Team",
             "inj_status": "Status", "fantasy_ppr_proj": "Proj PPR",
         }).head(40)
         moved_display["Status"] = moved_display["Status"].apply(injury_badge)
@@ -453,7 +453,7 @@ with tab3:
 
                     if moved and inj == "Active":
                         st.caption(
-                            f"ℹ️ Moved from **{p['recent_team']}** — 2024 stats carried over "
+                            f"ℹ️ Moved from **{p['recent_team']}** — 2025 stats carried over "
                             "as projection baseline. Scheme fit not yet modeled."
                         )
                     if inj not in ("Active","Healthy") and p.get("inj_desc"):
@@ -509,8 +509,9 @@ with tab3:
         st.plotly_chart(fig_p, use_container_width=True, config={"displayModeBar": False})
 
     st.info(
-        "**Methodology:** Per-game projections use each player's 2024 stat averages "
-        "as the base, adjusted for their **current team** (April 2026 rosters) and "
-        "**current injury status** from ESPN. Once the 2026 schedule releases (May 2026), "
+        "**Methodology:** Per-game projections use a **60/40 weighted blend of 2025 and 2024 "
+        "stat averages** as the base — 2025 is weighted higher as the most recent season, "
+        "with 2024 blended in for stability. Adjusted for **current team** (April 2026 rosters) "
+        "and **current injury status** from ESPN. Once the 2026 schedule releases (May 2026), "
         "opponent-strength adjustments will layer on top."
     )

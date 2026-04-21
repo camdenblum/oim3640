@@ -4,7 +4,7 @@
 {% block content %}
 <div class="page-header">
   <h1>Outreach Letter Builder</h1>
-  <p>Fill out the form below and we will generate a complete, professionally written outreach letter tailored to your school.</p>
+  <p>Fill in the target institution and your information — we'll generate a complete partnership outreach letter on behalf of the Campus Advocacy Toolkit.</p>
 </div>
 
 <div class="form-card">
@@ -19,69 +19,119 @@
 
   <form method="POST" action="{{ url_for('letter_builder') }}">
 
-    <div class="form-group">
-      <label for="school_name">School Name *</label>
-      <input type="text" id="school_name" name="school_name" class="form-control"
-             value="{{ form.get('school_name', '') }}" placeholder="e.g. Riverside High School" required />
+    <!-- Target Institution -->
+    <div class="form-section-title">Target Institution</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="school_name">Institution Name *</label>
+        <input type="text" id="school_name" name="school_name" class="form-control"
+               value="{{ form.get('school_name', '') }}" placeholder="e.g. Northeastern University" required />
+      </div>
+      <div class="form-group">
+        <label for="school_type">Institution Type</label>
+        <select id="school_type" name="school_type" class="form-control">
+          <option value="">Select type...</option>
+          {% for st in school_types %}
+          <option value="{{ st }}" {% if form.get('school_type') == st %}selected{% endif %}>{{ st }}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="school_type">School Type</label>
-      <select id="school_type" name="school_type" class="form-control">
-        <option value="">Select type...</option>
-        {% for st in school_types %}
-        <option value="{{ st }}" {% if form.get('school_type') == st %}selected{% endif %}>{{ st }}</option>
-        {% endfor %}
-      </select>
+    <!-- Recipient -->
+    <div class="form-section-title">Recipient at the Institution</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="admin_name">Contact Name *</label>
+        <input type="text" id="admin_name" name="admin_name" class="form-control"
+               value="{{ form.get('admin_name', '') }}" placeholder="e.g. Dr. Sarah Mitchell" required />
+      </div>
+      <div class="form-group">
+        <label for="admin_title">Contact Title</label>
+        <input type="text" id="admin_title" name="admin_title" class="form-control"
+               value="{{ form.get('admin_title', '') }}" placeholder="e.g. Dean of Students, VP of Student Affairs" />
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="admin_name">Administrator Name *</label>
-      <span class="hint">The person this letter is addressed to.</span>
-      <input type="text" id="admin_name" name="admin_name" class="form-control"
-             value="{{ form.get('admin_name', '') }}" placeholder="e.g. Dr. Sarah Mitchell" required />
+    <!-- Sender -->
+    <div class="form-section-title">Your Information (Campus Advocacy Toolkit)</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="submitter_name">Your Name *</label>
+        <input type="text" id="submitter_name" name="submitter_name" class="form-control"
+               value="{{ form.get('submitter_name', '') }}" placeholder="e.g. Jamie Rivera" required />
+      </div>
+      <div class="form-group">
+        <label for="submitter_role">Your Title</label>
+        <input type="text" id="submitter_role" name="submitter_role" class="form-control"
+               value="{{ form.get('submitter_role', '') }}" placeholder="e.g. Director of College Partnerships, Outreach Coordinator" />
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="admin_title">Administrator Title</label>
-      <input type="text" id="admin_title" name="admin_title" class="form-control"
-             value="{{ form.get('admin_title', '') }}" placeholder="e.g. Principal, Dean of Students" />
+    <!-- Letter Settings -->
+    <div class="form-section-title">Letter Settings</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="letter_type">Letter Type</label>
+        <span class="hint">Which contact at the institution are we pitching?</span>
+        <select id="letter_type" name="letter_type" class="form-control">
+          {% for val, label in letter_types %}
+          <option value="{{ val }}" {% if form.get('letter_type', 'admin') == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="urgency">Timeline</label>
+        <span class="hint">How quickly do you need a response?</span>
+        <select id="urgency" name="urgency" class="form-control">
+          {% for val, label in urgency_levels %}
+          <option value="{{ val }}" {% if form.get('urgency', 'exploratory') == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label for="submitter_name">Your Name *</label>
-      <input type="text" id="submitter_name" name="submitter_name" class="form-control"
-             value="{{ form.get('submitter_name', '') }}" placeholder="e.g. Jamie Rivera" required />
-    </div>
+    <!-- Institution Context -->
+    <div class="form-section-title">What We Know About This Institution</div>
 
     <div class="form-group">
-      <label for="submitter_role">Your Role</label>
-      <input type="text" id="submitter_role" name="submitter_role" class="form-control"
-             value="{{ form.get('submitter_role', '') }}" placeholder="e.g. School Counselor, GSA Advisor" />
+      <label for="campus_context">Institution Context <em style="font-weight:normal; color:#888;">(optional but highly recommended)</em></label>
+      <span class="hint">
+        Describe anything about this college or university that should make the pitch feel targeted —
+        a known student wellness gap, an active student org we could support, a recent campus event,
+        a grants initiative they've announced, or a specific student population that aligns with our programs.
+        The more specific, the stronger the letter.
+      </span>
+      <textarea id="campus_context" name="campus_context" class="form-control" rows="5"
+                placeholder="e.g. They recently launched a student mental health initiative but lack external programming partners. They have a well-funded student activities board. Their campus has a large LGBTQ+ student population. Their music department lost funding and they are actively seeking arts partnerships...">{{ form.get('campus_context', '') }}</textarea>
     </div>
 
-    <div class="form-group">
-      <label for="campus_context">Campus Context <em style="font-weight:normal; color:#888;">(optional but recommended)</em></label>
-      <span class="hint">Describe anything specific about your school — an existing program, a recent incident, a student population, an upcoming event — that should shape the letter.</span>
-      <textarea id="campus_context" name="campus_context" class="form-control" rows="4"
-                placeholder="e.g. Our school recently experienced a surge in student mental health referrals and we are looking for structured programming to complement our existing counseling resources...">{{ form.get('campus_context', '') }}</textarea>
-    </div>
+    <!-- Foundation selection -->
+    <div class="form-section-title">Programs to Pitch *</div>
 
     <div class="form-group">
-      <label>Select Foundations to Include *</label>
-      <span class="hint">Choose one or more foundations to feature in the letter.</span>
+      <span class="hint">Select the foundation programs you want to offer this institution as partnership opportunities.</span>
       <div class="checkbox-group">
         {% for fid, fname in foundation_choices %}
         <label class="checkbox-item">
           <input type="checkbox" name="foundations" value="{{ fid }}"
                  {% if fid in (form.getlist('foundations') if form else []) %}checked{% endif %} />
-          {{ fname }}
+          <span>
+            {{ fname }}
+            <span class="checkbox-desc">{{ {'busyhead': 'Mental health advocacy', 'ally': 'LGBTQ+ inclusion & safety', 'midwest_princess': 'Trans student support', 'laufey': 'Arts education & access'}[fid] }}</span>
+          </span>
         </label>
         {% endfor %}
       </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Generate Letter</button>
+    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem; font-size: 0.95rem;">
+      Generate Letter with Claude AI
+    </button>
 
   </form>
 </div>

@@ -2,9 +2,19 @@
 {% block title %}Overview — Campus Advocacy Toolkit{% endblock %}
 
 {% block content %}
-<div class="page-header">
-  <h1>Campus Advocacy Toolkit</h1>
-  <p>Connecting schools with the four most impactful artist-founded nonprofits serving young people today.</p>
+
+<!-- Hero -->
+<div class="hero">
+  <h1>The bridge between great foundations<br>and the schools that need them.</h1>
+  <p>
+    Four artist-founded nonprofits. One platform. Everything a school counselor,
+    GSA advisor, music director, or student affairs coordinator needs to bring
+    these programs to their campus — today, without waiting for an outreach coordinator.
+  </p>
+  <div class="hero-actions">
+    <a href="{{ url_for('letter_builder') }}" class="btn-hero btn-hero-primary">Build an Outreach Letter</a>
+    <a href="{{ url_for('resources') }}" class="btn-hero btn-hero-secondary">Browse the Resource Toolkit</a>
+  </div>
 </div>
 
 <!-- Live pipeline stats -->
@@ -23,7 +33,38 @@
   </div>
 </div>
 
+<!-- How it works -->
+<div class="how-it-works">
+  <h2>How the Toolkit Works</h2>
+  <div class="steps-grid">
+    <div class="step-card">
+      <span class="step-icon">&#128218;</span>
+      <h3>1. Learn the Foundations</h3>
+      <p>Each of the four foundations has a dedicated page covering mission, programs, and impact. Start here to get oriented.</p>
+    </div>
+    <div class="step-card">
+      <span class="step-icon">&#128196;</span>
+      <h3>2. Access the Resources</h3>
+      <p>Filter by foundation or audience type to find the guides, templates, and toolkits most relevant to your role.</p>
+    </div>
+    <div class="step-card">
+      <span class="step-icon">&#9997;&#65039;</span>
+      <h3>3. Generate an Outreach Letter</h3>
+      <p>Tell us about your school and we'll write a complete, ready-to-send letter addressed to the right administrator.</p>
+    </div>
+    <div class="step-card">
+      <span class="step-icon">&#128200;</span>
+      <h3>4. Track Your Progress</h3>
+      <p>Use the Pipeline Tracker to monitor every school in your outreach cycle and keep momentum over time.</p>
+    </div>
+  </div>
+</div>
+
 <!-- Foundation cards -->
+<div class="page-header" style="margin-bottom: 1.25rem;">
+  <h2 style="font-size: 1.25rem;">The Four Foundations</h2>
+</div>
+
 <div class="foundation-grid">
   {% for f in foundations %}
   <div class="foundation-card">
@@ -31,6 +72,7 @@
     <div class="card-body">
       <div class="foundation-name"><strong>{{ f.name }}</strong></div>
       <div class="foundation-founder">Founded by {{ f.founder }}</div>
+      <div class="foundation-tagline">{{ f.tagline }}</div>
       <span class="focus-badge badge-{{ f.id }}">{{ f.focus }}</span>
       <p class="mission">{{ f.mission }}</p>
       <ul class="impact-list text-{{ f.id }}">
@@ -38,7 +80,10 @@
         <li>{{ stat }}</li>
         {% endfor %}
       </ul>
-      <a href="{{ url_for('resources', foundation=f.id) }}" class="btn btn-outline">View Resources</a>
+    </div>
+    <div class="card-footer">
+      <a href="{{ url_for('foundation_detail', fid=f.id) }}" class="btn btn-primary btn-sm">Learn More</a>
+      <a href="{{ url_for('resources', foundation=f.id) }}" class="btn btn-outline btn-sm">View Resources</a>
     </div>
   </div>
   {% endfor %}
