@@ -29,10 +29,26 @@
 
 <div class="letter-box" id="letter-content">{{ letter_text }}</div>
 
+<!-- Pipeline banner -->
+{% if pipeline_added %}
+<div style="margin-bottom: 1.25rem; padding: 0.9rem 1.25rem; background: #edf7ed; border-radius: 8px; border: 1px solid #b2dfb2; display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+  <div style="font-family: Arial, sans-serif; font-size: 0.85rem; color: #2d6a2d; line-height: 1.5;">
+    <strong>&#10003; Added to Pipeline</strong> &mdash; {{ school_name }} has been added with status <em>Contacted</em>. Update it once you hear back.
+  </div>
+  <a href="{{ url_for('pipeline') }}" class="btn btn-outline btn-sm" style="white-space: nowrap;">View Pipeline</a>
+</div>
+{% elif pipeline_already_existed %}
+<div style="margin-bottom: 1.25rem; padding: 0.9rem 1.25rem; background: #f8f7f4; border-radius: 8px; border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+  <div style="font-family: Arial, sans-serif; font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.5;">
+    <strong>Already in Pipeline</strong> &mdash; {{ school_name }} is already tracked. You can update their status after sending.
+  </div>
+  <a href="{{ url_for('pipeline') }}" class="btn btn-outline btn-sm" style="white-space: nowrap;">View Pipeline</a>
+</div>
+{% endif %}
+
 <div class="letter-actions">
   <button onclick="copyLetter()" class="btn btn-primary" id="copy-btn">Copy Letter</button>
   <a href="{{ url_for('letter_builder') }}" class="btn btn-outline">Build Another Letter</a>
-  <a href="{{ url_for('pipeline') }}" class="btn btn-outline">Track in Pipeline</a>
   <a href="{{ url_for('resources') }}" class="btn btn-muted">Browse Resources to Attach</a>
 </div>
 
@@ -51,7 +67,6 @@ function copyLetter() {
   <p style="font-family: Arial, sans-serif; font-size: 0.8rem; color: var(--color-text-muted); line-height: 1.55;">
     <strong>Next steps:</strong> Copy this letter into your email client or word processor.
     Consider attaching relevant foundation resources to strengthen the pitch.
-    Once sent, add this institution to the Pipeline Tracker to monitor follow-up.
     Use your browser's Print function (Ctrl+P / Cmd+P) to save a PDF copy.
   </p>
 </div>

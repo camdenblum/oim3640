@@ -157,27 +157,6 @@ def resource_view(fid, idx):
 
     cache = load_resource_cache()
     cache_key = f"{fid}_{idx}"
-    generated_content = cache.get(cache_key)
-
-    return render_template(
-        "resource_view.html",
-        resource=resource,
-        foundation=foundation,
-        fid=fid,
-        idx=idx,
-        generated_content=generated_content,
-    )
-
-
-@app.route("/resource/<fid>/<int:idx>/generate", methods=["POST"])
-def resource_generate(fid, idx):
-    if fid not in RESOURCES or idx >= len(RESOURCES[fid]):
-        return redirect(url_for("resources"))
-    resource = RESOURCES[fid][idx]
-    foundation = FOUNDATIONS[fid]
-
-    cache = load_resource_cache()
-    cache_key = f"{fid}_{idx}"
 
     if cache_key not in cache:
         prompt = (
@@ -208,14 +187,19 @@ def resource_generate(fid, idx):
                 }],
                 messages=[{"role": "user", "content": prompt}],
             )
-            generated = response.content[0].text.strip()
+            cache[cache_key] = response.content[0].text.strip()
         except Exception as e:
-            generated = f"Content generation encountered an error: {e}\n\nPlease try again."
-
-        cache[cache_key] = generated
+            cache[cache_key] = f"Content generation encountered an error: {e}\n\nPlease refresh to try again."
         save_resource_cache(cache)
 
-    return redirect(url_for("resource_view", fid=fid, idx=idx))
+    return render_template(
+        "resource_view.html",
+        resource=resource,
+        foundation=foundation,
+        fid=fid,
+        idx=idx,
+        generated_content=cache[cache_key],
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -326,6 +310,35 @@ def letter_builder():
                 "Please check your ANTHROPIC_API_KEY and try again."
             )
 
+        # Add school to pipeline if the checkbox was checked
+        add_to_pipeline = request.form.get("add_to_pipeline") == "1"
+        pipeline_added = False
+        pipeline_school_id = None
+        pipeline_already_existed = False
+
+        if add_to_pipeline:
+            schools = load_pipeline()
+            existing = next(
+                (s for s in schools if s["name"].lower() == school_name.lower()), None
+            )
+            if existing:
+                pipeline_school_id = existing["id"]
+                pipeline_already_existed = True
+            else:
+                pipeline_school_id = str(uuid.uuid4())[:8]
+                schools.append({
+                    "id": pipeline_school_id,
+                    "name": school_name,
+                    "contact": admin_name,
+                    "status": "Contacted",
+                    "foundations": selected_foundations,
+                    "notes": f"Outreach letter generated ({letter_type_label}).",
+                    "date_added": str(date.today()),
+                    "last_updated": str(date.today()),
+                })
+                save_pipeline(schools)
+                pipeline_added = True
+
         return render_template(
             "letter_result.html",
             letter_text=letter_text,
@@ -333,6 +346,9 @@ def letter_builder():
             admin_name=admin_name,
             foundation_names=foundation_names,
             letter_type_label=letter_type_label,
+            pipeline_added=pipeline_added,
+            pipeline_already_existed=pipeline_already_existed,
+            pipeline_school_id=pipeline_school_id,
         )
 
     return render_template(

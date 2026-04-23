@@ -28,11 +28,16 @@
 
   <div class="resource-grid">
     {% for r in resource_list %}
+    {% set idx = loop.index0 %}
     <div class="resource-card border-{{ fid }}">
       <div class="resource-type">{{ r.type }}</div>
       <h3>{{ r.title }}</h3>
       <p>{{ r.description }}</p>
-      <span class="audience-tag">{{ r.audience }}</span>
+      <p class="resource-preview">{{ r.content_preview }}</p>
+      <div class="resource-card-footer">
+        <span class="audience-tag">{{ r.audience }}</span>
+        <a href="{{ url_for('resource_view', fid=fid, idx=idx) }}" class="btn btn-outline btn-sm">View Guide</a>
+      </div>
     </div>
     {% endfor %}
   </div>

@@ -129,6 +129,18 @@
       </div>
     </div>
 
+    <!-- Pipeline option -->
+    <div style="margin-bottom: 1.25rem; padding: 1rem 1.25rem; background: #f8f7f4; border-radius: 8px; border: 1px solid var(--color-border);">
+      <label class="checkbox-item" style="align-items: flex-start;">
+        <input type="checkbox" name="add_to_pipeline" value="1"
+               {% if form.get('add_to_pipeline', '1') != '0' %}checked{% endif %} />
+        <span>
+          <strong>Add this school to the Pipeline</strong>
+          <span class="checkbox-desc">Automatically track this institution as <em>Contacted</em> in your pipeline the moment the letter is generated — no extra step needed.</span>
+        </span>
+      </label>
+    </div>
+
     <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.75rem; font-size: 0.95rem;">
       Generate Letter with Claude AI
     </button>
