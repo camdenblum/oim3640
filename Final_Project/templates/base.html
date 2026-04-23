@@ -4,13 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}Campus Advocacy Toolkit{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
 
 <nav>
   <a class="nav-brand" href="{{ url_for('index') }}">
-    Campus Advocacy Toolkit
+    <span class="nav-brand-name">Campus Advocacy Toolkit</span>
     <span class="nav-sub">Artist-Founded Foundations &amp; Schools</span>
   </a>
   <ul class="nav-links">
@@ -34,11 +37,11 @@
       <a href="{{ url_for('foundation_detail', fid='midwest_princess') }}">The Midwest Princess Project</a>
       <a href="{{ url_for('foundation_detail', fid='laufey') }}">The Laufey Foundation</a>
     </div>
-    <div>
-      <a href="{{ url_for('index') }}">Overview</a> &nbsp;&middot;&nbsp;
-      <a href="{{ url_for('resources') }}">Resources</a> &nbsp;&middot;&nbsp;
-      <a href="{{ url_for('letter_builder') }}">Letter Builder</a> &nbsp;&middot;&nbsp;
-      <a href="{{ url_for('pipeline') }}">Pipeline</a> &nbsp;&middot;&nbsp;
+    <div class="footer-nav">
+      <a href="{{ url_for('index') }}">Overview</a>
+      <a href="{{ url_for('resources') }}">Resources</a>
+      <a href="{{ url_for('letter_builder') }}">Letter Builder</a>
+      <a href="{{ url_for('pipeline') }}">Pipeline</a>
       <a href="{{ url_for('impact') }}">Impact</a>
     </div>
     <p class="footer-note">

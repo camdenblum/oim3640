@@ -31,7 +31,6 @@ load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
 app = Flask(__name__)
 
 PIPELINE_FILE = os.path.join(os.path.dirname(__file__), "pipeline.json")
-RESOURCE_CACHE_FILE = os.path.join(os.path.dirname(__file__), "resource_cache.json")
 
 claude = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 
@@ -64,17 +63,6 @@ def save_pipeline(data):
     with open(PIPELINE_FILE, "w") as f:
         json.dump(data, f, indent=2)
 
-
-def load_resource_cache():
-    if not os.path.exists(RESOURCE_CACHE_FILE):
-        return {}
-    with open(RESOURCE_CACHE_FILE, "r") as f:
-        return json.load(f)
-
-
-def save_resource_cache(cache):
-    with open(RESOURCE_CACHE_FILE, "w") as f:
-        json.dump(cache, f, indent=2)
 
 
 # ---------------------------------------------------------------------------
@@ -154,51 +142,12 @@ def resource_view(fid, idx):
         return redirect(url_for("resources"))
     resource = RESOURCES[fid][idx]
     foundation = FOUNDATIONS[fid]
-
-    cache = load_resource_cache()
-    cache_key = f"{fid}_{idx}"
-
-    if cache_key not in cache:
-        prompt = (
-            f"Write the full content for a school resource called \"{resource['title']}\" "
-            f"published by {foundation['name']} (founded by {foundation['founder']}).\n\n"
-            f"Resource type: {resource['type']}\n"
-            f"Intended audience: {resource['audience']}\n"
-            f"Description: {resource['description']}\n"
-            f"Content preview hint: {resource['content_preview']}\n\n"
-            f"Write the complete, usable resource content. Format it clearly with sections, "
-            f"numbered steps where appropriate, and any templates or scripts described. "
-            f"It should be immediately usable by someone at a school with no prior training. "
-            f"Write approximately 600-900 words of substantive, actionable content."
-        )
-        try:
-            response = claude.messages.create(
-                model="claude-opus-4-7",
-                max_tokens=1400,
-                system=[{
-                    "type": "text",
-                    "text": (
-                        "You are an expert nonprofit curriculum writer creating practical, "
-                        "school-ready resources for The Campus Advocacy Toolkit. Your resources "
-                        "are clear, professional, and immediately actionable. You write for "
-                        "educators and school administrators who are motivated but time-constrained."
-                    ),
-                    "cache_control": {"type": "ephemeral"},
-                }],
-                messages=[{"role": "user", "content": prompt}],
-            )
-            cache[cache_key] = response.content[0].text.strip()
-        except Exception as e:
-            cache[cache_key] = f"Content generation encountered an error: {e}\n\nPlease refresh to try again."
-        save_resource_cache(cache)
-
     return render_template(
         "resource_view.html",
         resource=resource,
         foundation=foundation,
         fid=fid,
         idx=idx,
-        generated_content=cache[cache_key],
     )
 
 

@@ -1,3 +1,4 @@
 {
-  "busyhead_0": "Content generation encountered an error: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CaFvYcGAAhGAFHvbddJGn'}\n\nPlease try again."
+  "busyhead_0": "Content generation encountered an error: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CaFvYcGAAhGAFHvbddJGn'}\n\nPlease try again.",
+  "busyhead_1": "Content generation encountered an error: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CaMDBWouHEaaiwGYVSquK'}\n\nPlease refresh to try again."
 }
