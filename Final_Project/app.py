@@ -2,7 +2,7 @@
 app.py
 Campus Advocacy Toolkit — Flask web application
 Run with: python app.py
-Requires ANTHROPIC_API_KEY in your .env file.
+Requires OPENAI_API_KEY in your .env file.
 """
 
 import json
@@ -11,7 +11,7 @@ import uuid
 from collections import Counter
 from datetime import date
 
-import anthropic
+from openai import OpenAI
 from dotenv import load_dotenv
 from flask import Flask, redirect, render_template, request, url_for
 
@@ -26,13 +26,13 @@ from data import (
     URGENCY_LEVELS,
 )
 
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"), override=True)
 
 app = Flask(__name__)
 
 PIPELINE_FILE = os.path.join(os.path.dirname(__file__), "pipeline.json")
 
-claude = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+openai_client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 LETTER_SYSTEM_PROMPT = (
     "You are a professional partnership development writer at the Campus Advocacy Toolkit, "
@@ -242,21 +242,19 @@ def letter_builder():
         )
 
         try:
-            response = claude.messages.create(
-                model="claude-opus-4-7",
+            response = openai_client.chat.completions.create(
+                model="gpt-4o",
                 max_tokens=1500,
-                system=[{
-                    "type": "text",
-                    "text": LETTER_SYSTEM_PROMPT,
-                    "cache_control": {"type": "ephemeral"},
-                }],
-                messages=[{"role": "user", "content": prompt}],
+                messages=[
+                    {"role": "system", "content": LETTER_SYSTEM_PROMPT},
+                    {"role": "user", "content": prompt},
+                ],
             )
-            letter_text = response.content[0].text.strip()
+            letter_text = response.choices[0].message.content.strip()
         except Exception as e:
             letter_text = (
                 f"Letter generation failed: {e}\n\n"
-                "Please check your ANTHROPIC_API_KEY and try again."
+                "Please check your OPENAI_API_KEY and try again."
             )
 
         # Add school to pipeline if the checkbox was checked

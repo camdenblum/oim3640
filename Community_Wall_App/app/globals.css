@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --forest: #2D5016;
+  --forest-light: #4a7a23;
+  --cream: #F5F0E8;
+  --parchment: #EDE8DC;
+  --earth: #6B4D2A;
+  --amber: #C4870A;
+  --sky: #6B94A8;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--cream);
+  color: #2a2017;
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+@layer components {
+  .notecard {
+    @apply bg-cream rounded-sm shadow-card border border-amber/10 relative overflow-hidden;
+    background-image:
+      repeating-linear-gradient(
+        transparent,
+        transparent 27px,
+        rgba(107, 77, 42, 0.06) 27px,
+        rgba(107, 77, 42, 0.06) 28px
+      );
+    padding-top: 1.25rem;
+  }
+
+  .notecard-blue  { background-color: #EEF4F7; }
+  .notecard-green { background-color: #EEF4EE; }
+  .notecard-yellow { background-color: #F7F3E3; }
+  .notecard-cream  { background-color: #F5F0E8; }
+
+  .btn-primary {
+    @apply bg-forest text-cream font-medium px-5 py-2.5 rounded-full
+           hover:bg-forest-light transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-forest focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply border border-forest/30 text-forest font-medium px-5 py-2.5 rounded-full
+           hover:bg-forest/5 transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-forest focus:ring-offset-2;
+  }
+
+  .btn-ghost {
+    @apply text-forest/70 font-medium px-4 py-2 rounded-full
+           hover:text-forest hover:bg-forest/5 transition-all duration-200;
+  }
+
+  .section-header {
+    @apply font-serif text-2xl md:text-3xl text-forest font-semibold;
+  }
+
+  .card-surface {
+    @apply bg-white/60 backdrop-blur-sm rounded-2xl border border-amber/10 shadow-sm p-6;
+  }
+
+  .hp-chip {
+    @apply inline-flex items-center gap-1.5 bg-amber/10 text-amber font-semibold
+           text-sm px-3 py-1 rounded-full border border-amber/20;
+  }
+
+  .form-input {
+    @apply w-full border border-earth/20 rounded-xl px-4 py-3
+           bg-white/80 text-gray-800 placeholder-gray-400
+           focus:outline-none focus:ring-2 focus:ring-forest/30 focus:border-forest/40
+           transition duration-200;
+  }
+
+  .reaction-btn {
+    @apply flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-full
+           border border-transparent transition-all duration-150
+           hover:scale-105 active:scale-95;
+  }
+
+  .reaction-btn-active {
+    @apply bg-forest/10 border-forest/20 text-forest;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(45, 80, 22, 0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(45, 80, 22, 0.35); }
+
+/* Accessible focus */
+:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 2px;
+}
+
+/* Masonry-like wall grid */
+.wall-grid {
+  columns: 1;
+  column-gap: 1.5rem;
+}
+@media (min-width: 640px)  { .wall-grid { columns: 2; } }
+@media (min-width: 1024px) { .wall-grid { columns: 3; } }
+@media (min-width: 1280px) { .wall-grid { columns: 4; } }
+
+.wall-card-wrap {
+  break-inside: avoid;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Treeline SVG footer motif */
+.treeline { fill: var(--forest); }

@@ -1,0 +1,3027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Busyhead Wall — The Busyhead Project</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --forest:    #2D5016;
+  --forest-l:  #3d6b1f;
+  --forest-xl: #4e862a;
+  --cream:     #F6F1E9;
+  --parchment: #EDE8DC;
+  --earth:     #6B4D2A;
+  --amber:     #C4870A;
+  --sky:       #5e8fa3;
+  --red:       #b91c1c;
+  --white60:   rgba(255,255,255,.6);
+  --line:      rgba(107,77,42,.1);
+  --text:      #1e1a14;
+  --text-muted:#7a6045;
+}
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.025'/%3E%3C/svg%3E");
+}
+h1,h2,h3,h4 { font-family:'Playfair Display',Georgia,serif; line-height:1.25; }
+a { color:inherit; text-decoration:none; }
+button { font-family:inherit; cursor:pointer; border:none; background:none; }
+input,textarea,select { font-family:inherit; }
+
+/* ── Utility ── */
+.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0); }
+
+/* ── Crisis Banner ── */
+#crisis-banner {
+  background: var(--forest);
+  color: rgba(246,241,233,.82);
+  font-size: .78rem;
+  padding: .55rem 1.25rem;
+  display: flex; align-items: center; justify-content: space-between; gap: .75rem;
+  position: sticky; top: 0; z-index: 200;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+#crisis-banner .cb-links { display:flex; align-items:center; gap:.5rem .75rem; flex-wrap:wrap; }
+#crisis-banner .cb-label { font-weight:600; color:rgba(246,241,233,.95); }
+#crisis-banner a { color:var(--amber); font-weight:600; text-decoration:underline; text-underline-offset:2px; }
+#crisis-banner a:hover { text-decoration:none; }
+#crisis-dismiss { color:rgba(246,241,233,.35); font-size:1rem; padding:.25rem; transition:color .15s; line-height:1; }
+#crisis-dismiss:hover { color:rgba(246,241,233,.8); }
+
+/* ── Nav ── */
+nav {
+  background: rgba(246,241,233,.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 100;
+}
+.nav-inner {
+  max-width: 1240px; margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.nav-brand { display:flex; align-items:center; gap:.65rem; flex-shrink:0; }
+.nav-brand-icon { font-size:1.6rem; }
+.nav-brand-text strong { font-family:'Playfair Display',serif; font-size:.9rem; color:var(--forest); display:block; line-height:1.15; }
+.nav-brand-text small { font-size:.68rem; color:var(--text-muted); opacity:.7; }
+.nav-tabs { display:flex; gap:.15rem; }
+.nav-tab {
+  display:flex; align-items:center; gap:.35rem;
+  padding:.42rem .85rem;
+  border-radius:99px; font-size:.8rem; font-weight:500;
+  color:var(--text-muted); transition:all .15s;
+}
+.nav-tab:hover { color:var(--forest); background:rgba(45,80,22,.07); }
+.nav-tab.active { color:var(--forest); background:rgba(45,80,22,.11); font-weight:600; }
+.nav-tab .tab-icon { font-size:.95rem; }
+.nav-right { display:flex; align-items:center; gap:.6rem; flex-shrink:0; }
+.nav-user { display:flex; align-items:center; gap:.55rem; }
+.nav-avatar {
+  width:34px; height:34px; border-radius:50%;
+  background:linear-gradient(135deg,var(--forest-l),var(--forest));
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem; color:white; font-weight:700; flex-shrink:0;
+  box-shadow:0 1px 4px rgba(45,80,22,.25);
+}
+.nav-username { font-size:.82rem; font-weight:600; color:var(--forest); max-width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.nav-signout { font-size:.75rem; color:var(--text-muted); padding:.3rem .55rem; border-radius:6px; transition:all .15s; }
+.nav-signout:hover { background:rgba(185,28,28,.07); color:var(--red); }
+.hp-badge {
+  display:inline-flex; align-items:center; gap:.3rem;
+  background:rgba(196,135,10,.1); color:var(--amber);
+  font-size:.75rem; font-weight:700;
+  padding:.3rem .75rem; border-radius:99px;
+  border:1px solid rgba(196,135,10,.22);
+}
+
+/* ── Buttons ── */
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:.4rem;
+  font-weight:600; font-size:.85rem; border-radius:10px;
+  padding:.6rem 1.25rem; transition:all .15s; cursor:pointer;
+  border:none; font-family:inherit; text-align:center;
+}
+.btn-primary { background:var(--forest); color:#fff; }
+.btn-primary:hover { background:var(--forest-l); transform:translateY(-1px); box-shadow:0 4px 12px rgba(45,80,22,.25); }
+.btn-primary:active { transform:translateY(0); box-shadow:none; }
+.btn-primary:disabled { opacity:.45; cursor:not-allowed; transform:none; box-shadow:none; }
+.btn-outline { background:transparent; color:var(--forest); border:1.5px solid rgba(45,80,22,.3); }
+.btn-outline:hover { background:rgba(45,80,22,.06); border-color:rgba(45,80,22,.5); }
+.btn-ghost { background:transparent; color:var(--text-muted); font-weight:500; }
+.btn-ghost:hover { color:var(--forest); background:rgba(45,80,22,.06); }
+.btn-danger { background:#fef2f2; color:var(--red); border:1.5px solid rgba(185,28,28,.2); }
+.btn-danger:hover { background:#fee2e2; }
+.btn-full { width:100%; }
+.btn-sm { font-size:.78rem; padding:.42rem .9rem; border-radius:8px; }
+.btn-lg { font-size:.95rem; padding:.75rem 1.75rem; border-radius:12px; }
+
+/* ── Form inputs ── */
+.field { display:flex; flex-direction:column; gap:.45rem; }
+.field label { font-size:.78rem; font-weight:600; color:var(--text-muted); letter-spacing:.02em; }
+.input {
+  width:100%; padding:.72rem 1rem;
+  border:1.5px solid rgba(107,77,42,.18);
+  border-radius:10px;
+  background:rgba(255,255,255,.85);
+  font-size:.9rem; color:var(--text);
+  transition:border .15s, box-shadow .15s;
+  outline:none;
+}
+.input:focus { border-color:rgba(45,80,22,.45); box-shadow:0 0 0 3px rgba(45,80,22,.1); }
+.input::placeholder { color:rgba(107,77,42,.38); font-size:.85rem; }
+.input-error { border-color:rgba(185,28,28,.4) !important; }
+.field-error { font-size:.75rem; color:var(--red); }
+textarea.input { resize:vertical; font-family:'Playfair Display',serif; font-size:.95rem; line-height:1.6; }
+
+/* ── Pages ── */
+.page { display:none; max-width:1240px; margin:0 auto; padding:2rem 1.5rem 6rem; }
+.page.active { display:block; }
+
+/* ── Card surface ── */
+.card {
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(196,135,10,.12);
+  border-radius:16px;
+  box-shadow:0 2px 8px rgba(0,0,0,.05);
+  padding:1.5rem;
+}
+.card-lg { padding:2rem; border-radius:20px; }
+
+/* ── Page headers ── */
+.page-hero { text-align:center; padding:3rem 1rem 2.5rem; }
+.page-hero .eyebrow {
+  font-size:.7rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  color:rgba(45,80,22,.55); margin-bottom:.85rem;
+  display:flex; align-items:center; justify-content:center; gap:.5rem;
+}
+.page-hero .eyebrow::before,.page-hero .eyebrow::after {
+  content:''; display:block; width:28px; height:1px; background:rgba(45,80,22,.25);
+}
+.page-hero h1 { font-size:clamp(2.1rem,5vw,3.6rem); color:var(--forest); margin-bottom:.9rem; }
+.page-hero p { color:var(--text-muted); max-width:500px; margin:0 auto 1.75rem; line-height:1.75; font-size:.95rem; }
+
+/* ── Wall ── */
+.wall-layout { display:grid; grid-template-columns:1fr; gap:2rem; }
+@media(min-width:900px) { .wall-layout { grid-template-columns:320px 1fr; align-items:start; } }
+
+.submit-panel { position:sticky; top:80px; }
+.submit-panel-header { margin-bottom:1.25rem; }
+.submit-panel-header h2 { font-size:1.15rem; color:var(--forest); margin-bottom:.2rem; }
+.submit-panel-header p { font-size:.8rem; color:var(--text-muted); line-height:1.55; }
+
+.prompt-list { display:flex; flex-direction:column; gap:.5rem; margin-bottom:1.25rem; }
+.prompt-option {
+  display:flex; align-items:flex-start; gap:.75rem;
+  padding:.7rem .9rem; border-radius:10px;
+  border:1.5px solid var(--line);
+  cursor:pointer; transition:all .15s; background:rgba(255,255,255,.5);
+  text-align:left; font-family:inherit;
+}
+.prompt-option:hover { border-color:rgba(45,80,22,.3); background:rgba(45,80,22,.04); }
+.prompt-option.selected { border-color:var(--forest); background:rgba(45,80,22,.07); }
+.prompt-option.done { opacity:.5; cursor:not-allowed; background:rgba(107,77,42,.04); }
+.prompt-radio {
+  width:17px; height:17px; border-radius:50%; border:2px solid rgba(107,77,42,.3);
+  flex-shrink:0; margin-top:.15rem; display:flex; align-items:center; justify-content:center;
+  transition:all .15s;
+}
+.prompt-option.selected .prompt-radio { border-color:var(--forest); background:var(--forest); }
+.prompt-option.selected .prompt-radio::after { content:''; width:6px; height:6px; border-radius:50%; background:#fff; display:block; }
+.prompt-option.done .prompt-radio { border-color:var(--forest); background:var(--forest); }
+.prompt-option.done .prompt-radio::after { content:'✓'; font-size:.55rem; color:#fff; font-weight:700; line-height:1; }
+.prompt-text { font-size:.82rem; line-height:1.5; color:var(--text-muted); }
+.prompt-option.selected .prompt-text { color:var(--forest); font-weight:500; }
+.prompt-done-label { font-size:.68rem; color:var(--forest); font-weight:600; margin-top:.2rem; opacity:.7; }
+
+.write-area { display:none; margin-top:1rem; }
+.write-area.open { display:block; }
+.char-bar { display:flex; justify-content:space-between; align-items:center; margin-top:.35rem; }
+.char-bar span { font-size:.7rem; color:rgba(107,77,42,.4); }
+.submit-row { display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-top:.9rem; flex-wrap:wrap; }
+.submit-row .hint { font-size:.7rem; color:rgba(107,77,42,.4); line-height:1.4; max-width:200px; }
+
+/* ── Wall grid ── */
+.wall-controls { display:flex; align-items:center; justify-content:space-between; gap:.75rem; flex-wrap:wrap; margin-bottom:1.25rem; }
+.filter-row { display:flex; gap:.35rem; flex-wrap:wrap; }
+.fpill {
+  font-size:.72rem; font-weight:600; padding:.32rem .8rem;
+  border-radius:99px; border:1.5px solid var(--line);
+  color:var(--text-muted); cursor:pointer; transition:all .15s;
+  background:transparent; font-family:inherit;
+}
+.fpill:hover { border-color:rgba(45,80,22,.35); color:var(--forest); }
+.fpill.on { background:var(--forest); color:#fff; border-color:var(--forest); }
+
+.wall-grid { columns:1; column-gap:1.1rem; }
+@media(min-width:500px) { .wall-grid { columns:2; } }
+@media(min-width:800px) { .wall-grid { columns:3; } }
+
+.card-wrap { break-inside:avoid; display:inline-block; width:100%; margin-bottom:1.1rem; }
+
+/* ── Notecards ── */
+.notecard {
+  border-radius:4px;
+  padding:1rem 1.1rem 1rem;
+  box-shadow: 3px 5px 18px rgba(45,80,22,.1), 0 1px 3px rgba(0,0,0,.06);
+  border:1px solid rgba(196,135,10,.14);
+  position:relative; cursor:default;
+  background-image:repeating-linear-gradient(transparent,transparent 26px,rgba(107,77,42,.055) 26px,rgba(107,77,42,.055) 27px);
+  padding-top:1.1rem;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.notecard::before {
+  content:''; position:absolute; top:-5px; left:50%; transform:translateX(-50%);
+  width:10px; height:10px; border-radius:50%;
+  background:rgba(107,77,42,.35);
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
+}
+.notecard:hover {
+  box-shadow:5px 10px 32px rgba(45,80,22,.15), 0 2px 8px rgba(0,0,0,.09);
+  transform:translateY(-4px) !important;
+}
+.nc-cream  { background-color:#F6F1E9; }
+.nc-yellow { background-color:#F8F4E4; }
+.nc-blue   { background-color:#EDF3F7; }
+.nc-green  { background-color:#EDF4EE; }
+
+.nc-prompt { font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:rgba(107,77,42,.35); margin-bottom:.65rem; line-height:1.35; }
+.nc-content { font-family:'Playfair Display',serif; font-size:.93rem; line-height:1.7; color:var(--text); margin-bottom:.8rem; }
+.nc-content::before { content:'\201C'; }
+.nc-content::after  { content:'\201D'; }
+.nc-footer { display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
+.nc-name { font-size:.7rem; font-style:italic; color:rgba(107,77,42,.4); }
+.nc-share { font-size:.75rem; color:rgba(107,77,42,.2); padding:.15rem; transition:all .15s; opacity:0; }
+.notecard:hover .nc-share { opacity:1; }
+.nc-share:hover { color:var(--forest); }
+.nc-reactions { display:flex; gap:.3rem; flex-wrap:wrap; margin-top:.65rem; padding-top:.65rem; border-top:1px solid rgba(107,77,42,.09); }
+.rxn {
+  display:inline-flex; align-items:center; gap:.28rem;
+  font-size:.72rem; padding:.22rem .55rem; border-radius:99px;
+  border:1px solid transparent; color:rgba(107,77,42,.48);
+  transition:all .12s; background:transparent; cursor:pointer; font-family:inherit;
+}
+.rxn:hover { color:var(--forest); background:rgba(45,80,22,.07); border-color:rgba(45,80,22,.15); }
+.rxn.on { background:rgba(45,80,22,.1); border-color:rgba(45,80,22,.25); color:var(--forest); }
+.rxn .rc { font-weight:700; font-size:.67rem; }
+
+.empty-wall { text-align:center; padding:5rem 1rem; }
+.empty-wall p { font-family:'Playfair Display',serif; font-size:1.05rem; color:rgba(107,77,42,.45); margin-top:.75rem; }
+
+/* ── Learn page ── */
+.reflection-card {
+  background:var(--forest); border-radius:20px;
+  padding:3rem 2rem; text-align:center;
+  position:relative; overflow:hidden; margin-bottom:2.5rem;
+}
+.reflection-card::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 70% 10%,rgba(255,255,255,.07),transparent 55%);
+}
+.reflection-card .eyebrow { font-size:.68rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:rgba(246,241,233,.4); margin-bottom:1.1rem; }
+.reflection-card blockquote { font-family:'Playfair Display',serif; font-style:italic; font-size:clamp(1.05rem,2.5vw,1.35rem); color:rgba(246,241,233,.95); line-height:1.65; margin-bottom:.9rem; }
+.reflection-card .sub { font-size:.83rem; color:rgba(246,241,233,.58); line-height:1.65; max-width:380px; margin:0 auto; }
+.reflection-card cite { display:block; font-size:.7rem; color:rgba(246,241,233,.3); margin-top:1rem; font-style:normal; }
+
+.res-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:1rem; margin-bottom:2rem; }
+.res-card { padding:1.35rem; border-radius:14px; background:rgba(255,255,255,.72); border:1px solid rgba(196,135,10,.12); transition:box-shadow .15s; }
+.res-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.07); }
+.res-tag {
+  display:inline-flex; align-items:center; gap:.3rem;
+  font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  padding:.22rem .65rem; border-radius:99px; border:1px solid; margin-bottom:.85rem;
+}
+.tag-tip      { color:var(--amber); background:rgba(196,135,10,.08); border-color:rgba(196,135,10,.22); }
+.tag-resource { color:var(--forest); background:rgba(45,80,22,.07); border-color:rgba(45,80,22,.2); }
+.tag-fact     { color:var(--sky); background:rgba(94,143,163,.08); border-color:rgba(94,143,163,.25); }
+.res-card h3 { font-size:.95rem; color:var(--forest); margin-bottom:.45rem; line-height:1.35; }
+.res-card p  { font-size:.82rem; color:var(--text-muted); line-height:1.62; }
+.res-card a  { display:inline-block; margin-top:.75rem; font-size:.75rem; font-weight:600; color:var(--forest); }
+.res-card a:hover { text-decoration:underline; }
+
+.bethere-cta { background:rgba(196,135,10,.08); border:1.5px solid rgba(196,135,10,.22); border-radius:18px; padding:2.25rem; text-align:center; }
+.bethere-cta h2 { font-size:1.25rem; color:var(--forest); margin:.5rem 0; }
+.bethere-cta p { font-size:.84rem; color:var(--text-muted); max-width:380px; margin:0 auto .85rem auto; line-height:1.65; }
+
+/* ── Check-in ── */
+.checkin-wrap { max-width:500px; margin:0 auto; display:flex; flex-direction:column; gap:1.25rem; }
+.step-card { display:none; }
+.step-card.on { display:block; animation:fadeUp .3s ease both; }
+.step-label { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:rgba(107,77,42,.4); margin-bottom:.5rem; }
+.step-title { font-size:1.15rem; color:var(--forest); margin-bottom:1.35rem; }
+.mood-emojis { display:flex; justify-content:space-between; margin-bottom:.9rem; }
+.mood-emoji { font-size:2.1rem; opacity:.28; transition:all .18s; padding:.2rem; border-radius:.5rem; background:none; border:none; cursor:pointer; }
+.mood-emoji.on,.mood-emoji:hover { opacity:1; transform:scale(1.3); }
+.mood-slider {
+  width:100%; -webkit-appearance:none; appearance:none;
+  height:5px; border-radius:3px; background:var(--parchment);
+  outline:none; cursor:pointer; margin-bottom:.4rem;
+}
+.mood-slider::-webkit-slider-thumb { -webkit-appearance:none; width:20px; height:20px; border-radius:50%; background:var(--forest); cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.2); }
+.mood-label-text { text-align:center; font-weight:600; color:var(--forest); font-size:.9rem; min-height:1.4em; }
+.step-nav { display:flex; gap:.6rem; margin-top:1.1rem; }
+.step-nav .btn { flex:1; }
+.journal-q { font-size:.88rem; font-style:italic; color:var(--text-muted); margin-bottom:.65rem; }
+.breath-wrap { display:flex; flex-direction:column; align-items:center; padding:1.25rem 0; }
+.breath-ring {
+  width:120px; height:120px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Playfair Display',serif; font-size:2.1rem; font-weight:700;
+  border:3px solid var(--forest); background:rgba(45,80,22,.08); color:var(--forest);
+  margin-bottom:1.25rem; transition:background .5s, border-color .5s;
+}
+.breath-ring.inhale { border-color:#4e862a; background:rgba(78,134,42,.12); color:#4e862a; }
+.breath-ring.hold   { border-color:var(--amber); background:rgba(196,135,10,.1); color:var(--amber); }
+.breath-ring.exhale { border-color:var(--sky); background:rgba(94,143,163,.1); color:var(--sky); }
+.breath-phase-text { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--forest); min-height:1.6em; margin-bottom:.3rem; }
+.breath-cycles-text { font-size:.75rem; color:rgba(107,77,42,.4); }
+.done-check { text-align:center; padding:1.5rem 1rem; }
+.done-check .icon { font-size:3rem; margin-bottom:.75rem; }
+.done-check h2 { color:var(--forest); margin-bottom:.4rem; }
+.done-check p { font-size:.88rem; color:var(--text-muted); line-height:1.6; }
+.done-check .hp-earned { color:var(--amber); font-weight:700; margin-top:.4rem; }
+.mood-graph-svg { width:100%; height:85px; }
+
+/* ── Store ── */
+.store-hero { text-align:center; margin-bottom:2.5rem; }
+.store-cat-label { font-family:'Playfair Display',serif; font-size:1.1rem; color:var(--forest); margin:2rem 0 .85rem; display:flex; align-items:center; gap:.5rem; }
+.store-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:1rem; }
+.store-card { display:flex; flex-direction:column; }
+.store-tag {
+  display:inline-flex; align-items:center; gap:.3rem;
+  font-size:.67rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  padding:.22rem .65rem; border-radius:99px; border:1px solid; margin-bottom:.75rem; width:fit-content;
+}
+.store-card h3 { font-size:.9rem; color:var(--forest); margin-bottom:.4rem; line-height:1.35; }
+.store-card .desc { font-size:.8rem; color:var(--text-muted); line-height:1.6; flex:1; margin-bottom:.9rem; }
+.store-footer { display:flex; align-items:center; justify-content:space-between; margin-top:auto; }
+.store-redeemed { font-size:.76rem; color:#16a34a; font-weight:700; }
+
+/* ── Profile ── */
+.profile-top { display:flex; flex-wrap:wrap; gap:1.5rem; align-items:flex-start; margin-bottom:2rem; }
+.profile-avatar-big {
+  width:76px; height:76px; border-radius:50%; flex-shrink:0;
+  background:linear-gradient(135deg,var(--forest-l),var(--forest));
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.2rem; box-shadow:0 4px 14px rgba(45,80,22,.22);
+}
+.profile-fields { flex:1; min-width:200px; display:flex; flex-direction:column; gap:.85rem; }
+.avatar-picker { display:flex; gap:.4rem; flex-wrap:wrap; }
+.av-opt {
+  font-size:1.45rem; width:2.1rem; height:2.1rem; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:all .15s; border:2px solid transparent; background:transparent;
+}
+.av-opt:hover { background:rgba(45,80,22,.08); }
+.av-opt.on { background:rgba(45,80,22,.14); border-color:rgba(45,80,22,.45); }
+.profile-hp-block { text-align:center; }
+.profile-hp-block .big-hp { font-family:'Playfair Display',serif; font-size:2.5rem; color:var(--forest); font-weight:700; line-height:1; }
+.profile-hp-block .hp-label { font-size:.75rem; color:var(--text-muted); margin-top:.2rem; }
+.streak-tag { display:inline-flex; align-items:center; gap:.3rem; background:rgba(196,135,10,.1); color:var(--amber); font-size:.75rem; font-weight:700; padding:.28rem .7rem; border-radius:99px; margin-top:.5rem; }
+
+.ptabs { display:flex; border-bottom:2px solid var(--line); margin-bottom:1.5rem; gap:0; }
+.ptab { padding:.6rem 1.1rem; font-size:.82rem; font-weight:600; color:rgba(107,77,42,.45); border-bottom:2px solid transparent; margin-bottom:-2px; cursor:pointer; transition:all .15s; font-family:inherit; background:none; }
+.ptab:hover { color:var(--forest); }
+.ptab.on { color:var(--forest); border-bottom-color:var(--forest); }
+.ppanel { display:none; }
+.ppanel.on { display:block; animation:fadeUp .25s ease both; }
+
+.badge-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(125px,1fr)); gap:.75rem; }
+.badge-tile { border-radius:14px; border:1.5px solid; padding:.9rem .75rem; text-align:center; }
+.badge-tile.earned { background:rgba(45,80,22,.05); border-color:rgba(45,80,22,.2); }
+.badge-tile.locked { background:rgba(255,255,255,.35); border-color:rgba(107,77,42,.1); opacity:.42; }
+.badge-tile .bi { font-size:1.65rem; margin-bottom:.35rem; }
+.badge-tile .bn { font-size:.73rem; font-weight:700; color:var(--forest); line-height:1.25; }
+.badge-tile .bd { font-size:.65rem; color:var(--text-muted); margin-top:.25rem; line-height:1.3; }
+
+.card-history { display:flex; flex-direction:column; gap:.7rem; }
+.hcard { padding:.9rem 1.1rem; background:rgba(255,255,255,.65); border-radius:12px; border:1px solid var(--line); }
+.hcard .hc-prompt { font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.09em; color:rgba(107,77,42,.38); margin-bottom:.35rem; }
+.hcard .hc-content { font-family:'Playfair Display',serif; font-size:.88rem; color:var(--text); line-height:1.55; }
+
+.hp-log-list { display:flex; flex-direction:column; }
+.hp-row { display:flex; justify-content:space-between; padding:.65rem 0; border-bottom:1px solid rgba(107,77,42,.07); font-size:.82rem; }
+.hp-row .hr-desc { color:var(--text-muted); }
+.hp-row .hr-amt { font-weight:700; }
+.hr-pos { color:var(--forest); }
+.hr-neg { color:var(--red); }
+
+/* ── Auth modal ── */
+.overlay {
+  display:none; position:fixed; inset:0; background:rgba(15,10,5,.55);
+  align-items:center; justify-content:center; z-index:500; padding:1rem;
+  backdrop-filter:blur(4px);
+}
+.overlay.open { display:flex; }
+
+.auth-box {
+  background:var(--cream); border-radius:22px;
+  width:100%; max-width:440px;
+  box-shadow:0 24px 64px rgba(0,0,0,.22);
+  overflow:hidden; animation:popIn .25s ease both;
+}
+.auth-header { background:var(--forest); padding:2rem 2rem 1.5rem; text-align:center; position:relative; }
+.auth-header::after {
+  content:''; position:absolute; bottom:-1px; left:0; right:0; height:30px;
+  background:var(--cream);
+  clip-path:ellipse(60% 100% at 50% 100%);
+}
+.auth-header .ah-icon { font-size:2.4rem; margin-bottom:.5rem; }
+.auth-header h2 { font-family:'Playfair Display',serif; color:#fff; font-size:1.55rem; }
+.auth-header p { font-size:.8rem; color:rgba(246,241,233,.65); margin-top:.3rem; }
+
+.auth-tabs { display:flex; border-bottom:2px solid var(--line); margin:0 1.75rem; }
+.auth-tab { flex:1; padding:.75rem; font-size:.83rem; font-weight:600; color:rgba(107,77,42,.45); border-bottom:2px solid transparent; margin-bottom:-2px; cursor:pointer; transition:all .15s; font-family:inherit; background:none; text-align:center; }
+.auth-tab.on { color:var(--forest); border-bottom-color:var(--forest); }
+
+.auth-body { padding:1.5rem 1.75rem 1.75rem; }
+.auth-form { display:none; flex-direction:column; gap:.9rem; }
+.auth-form.on { display:flex; }
+.auth-error { font-size:.78rem; color:var(--red); background:rgba(185,28,28,.07); border:1px solid rgba(185,28,28,.18); padding:.55rem .85rem; border-radius:8px; }
+.auth-footer { text-align:center; font-size:.75rem; color:rgba(107,77,42,.45); margin-top:1rem; line-height:1.55; }
+
+/* ── Confirm / Crisis modals ── */
+.modal-box {
+  background:var(--cream); border-radius:20px; width:100%; max-width:380px;
+  box-shadow:0 20px 60px rgba(0,0,0,.22); padding:2rem 1.75rem;
+  animation:popIn .22s ease both;
+}
+.modal-box h3 { font-size:1.2rem; color:var(--forest); margin-bottom:.5rem; }
+.modal-box p { font-size:.85rem; color:var(--text-muted); margin-bottom:1.4rem; line-height:1.6; }
+.modal-actions { display:flex; gap:.65rem; }
+.modal-actions .btn { flex:1; }
+
+.crisis-box {
+  background:var(--cream); border-radius:20px; width:100%; max-width:400px;
+  box-shadow:0 20px 60px rgba(0,0,0,.22); padding:2.5rem 2rem; text-align:center;
+  animation:popIn .22s ease both;
+}
+.crisis-box .ci { font-size:3rem; margin-bottom:.75rem; }
+.crisis-box h2 { color:var(--forest); margin-bottom:.65rem; }
+.crisis-box p { font-size:.86rem; color:var(--text-muted); line-height:1.65; margin-bottom:1.4rem; }
+.crisis-links { display:flex; flex-direction:column; gap:.55rem; }
+
+/* ── Footer ── */
+footer { background:var(--forest); color:rgba(246,241,233,.75); padding:2.75rem 1.5rem; margin-top:4rem; }
+.footer-inner { max-width:1240px; margin:0 auto; }
+.treeline { display:block; width:100%; margin-bottom:1.75rem; fill:rgba(246,241,233,.2); }
+.footer-cols { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:2rem; }
+.footer-cols h4 { font-family:'Playfair Display',serif; color:rgba(246,241,233,.9); margin-bottom:.6rem; font-size:.95rem; }
+.footer-cols a,.footer-cols p { font-size:.78rem; line-height:1.75; display:block; color:rgba(246,241,233,.5); }
+.footer-cols a:hover { color:rgba(246,241,233,.9); }
+.donate-pill { display:inline-block; background:var(--amber); color:#fff; font-size:.78rem; font-weight:700; padding:.45rem 1.1rem; border-radius:99px; margin-top:.4rem; }
+.donate-pill:hover { background:#d49410; }
+.footer-copy { font-size:.68rem; color:rgba(246,241,233,.28); margin-top:1.75rem; }
+
+/* ── Animations ── */
+@keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@keyframes popIn  { from { opacity:0; transform:scale(.94); } to { opacity:1; transform:scale(1); } }
+.fade-up { animation:fadeUp .4s ease both; }
+
+/* ── Level badge ── */
+.level-badge {
+  display:inline-flex; align-items:center; gap:.55rem;
+  padding:.55rem 1rem; border-radius:12px; border:1.5px solid;
+  font-weight:700; font-size:.85rem; transition:all .2s;
+}
+.level-badge .lb-icon { font-size:1.3rem; }
+.level-badge .lb-name { line-height:1.1; }
+.level-badge .lb-num  { font-size:.65rem; opacity:.65; font-weight:500; }
+.level-progress-wrap { margin-top:.6rem; }
+.level-progress-label { display:flex; justify-content:space-between; font-size:.7rem; color:var(--text-muted); margin-bottom:.3rem; }
+.level-progress-track { height:7px; background:rgba(107,77,42,.12); border-radius:99px; overflow:hidden; }
+.level-progress-fill  { height:100%; border-radius:99px; transition:width .6s ease; }
+.level-maxed { font-size:.75rem; color:var(--forest); font-weight:600; text-align:center; padding:.4rem 0; }
+
+/* ── Daily challenge ── */
+.challenge-card {
+  border-radius:16px; border:1.5px solid rgba(196,135,10,.3);
+  background:linear-gradient(135deg,rgba(196,135,10,.07),rgba(245,240,232,.5));
+  padding:1.1rem 1.25rem; display:flex; align-items:flex-start; gap:1rem;
+  margin-bottom:1.5rem; position:relative; overflow:hidden;
+}
+.challenge-card::before {
+  content:'DAILY'; position:absolute; top:.55rem; right:.75rem;
+  font-size:.58rem; font-weight:800; letter-spacing:.12em; color:rgba(196,135,10,.45);
+}
+.challenge-card.done { border-color:rgba(45,80,22,.3); background:linear-gradient(135deg,rgba(45,80,22,.06),rgba(245,240,232,.5)); }
+.challenge-card.done::before { content:'DONE ✓'; color:rgba(45,80,22,.5); }
+.ch-icon { font-size:1.8rem; flex-shrink:0; margin-top:.1rem; }
+.ch-body h4 { font-size:.88rem; font-weight:700; color:var(--forest); margin-bottom:.2rem; }
+.ch-body p  { font-size:.78rem; color:var(--text-muted); line-height:1.45; }
+.ch-footer  { display:flex; align-items:center; gap:.5rem; margin-top:.5rem; flex-wrap:wrap; }
+.ch-reward  { font-size:.72rem; font-weight:700; color:var(--amber); background:rgba(196,135,10,.1); padding:.18rem .55rem; border-radius:99px; }
+.ch-progress-text { font-size:.7rem; color:var(--text-muted); }
+
+/* ── Song of the day ── */
+.song-banner {
+  background:var(--forest); border-radius:16px; padding:1.25rem 1.5rem;
+  display:flex; align-items:center; gap:1.25rem; margin-bottom:2rem;
+  position:relative; overflow:hidden; cursor:pointer;
+  transition:opacity .15s;
+}
+.song-banner:hover { opacity:.95; }
+.song-banner::after {
+  content:''; position:absolute; right:-20px; top:-20px;
+  width:120px; height:120px; border-radius:50%;
+  background:rgba(255,255,255,.04);
+}
+.sb-vinyl { font-size:2.2rem; flex-shrink:0; animation:spin 8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.sb-text { flex:1; min-width:0; }
+.sb-label { font-size:.65rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(246,241,233,.4); margin-bottom:.3rem; }
+.sb-lyric { font-family:'Playfair Display',serif; font-style:italic; font-size:.95rem; color:rgba(246,241,233,.92); line-height:1.45; }
+.sb-song  { font-size:.7rem; color:rgba(246,241,233,.38); margin-top:.3rem; }
+.sb-note  { font-size:.75rem; color:rgba(246,241,233,.55); margin-top:.4rem; line-height:1.4; display:none; }
+.song-banner.expanded .sb-note { display:block; }
+.sb-arrow { font-size:.85rem; color:rgba(246,241,233,.35); transition:transform .2s; flex-shrink:0; }
+.song-banner.expanded .sb-arrow { transform:rotate(180deg); }
+
+/* ── Community stats ── */
+.comm-stats { display:flex; gap:.75rem; flex-wrap:wrap; margin-bottom:1.75rem; }
+.stat-tile {
+  flex:1; min-width:110px; background:rgba(255,255,255,.65);
+  border:1px solid rgba(196,135,10,.12); border-radius:14px;
+  padding:.85rem 1rem; text-align:center;
+}
+.stat-tile .sv { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; color:var(--forest); }
+.stat-tile .sl { font-size:.68rem; color:var(--text-muted); margin-top:.15rem; }
+
+/* ── Hot card marker ── */
+.hot-badge {
+  display:inline-flex; align-items:center; gap:.25rem;
+  font-size:.62rem; font-weight:700; color:#ea580c;
+  background:rgba(234,88,12,.08); border:1px solid rgba(234,88,12,.2);
+  padding:.15rem .45rem; border-radius:99px; margin-bottom:.4rem;
+}
+
+/* ── Floating BB animation ── */
+.bb-float {
+  position:fixed; pointer-events:none; font-size:.88rem; font-weight:800;
+  color:var(--forest); z-index:999; opacity:0;
+  transition:opacity .15s;
+  text-shadow:0 1px 4px rgba(255,255,255,.8);
+}
+@keyframes bbRise {
+  0%  { opacity:0; transform:translateY(0) scale(.8); }
+  20% { opacity:1; transform:translateY(-10px) scale(1); }
+  80% { opacity:1; transform:translateY(-40px) scale(1); }
+  100%{ opacity:0; transform:translateY(-60px) scale(.9); }
+}
+.bb-float.go { animation:bbRise 1.4s ease forwards; }
+
+/* ── Streak calendar ── */
+.streak-cal { display:flex; gap:.3rem; margin-top:.6rem; flex-wrap:wrap; }
+.sc-dot {
+  width:22px; height:22px; border-radius:50%; border:1.5px solid rgba(107,77,42,.18);
+  display:flex; align-items:center; justify-content:center;
+  font-size:.55rem; color:rgba(107,77,42,.35); background:transparent;
+}
+.sc-dot.filled { background:var(--forest); border-color:var(--forest); color:#fff; font-size:.65rem; }
+.sc-dot.today-dot { border-color:var(--amber); }
+
+/* ── Level-up modal ── */
+.levelup-box {
+  background:var(--cream); border-radius:24px; width:100%; max-width:400px;
+  box-shadow:0 24px 80px rgba(0,0,0,.28); padding:2.5rem 2rem; text-align:center;
+  animation:popIn .3s cubic-bezier(.34,1.56,.64,1) both;
+  position:relative; overflow:hidden;
+}
+.levelup-box::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 0%,rgba(45,80,22,.08),transparent 60%);
+}
+.levelup-box .lu-icon { font-size:4rem; margin-bottom:.5rem; display:block; }
+.levelup-box h2 { font-size:1.5rem; color:var(--forest); margin-bottom:.4rem; }
+.levelup-box .lu-level { font-size:1.1rem; font-weight:700; margin-bottom:.6rem; }
+.levelup-box p { font-size:.85rem; color:var(--text-muted); line-height:1.6; margin-bottom:1.5rem; }
+@keyframes confettiFall {
+  0% { transform:translateY(-10px) rotate(0deg); opacity:1; }
+  100% { transform:translateY(80px) rotate(720deg); opacity:0; }
+}
+.confetti-piece {
+  position:absolute; width:8px; height:8px; border-radius:2px;
+  animation:confettiFall 1.2s ease forwards;
+}
+
+/* ── Profile stats grid ── */
+.profile-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(100px,1fr)); gap:.65rem; margin-bottom:1.5rem; }
+.ps-tile { background:rgba(255,255,255,.65); border:1px solid var(--line); border-radius:12px; padding:.85rem .75rem; text-align:center; }
+.ps-tile .pv { font-family:'Playfair Display',serif; font-size:1.35rem; font-weight:700; color:var(--forest); }
+.ps-tile .pl { font-size:.67rem; color:var(--text-muted); margin-top:.15rem; line-height:1.3; }
+
+/* ── Dog companion panel ── */
+.dog-panel {
+  background: linear-gradient(135deg, rgba(255,255,255,.85), rgba(237,232,220,.7));
+  border: 1.5px solid rgba(196,135,10,.2);
+  border-radius: 16px; padding: 1.25rem; margin-bottom: 1.5rem;
+}
+.dog-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:.85rem; }
+.dog-title  { font-family:'Playfair Display',serif; font-size:1rem; color:var(--forest); font-weight:700; }
+.dog-mood-pill { font-size:.68rem; font-weight:700; padding:.2rem .6rem; border-radius:99px; }
+.dog-stage { text-align:center; padding:.25rem 0 .6rem; position:relative; }
+.dog-main  { font-size:3.8rem; display:block; line-height:1.1; }
+.dog-acc   { font-size:1.2rem; position:absolute; top:-6px; left:50%; transform:translateX(-50%); display:flex; gap:2px; pointer-events:none; }
+@keyframes dogBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+@keyframes dogWag    { 0%,100%{transform:rotate(-4deg)} 50%{transform:rotate(4deg)} }
+@keyframes dogBreathe{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+.anim-bounce  { animation:dogBounce .75s ease-in-out infinite; }
+.anim-wag     { animation:dogWag   1.1s ease-in-out infinite; }
+.anim-breathe { animation:dogBreathe 2.5s ease-in-out infinite; }
+.dog-happiness-row { display:flex; align-items:center; gap:.55rem; margin-bottom:.5rem; }
+.dog-hp-track { flex:1; height:7px; background:rgba(107,77,42,.1); border-radius:99px; overflow:hidden; }
+.dog-hp-fill  { height:100%; border-radius:99px; transition:width .6s ease, background .5s; }
+.dog-hp-pct   { font-size:.72rem; font-weight:700; min-width:28px; text-align:right; }
+.dog-message  { font-size:.78rem; color:var(--text-muted); font-style:italic; text-align:center; margin-bottom:.8rem; min-height:1.1em; line-height:1.45; }
+.dog-actions  { display:grid; grid-template-columns:1fr 1fr; gap:.4rem; }
+.dog-act {
+  display:flex; flex-direction:column; align-items:center; gap:.18rem;
+  padding:.5rem .3rem; border-radius:10px;
+  border:1.5px solid var(--line); background:rgba(255,255,255,.75);
+  font-size:.68rem; font-weight:600; color:var(--text-muted);
+  cursor:pointer; transition:all .15s; font-family:inherit; line-height:1.2;
+}
+.dog-act .di { font-size:1.25rem; }
+.dog-act:hover:not(:disabled) { border-color:rgba(45,80,22,.3); background:rgba(45,80,22,.05); color:var(--forest); transform:translateY(-1px); }
+.dog-act:disabled { opacity:.42; cursor:not-allowed; }
+.dog-act.done { background:rgba(45,80,22,.07); border-color:rgba(45,80,22,.22); color:var(--forest); }
+.dog-rename { font-size:.68rem; color:rgba(107,77,42,.35); text-align:center; margin-top:.6rem; cursor:pointer; transition:color .15s; }
+.dog-rename:hover { color:var(--forest); }
+
+/* ── Reaction pop ── */
+@keyframes rxnPop { 0%{transform:scale(1)} 35%{transform:scale(1.55)} 65%{transform:scale(.9)} 100%{transform:scale(1)} }
+.rxn.pop { animation:rxnPop .3s cubic-bezier(.34,1.56,.64,1) both; }
+
+/* ── Sort buttons ── */
+.sort-row { display:flex; gap:.35rem; }
+.sort-btn { font-size:.72rem; font-weight:600; padding:.28rem .65rem; border-radius:8px; border:1.5px solid var(--line); color:var(--text-muted); background:transparent; cursor:pointer; font-family:inherit; transition:all .15s; }
+.sort-btn.on { background:var(--forest); color:#fff; border-color:var(--forest); }
+
+/* ── Nav notification dot ── */
+.nav-tab { position:relative; }
+.tab-dot { width:7px; height:7px; background:#ef4444; border-radius:50%; position:absolute; top:3px; right:2px; display:none; border:1.5px solid rgba(246,241,233,.97); }
+.nav-tab.has-notif .tab-dot { display:block; }
+
+/* ── Reset countdown ── */
+.reset-tag { font-size:.68rem; color:rgba(107,77,42,.38); margin-top:.6rem; text-align:right; }
+
+/* ── Streak milestone banner ── */
+.streak-banner {
+  background:linear-gradient(135deg,var(--forest),var(--forest-l));
+  border-radius:14px; padding:1rem 1.25rem;
+  display:flex; align-items:center; gap:.9rem; margin-bottom:1.25rem;
+  animation:fadeUp .4s ease both;
+}
+.sb2-icon { font-size:1.75rem; flex-shrink:0; }
+.sb2-text h4 { font-size:.88rem; font-weight:700; color:#fff; margin-bottom:.12rem; }
+.sb2-text p  { font-size:.75rem; color:rgba(255,255,255,.7); }
+.sb2-bb { font-size:.78rem; font-weight:700; color:rgba(255,255,255,.9); background:rgba(255,255,255,.15); padding:.2rem .6rem; border-radius:99px; margin-left:auto; flex-shrink:0; }
+
+/* ══════════════ DOG PAGE ══════════════ */
+.dog-page-wrap { max-width:820px; margin:0 auto; display:flex; flex-direction:column; gap:1.25rem; }
+
+/* Hero card */
+.dog-hero-card {
+  text-align:center; padding:2rem 1.75rem;
+  background:linear-gradient(160deg,rgba(45,80,22,.06),rgba(196,135,10,.04),rgba(107,148,168,.05));
+  position:relative; overflow:hidden;
+}
+.dog-hero-card::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 0%,rgba(45,80,22,.06),transparent 60%);
+}
+.dp-level-row { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.25rem; flex-wrap:wrap; }
+.dp-level-badge {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:rgba(45,80,22,.1); border:1.5px solid rgba(45,80,22,.22);
+  border-radius:12px; padding:.4rem .9rem;
+  font-size:.82rem; font-weight:700; color:var(--forest);
+}
+.dp-xp-wrap { flex:1; min-width:140px; }
+.dp-xp-labels { display:flex; justify-content:space-between; font-size:.65rem; color:var(--text-muted); margin-bottom:.3rem; }
+.dp-xp-track  { height:6px; background:rgba(107,77,42,.1); border-radius:99px; overflow:hidden; }
+.dp-xp-fill   { height:100%; background:linear-gradient(90deg,var(--forest),var(--forest-l)); border-radius:99px; transition:width .7s ease; }
+.dp-bb-today  { font-size:.72rem; color:var(--amber); font-weight:700; white-space:nowrap; }
+
+.dp-dog-wrap  { position:relative; display:inline-block; margin:.5rem auto 0; }
+.dp-dog-emoji { font-size:7rem; display:block; line-height:1; filter:drop-shadow(0 6px 16px rgba(45,80,22,.15)); }
+.dp-dog-accessories { font-size:2rem; display:flex; justify-content:center; gap:.2rem; min-height:2.2rem; margin-bottom:.25rem; }
+.dp-dog-name  { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--forest); font-weight:700; margin-bottom:.2rem; }
+.dp-dog-mood  { font-size:.85rem; font-style:italic; color:var(--text-muted); margin-bottom:1.5rem; min-height:1.3em; }
+
+/* Stat bars */
+.dp-stats { display:grid; grid-template-columns:1fr 1fr; gap:.85rem 1.5rem; text-align:left; margin-bottom:0; }
+@media(min-width:540px){ .dp-stats { grid-template-columns:repeat(4,1fr); } }
+.dp-stat { display:flex; flex-direction:column; gap:.3rem; }
+.dp-stat-top  { display:flex; justify-content:space-between; align-items:baseline; }
+.dp-stat-name { font-size:.72rem; font-weight:600; color:var(--text-muted); }
+.dp-stat-val  { font-size:.7rem; font-weight:700; }
+.dp-stat-bar  { height:7px; background:rgba(107,77,42,.1); border-radius:99px; overflow:hidden; }
+.dp-stat-fill { height:100%; border-radius:99px; transition:width .5s ease, background .4s; }
+
+/* Care actions */
+.dp-actions-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:.65rem; }
+@media(max-width:560px){ .dp-actions-grid { grid-template-columns:repeat(2,1fr); } }
+.dp-act {
+  display:flex; flex-direction:column; align-items:center; gap:.28rem;
+  padding:.9rem .4rem; border-radius:14px;
+  border:1.5px solid var(--line); background:rgba(255,255,255,.75);
+  cursor:pointer; font-family:inherit; transition:all .18s;
+}
+.dp-act:hover:not(:disabled) { border-color:rgba(45,80,22,.35); background:rgba(45,80,22,.05); transform:translateY(-2px); box-shadow:0 4px 14px rgba(45,80,22,.1); }
+.dp-act:active:not(:disabled) { transform:translateY(0); box-shadow:none; }
+.dp-act:disabled { opacity:.42; cursor:not-allowed; }
+.dp-act.done { background:rgba(45,80,22,.07); border-color:rgba(45,80,22,.22); }
+.dp-act-icon { font-size:1.75rem; line-height:1; }
+.dp-act-name { font-size:.75rem; font-weight:700; color:var(--forest); }
+.dp-act-gain { font-size:.65rem; color:var(--amber); font-weight:600; }
+.dp-act-stat { font-size:.62rem; color:var(--text-muted); min-height:1.2em; }
+
+/* Minigames */
+.minigame-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; }
+@media(max-width:560px){ .minigame-grid { grid-template-columns:1fr; } }
+.mg-card { background:rgba(255,255,255,.5); border:1px solid var(--line); border-radius:14px; padding:1.1rem; }
+.mg-title { font-size:.85rem; font-weight:700; color:var(--forest); margin-bottom:.65rem; display:flex; align-items:center; gap:.4rem; }
+.mg-meta  { font-size:.72rem; color:var(--text-muted); margin-bottom:.65rem; }
+
+/* Fetch arena */
+.fetch-arena {
+  background:linear-gradient(to bottom,#87CEEB 0%,#87CEEB 55%,#5a9e35 55%,#2D5016 100%);
+  border-radius:12px; height:120px; position:relative; overflow:hidden;
+  border:1.5px solid rgba(45,80,22,.2); cursor:crosshair; user-select:none;
+}
+.fetch-ball {
+  position:absolute; font-size:1.8rem; cursor:pointer; line-height:1;
+  transition:left .35s ease, top .35s ease;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.2));
+  display:none;
+}
+@keyframes ballPop { 0%{transform:scale(1)} 40%{transform:scale(1.7)} 100%{transform:scale(0);opacity:0} }
+.fetch-ball.pop { animation:ballPop .35s ease forwards; }
+.fetch-timer-bar { position:absolute; bottom:0; left:0; height:4px; background:var(--forest); transition:width linear; border-radius:0 2px 0 0; }
+.fetch-prompt { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+.fetch-score-row { display:flex; gap:1rem; font-size:.72rem; color:var(--text-muted); margin-top:.5rem; }
+.fetch-score-row strong { color:var(--forest); }
+
+/* Training rhythm game */
+.train-bar-wrap { position:relative; height:36px; margin:.75rem 0; }
+.train-bar-track {
+  position:absolute; inset:8px 0; background:rgba(107,77,42,.1);
+  border-radius:99px; overflow:hidden;
+}
+.train-hit-zone {
+  position:absolute; top:0; bottom:0; left:58%; width:22%;
+  background:rgba(45,80,22,.25); border-radius:99px;
+}
+.train-bar-fill {
+  position:absolute; top:0; left:0; bottom:0;
+  background:linear-gradient(90deg,var(--sky),var(--amber));
+  border-radius:99px; width:0; transition:width linear;
+}
+.train-marker {
+  position:absolute; top:-4px; bottom:-4px; width:8px;
+  background:var(--forest); border-radius:4px;
+  transition:left .016s linear; left:0%;
+}
+.train-hint { font-size:.72rem; color:var(--text-muted); text-align:center; }
+
+/* Tricks grid */
+.tricks-wrap { display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:.55rem; }
+.trick-tile { border-radius:12px; border:1.5px solid; padding:.7rem .5rem; text-align:center; transition:transform .15s; }
+.trick-tile.unlocked { background:rgba(45,80,22,.06); border-color:rgba(45,80,22,.2); }
+.trick-tile.unlocked:hover { transform:scale(1.04); }
+.trick-tile.locked { background:rgba(255,255,255,.3); border-color:rgba(107,77,42,.1); opacity:.4; }
+.trick-icon { font-size:1.4rem; margin-bottom:.2rem; }
+.trick-name { font-size:.7rem; font-weight:700; color:var(--forest); }
+.trick-xp   { font-size:.58rem; color:var(--text-muted); margin-top:.15rem; }
+
+/* Accessories equip grid */
+.acc-equip-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:.6rem; }
+.acc-tile { border:1.5px solid var(--line); border-radius:12px; padding:.75rem .5rem; text-align:center; cursor:pointer; transition:all .15s; background:rgba(255,255,255,.65); }
+.acc-tile.equipped { border-color:var(--forest); background:rgba(45,80,22,.07); }
+.acc-tile.owned:hover { border-color:rgba(45,80,22,.3); transform:translateY(-1px); }
+.acc-tile.locked { opacity:.38; cursor:default; }
+.acc-tile-icon { font-size:1.5rem; margin-bottom:.3rem; }
+.acc-tile-name { font-size:.68rem; font-weight:700; color:var(--forest); line-height:1.25; }
+.acc-tile-status { font-size:.6rem; color:var(--text-muted); margin-top:.12rem; }
+
+/* Dog journal */
+.dog-journal-list { display:flex; flex-direction:column; gap:0; max-height:220px; overflow-y:auto; }
+.dj-row { display:flex; gap:.6rem; padding:.5rem 0; border-bottom:1px solid rgba(107,77,42,.07); }
+.dj-time { font-size:.65rem; color:rgba(107,77,42,.35); flex-shrink:0; width:44px; padding-top:.05rem; }
+.dj-msg  { font-size:.78rem; color:var(--text-muted); line-height:1.45; }
+
+/* Dog wellbeing tips */
+.dog-tip { background:rgba(107,148,168,.07); border:1px solid rgba(107,148,168,.2); border-radius:12px; padding:.9rem 1.1rem; font-size:.8rem; color:var(--text-muted); line-height:1.6; }
+.dog-tip strong { color:var(--sky); }
+
+/* Section title inside dog page */
+.dp-section { font-family:'Playfair Display',serif; font-size:1rem; color:var(--forest); margin-bottom:.75rem; display:flex; align-items:center; gap:.4rem; }
+
+/* ── Responsive ── */
+@media(max-width:640px) {
+  .nav-tabs .nav-tab .tab-label { display:none; }
+  .nav-tabs .nav-tab { padding:.4rem .6rem; }
+  .nav-username { display:none; }
+  .dog-actions { grid-template-columns:1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- Crisis banner -->
+<div id="crisis-banner">
+  <div class="cb-links">
+    <span class="cb-label">Need support?</span>
+    You are not alone. &nbsp;
+    <a href="tel:988">Call/text 988</a>&nbsp;·&nbsp;
+    <a href="sms:741741?body=HOME">Text HOME to 741741</a>
+  </div>
+  <button id="crisis-dismiss" onclick="this.closest('#crisis-banner').style.display='none'" aria-label="Dismiss">✕</button>
+</div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <span class="nav-brand-icon" aria-hidden>🌲</span>
+      <div class="nav-brand-text">
+        <strong>The Busyhead</strong>
+        <small>Community Wall</small>
+      </div>
+    </div>
+    <div class="nav-tabs" role="tablist">
+      <button class="nav-tab active" onclick="showPage('wall')"    role="tab" id="ntab-wall"   ><span class="tab-icon">🌿</span><span class="tab-label"> The Wall</span><span class="tab-dot"></span></button>
+      <button class="nav-tab"        onclick="showPage('learn')"   role="tab" id="ntab-learn"  ><span class="tab-icon">📖</span><span class="tab-label"> Learn</span></button>
+      <button class="nav-tab"        onclick="showPage('checkin')" role="tab" id="ntab-checkin"><span class="tab-icon">🌬️</span><span class="tab-label"> Check-in</span><span class="tab-dot"></span></button>
+      <button class="nav-tab"        onclick="showPage('store')"   role="tab" id="ntab-store"  ><span class="tab-icon">🏕️</span><span class="tab-label"> Store</span></button>
+      <button class="nav-tab"        onclick="showPage('profile')" role="tab" id="ntab-profile"><span class="tab-icon">🏔️</span><span class="tab-label"> Profile</span></button>
+      <button class="nav-tab"        onclick="showPage('dog')"     role="tab" id="ntab-dog"    ><span class="tab-icon">🐾</span><span class="tab-label"> My Dog</span><span class="tab-dot"></span></button>
+    </div>
+    <div class="nav-right" id="nav-right">
+      <button class="btn btn-primary btn-sm" onclick="openAuth('signup')">Join the wall</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ WALL PAGE ═══════════════════════════════════════════════════════ -->
+<section class="page active" id="page-wall">
+  <div class="page-hero fade-up">
+    <p class="eyebrow">The Busyhead Project</p>
+    <h1>The Community Wall</h1>
+    <p>Over 11,000 handwritten cards. One shared truth: you are not alone.<br>Add your voice. Read theirs.</p>
+  </div>
+
+  <!-- Song of the Day -->
+  <div class="song-banner" id="song-banner" onclick="this.classList.toggle('expanded')">
+    <span class="sb-vinyl" aria-hidden>🎵</span>
+    <div class="sb-text">
+      <div class="sb-label">Noah's words today</div>
+      <div class="sb-lyric" id="sb-lyric"></div>
+      <div class="sb-song" id="sb-song"></div>
+      <div class="sb-note" id="sb-note"></div>
+    </div>
+    <span class="sb-arrow">▾</span>
+  </div>
+
+  <!-- Community Stats -->
+  <div class="comm-stats" id="comm-stats"></div>
+
+  <!-- Daily Challenge -->
+  <div id="daily-challenge-wrap"></div>
+
+  <!-- Streak milestone banner (shown on login) -->
+  <div id="streak-banner-wrap"></div>
+
+  <!-- Today's progress strip -->
+  <div id="today-progress" style="display:none;flex-wrap:wrap;align-items:center;gap:.65rem 1rem;background:rgba(255,255,255,.6);border:1px solid var(--line);border-radius:12px;padding:.65rem 1rem;margin-bottom:1.25rem;font-size:.75rem"></div>
+
+  <div class="wall-layout">
+    <!-- Left: Submit panel -->
+    <aside class="submit-panel fade-up" id="submit-panel">
+      <div class="card card-lg">
+        <div class="submit-panel-header">
+          <h2>Add your card</h2>
+          <p>Choose a prompt and write your response — your words might be exactly what someone needs tonight.</p>
+        </div>
+        <div id="not-signed-in-wall" style="display:none;text-align:center;padding:1rem 0">
+          <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:1rem">Sign in to add your voice to the wall.</p>
+          <button class="btn btn-primary" onclick="openAuth('signup')">Join the wall →</button>
+        </div>
+        <div id="prompt-list" class="prompt-list"></div>
+        <div class="write-area" id="write-area">
+          <div class="field">
+            <label for="card-content">Your response</label>
+            <textarea class="input" id="card-content" rows="4" maxlength="500" placeholder="Write honestly. This space is safe." oninput="onContentInput(this)"></textarea>
+            <div class="char-bar"><span id="char-count">0 / 500</span></div>
+          </div>
+          <div class="field" style="margin-top:.65rem">
+            <label for="card-display-name">Your name <span style="font-weight:400;opacity:.6">(optional — leave blank to stay anonymous)</span></label>
+            <input class="input" id="card-display-name" type="text" maxlength="30" placeholder="First name or anonymous">
+          </div>
+          <div class="submit-row">
+            <span class="hint">All cards are reviewed for safety before appearing on the wall.</span>
+            <button class="btn btn-primary" id="pin-btn" onclick="submitCard()" disabled>Pin to wall →</button>
+          </div>
+        </div>
+        <p class="reset-tag" id="reset-tag"></p>
+      </div>
+
+      <!-- Penny the dog -->
+      <div class="dog-panel" id="penny-panel" style="display:none">
+        <div class="dog-header">
+          <span class="dog-title">🐾 <span id="dog-name-display">Penny</span></span>
+          <span class="dog-mood-pill" id="dog-mood-pill"></span>
+        </div>
+        <div class="dog-stage">
+          <span class="dog-acc" id="dog-acc-display"></span>
+          <span class="dog-main" id="dog-emoji-main">🐕</span>
+        </div>
+        <div class="dog-happiness-row">
+          <div class="dog-hp-track"><div class="dog-hp-fill" id="dog-hp-fill"></div></div>
+          <span class="dog-hp-pct" id="dog-hp-pct"></span>
+        </div>
+        <p class="dog-message" id="dog-message"></p>
+        <div class="dog-actions" id="dog-actions-grid"></div>
+        <p class="dog-rename" onclick="toggleDogRename()">✏️ Rename your dog</p>
+        <input class="input dog-name-input" id="dog-name-input" type="text" maxlength="20" placeholder="Give your dog a name..." onkeydown="if(event.key==='Enter')saveDogName()">
+      </div>
+    </aside>
+
+    <!-- Right: Wall grid -->
+    <div>
+      <div class="wall-controls">
+        <div class="filter-row" id="filter-row">
+          <button class="fpill on" onclick="filterWall(null,this)">All voices</button>
+        </div>
+        <div class="sort-row">
+          <button class="sort-btn on" onclick="sortWall('newest',this)">Newest</button>
+          <button class="sort-btn"    onclick="sortWall('loved',this)">Most Loved</button>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="shuffleWall()">⇄ Shuffle</button>
+      </div>
+      <!-- Community Pick -->
+      <div id="community-pick" style="display:none;background:linear-gradient(135deg,rgba(196,135,10,.08),rgba(245,240,232,.6));border:1.5px solid rgba(196,135,10,.25);border-radius:14px;padding:1rem 1.25rem;margin-bottom:1.1rem"></div>
+
+      <div id="wall-grid" class="wall-grid" role="feed" aria-label="Community wall cards"></div>
+      <div class="empty-wall" id="wall-empty" style="display:none">
+        <div style="font-size:2.5rem">🌿</div>
+        <p>The wall is waiting for your voice. Be the first to share.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ LEARN PAGE ══════════════════════════════════════════════════════ -->
+<section class="page" id="page-learn">
+  <div class="page-hero fade-up">
+    <p class="eyebrow">Resources &amp; Reflections</p>
+    <h1>The Other Place</h1>
+    <p>Small truths and real resources — gathered to help you and the people you love.</p>
+  </div>
+
+  <div class="reflection-card fade-up">
+    <p class="eyebrow">Today's Reflection</p>
+    <blockquote>"It's okay to be in a place of hurting. We must all strive for the place of healing, forgiveness, awareness."</blockquote>
+    <p class="sub">Take 3 slow breaths. What's one thing you can feel right now?</p>
+    <cite>— Noah Kahan / The Busyhead Project</cite>
+  </div>
+
+  <h2 class="store-cat-label">💡 Small things that help</h2>
+  <div class="res-grid">
+    <div class="res-card"><span class="res-tag tag-tip">💡 Tip</span><h3>You are not a burden</h3><p>The people who love you would rather carry some of your weight than watch you carry all of it alone. You are allowed to lean.</p></div>
+    <div class="res-card"><span class="res-tag tag-tip">💡 Tip</span><h3>The 5-4-3-2-1 grounding technique</h3><p>When anxiety feels overwhelming: name 5 things you can see, 4 you can touch, 3 you can hear, 2 you can smell, 1 you can taste.</p></div>
+    <div class="res-card"><span class="res-tag tag-fact">💙 Did you know?</span><h3>1 in 5 adults experiences a mental illness each year</h3><p>Mental health conditions are among the most common health conditions in the world. You are not alone. You are not unusual. You are human.</p></div>
+    <div class="res-card"><span class="res-tag tag-fact">💙 Did you know?</span><h3>Sleep and mental health are deeply connected</h3><p>Even small improvements — a consistent bedtime, no screens 30 minutes before bed — can meaningfully shift how you feel.</p></div>
+  </div>
+
+  <h2 class="store-cat-label">🌿 Organizations that help</h2>
+  <div class="res-grid">
+    <div class="res-card"><span class="res-tag tag-resource">🌿 Resource</span><h3>988 Suicide &amp; Crisis Lifeline</h3><p>Call or text 988 anytime. You do not have to be suicidal to call — it's for anyone in emotional distress.</p><a href="tel:988">Call or text 988 ↗</a></div>
+    <div class="res-card"><span class="res-tag tag-resource">🌿 Resource</span><h3>Crisis Text Line</h3><p>Text HOME to 741741. A trained crisis counselor is there for you, 24/7, completely free and confidential.</p><a href="sms:741741?body=HOME">Text HOME to 741741 ↗</a></div>
+    <div class="res-card"><span class="res-tag tag-resource">🌿 Resource</span><h3>JED Foundation</h3><p>Protecting emotional health and preventing suicide for teens and young adults.</p><a href="https://jedfoundation.org" target="_blank" rel="noopener">jedfoundation.org ↗</a></div>
+    <div class="res-card"><span class="res-tag tag-resource">🌿 Resource</span><h3>Hope For The Day</h3><p>Proactive suicide prevention and mental health education — honest, approachable, stigma-free.</p><a href="https://hftd.org" target="_blank" rel="noopener">hftd.org ↗</a></div>
+    <div class="res-card"><span class="res-tag tag-resource">🌿 Resource</span><h3>Jack.org</h3><p>Training young people across Canada to revolutionize mental health conversations in their communities.</p><a href="https://jack.org" target="_blank" rel="noopener">jack.org ↗</a></div>
+    <div class="res-card"><span class="res-tag tag-resource">🌿 Resource</span><h3>busyheadproject.org</h3><p>The official resource hub — guides, partner organizations, and the Be There certification.</p><a href="https://busyheadproject.org/resources" target="_blank" rel="noopener">busyheadproject.org ↗</a></div>
+  </div>
+
+  <div class="bethere-cta">
+    <div style="font-size:1.6rem">🎓</div>
+    <h2>Be There Certificate</h2>
+    <p>A free online certification to help you support the people in your life who are struggling. Takes about an hour. Could change everything.</p>
+    <a href="https://busyheadproject.org/bethere" target="_blank" rel="noopener" class="btn btn-primary btn-lg" style="display:inline-flex">Get certified →</a>
+  </div>
+</section>
+
+<!-- ═══ CHECK-IN PAGE ══════════════════════════════════════════════════ -->
+<section class="page" id="page-checkin">
+  <div class="page-hero fade-up" style="padding-bottom:1.5rem">
+    <h1>Daily Moment</h1>
+    <p>Two minutes, just for you. No one else sees this.</p>
+  </div>
+  <div class="checkin-wrap">
+    <div class="card step-card on" id="step-mood">
+      <p class="step-label">Step 1 of 3</p>
+      <h2 class="step-title">How are you feeling today?</h2>
+      <div class="mood-emojis">
+        <button class="mood-emoji" onclick="setMood(1)" title="Really struggling">😔</button>
+        <button class="mood-emoji" onclick="setMood(2)" title="A bit rough">😕</button>
+        <button class="mood-emoji" onclick="setMood(3)" title="Okay">😐</button>
+        <button class="mood-emoji" onclick="setMood(4)" title="Pretty good">🙂</button>
+        <button class="mood-emoji" onclick="setMood(5)" title="Doing great">😊</button>
+      </div>
+      <input type="range" min="1" max="5" step="1" value="3" class="mood-slider" id="mood-slider" oninput="setMood(+this.value)">
+      <p class="mood-label-text" id="mood-label">Okay</p>
+      <div class="step-nav" style="margin-top:1.25rem">
+        <button class="btn btn-primary" onclick="goStep('journal')">Continue →</button>
+      </div>
+    </div>
+
+    <div class="card step-card" id="step-journal">
+      <p class="step-label">Step 2 of 3</p>
+      <p class="journal-q" id="journal-q">What's one thing that felt okay today?</p>
+      <textarea class="input" id="journal-text" rows="4" maxlength="280" placeholder="Optional — just for you, never shared." oninput="document.getElementById('jcount').textContent=this.value.length+'/280'"></textarea>
+      <p style="font-size:.7rem;color:rgba(107,77,42,.38);text-align:right;margin-top:.3rem"><span id="jcount">0/280</span></p>
+      <div class="step-nav">
+        <button class="btn btn-primary" onclick="goStep('breathing')">Take a breath →</button>
+        <button class="btn btn-ghost" onclick="finishCheckin(true)">Skip &amp; finish</button>
+      </div>
+    </div>
+
+    <div class="card step-card" id="step-breathing">
+      <p class="step-label">Step 3 of 3</p>
+      <h2 class="step-title" style="font-size:1rem;margin-bottom:.3rem">4 seconds in · 7 hold · 8 out</h2>
+      <p style="font-size:.78rem;color:var(--text-muted);margin-bottom:1.25rem">The 4-7-8 technique calms your nervous system.</p>
+      <div class="breath-wrap">
+        <div class="breath-ring" id="breath-ring">🌬️</div>
+        <p class="breath-phase-text" id="breath-phase">Ready when you are</p>
+        <p class="breath-cycles-text" id="breath-cycles"></p>
+        <button class="btn btn-outline" style="margin-top:1rem" id="breath-start-btn" onclick="startBreathing()">Start exercise</button>
+      </div>
+      <div class="step-nav" style="margin-top:1.25rem">
+        <button class="btn btn-primary" onclick="finishCheckin(false)">Finish check-in +25 Busyhead Bucks</button>
+      </div>
+    </div>
+
+    <div class="card step-card" id="step-done">
+      <div class="done-check">
+        <div class="icon">🌿</div>
+        <h2>Check-in complete.</h2>
+        <p>You showed up for yourself today. That matters.</p>
+        <p class="hp-earned" id="checkin-hp-label">+25 Busyhead Bucks earned</p>
+      </div>
+    </div>
+
+    <div class="card" id="mood-history-section" style="display:none">
+      <h3 style="font-size:1rem;color:var(--forest);margin-bottom:.2rem">Your mood over time</h3>
+      <p style="font-size:.7rem;color:rgba(107,77,42,.38);margin-bottom:.85rem">Private — only visible to you</p>
+      <svg class="mood-graph-svg" id="mood-graph" viewBox="0 0 600 80" preserveAspectRatio="none"></svg>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ STORE PAGE ══════════════════════════════════════════════════════ -->
+<section class="page" id="page-store">
+  <div class="store-hero page-hero fade-up" style="padding-bottom:1.5rem">
+    <p class="eyebrow">Earn · Redeem · Give back</p>
+    <h1>The Merch Tent</h1>
+    <p>Busyhead Bucks are earned by showing up, sharing, and supporting each other. They can never be purchased — only given.</p>
+    <div class="hp-badge" style="font-size:.9rem;padding:.45rem 1.1rem">🌿 <span id="store-hp">0</span> Busyhead Bucks</div>
+  </div>
+  <div id="store-content"></div>
+  <div style="text-align:center;border-top:1px solid var(--line);padding-top:2rem;margin-top:2rem">
+    <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.75rem">Want to support the mission directly?</p>
+    <a href="https://givebutter.com/thebusyheadproject" target="_blank" rel="noopener" class="btn btn-primary btn-lg">Donate to The Busyhead Project →</a>
+  </div>
+</section>
+
+<!-- ═══ PROFILE PAGE ════════════════════════════════════════════════════ -->
+<section class="page" id="page-profile">
+  <div id="profile-level-wrap" style="margin-bottom:1.25rem"></div>
+  <div class="profile-stats" id="profile-stats-grid"></div>
+  <div class="card card-lg profile-top fade-up" style="margin-bottom:2rem">
+    <div class="profile-avatar-big" id="profile-avatar-big">🏔️</div>
+    <div class="profile-fields">
+      <div class="field">
+        <label>Display name</label>
+        <input class="input" id="profile-name-input" type="text" maxlength="40" placeholder="Your name or stay anonymous">
+      </div>
+      <div>
+        <label class="field" style="margin-bottom:.4rem"><span style="font-size:.78rem;font-weight:600;color:var(--text-muted)">Avatar</span></label>
+        <div class="avatar-picker" id="avatar-picker"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.75rem">
+        <button class="btn btn-primary btn-sm" onclick="saveProfile()">Save changes</button>
+        <span id="save-ok" style="font-size:.78rem;color:var(--forest);opacity:0;transition:opacity .3s"></span>
+      </div>
+    </div>
+    <div class="profile-hp-block">
+      <div class="big-hp" id="profile-hp-big">0</div>
+      <div class="hp-label">Busyhead Bucks</div>
+      <div id="profile-streak"></div>
+    </div>
+  </div>
+
+  <div class="ptabs">
+    <button class="ptab on" onclick="switchPTab('badges',this)">Badges</button>
+    <button class="ptab" onclick="switchPTab('cards',this)">My Cards</button>
+    <button class="ptab" onclick="switchPTab('activity',this)">Buck Activity</button>
+  </div>
+  <div class="ppanel on" id="ppanel-badges"><div class="badge-grid" id="badge-grid"></div></div>
+  <div class="ppanel" id="ppanel-cards"><div class="card-history" id="card-history"></div></div>
+  <div class="ppanel" id="ppanel-activity"><div class="card"><div class="hp-log-list" id="hp-log-list"></div></div></div>
+</section>
+
+<!-- ══ DOG PAGE ══════════════════════════════════════════════════════════ -->
+<section class="page" id="page-dog">
+  <div class="page-hero fade-up" style="padding-bottom:1rem">
+    <h1 class="section-header" id="dp-title">Penny's Place</h1>
+    <p style="color:var(--text-muted);font-size:.88rem;margin-top:.2rem" id="dp-subtitle">Your companion is here for you — just like you're here for them.</p>
+  </div>
+
+  <div id="dog-page-signed-out" style="display:none;text-align:center;padding:4rem 1rem">
+    <p style="font-size:4rem;margin-bottom:1rem">🐾</p>
+    <p style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--forest);margin-bottom:.5rem">Your dog is waiting for you.</p>
+    <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1.5rem">Sign in to meet your companion.</p>
+    <button class="btn btn-primary" onclick="openAuth('signup')">Join the wall →</button>
+  </div>
+
+  <div class="dog-page-wrap" id="dog-page-content" style="display:none">
+
+    <!-- Hero: dog display + stats -->
+    <div class="card card-lg dog-hero-card fade-up">
+      <!-- Level + XP -->
+      <div class="dp-level-row" id="dp-level-row"></div>
+      <!-- Accessories -->
+      <div class="dp-dog-accessories" id="dp-acc-display"></div>
+      <!-- Big dog -->
+      <span class="dp-dog-emoji" id="dp-dog-emoji">🐕</span>
+      <p class="dp-dog-name" id="dp-dog-name">Penny</p>
+      <p class="dp-dog-mood" id="dp-dog-mood"></p>
+      <!-- Stats -->
+      <div class="dp-stats" id="dp-stats"></div>
+    </div>
+
+    <!-- Daily care -->
+    <div class="card">
+      <p class="dp-section">🤲 Daily Care <span style="font-size:.68rem;font-weight:400;color:var(--text-muted);margin-left:.3rem">— resets at midnight</span></p>
+      <div class="dp-actions-grid" id="dp-actions"></div>
+    </div>
+
+    <!-- Minigames -->
+    <div class="card">
+      <p class="dp-section">🎮 Playtime</p>
+      <div class="minigame-grid">
+
+        <!-- Fetch -->
+        <div class="mg-card">
+          <p class="mg-title">🎾 Fetch</p>
+          <div class="fetch-score-row">
+            <span>Throws: <strong id="dp-fetch-throws">0</strong>/5</span>
+            <span>Caught: <strong id="dp-fetch-caught">0</strong></span>
+            <span>BB earned: <strong id="dp-fetch-bb">0</strong></span>
+          </div>
+          <div class="fetch-arena" id="dp-fetch-arena">
+            <div class="fetch-ball" id="dp-fetch-ball" onclick="catchBall(event)">🎾</div>
+            <div class="fetch-timer-bar" id="dp-fetch-timer" style="width:100%"></div>
+            <div class="fetch-prompt" id="dp-fetch-prompt">
+              <button class="btn btn-primary btn-sm" onclick="throwBall(event)">Throw ball! 🎾</button>
+            </div>
+          </div>
+          <p style="font-size:.7rem;color:var(--text-muted);margin-top:.5rem;text-align:center" id="dp-fetch-msg">Click the ball before it disappears!</p>
+        </div>
+
+        <!-- Training rhythm game -->
+        <div class="mg-card">
+          <p class="mg-title">🎓 Training</p>
+          <p class="mg-meta">Sessions today: <strong id="dp-train-count">0</strong>/3 &nbsp;·&nbsp; Click in the <span style="color:var(--forest);font-weight:600">green zone</span>!</p>
+          <!-- Bouncing marker bar -->
+          <div class="train-bar-wrap" id="dp-train-bar-wrap">
+            <div class="train-bar-track">
+              <div class="train-hit-zone"></div>
+              <div class="train-marker" id="dp-train-marker"></div>
+            </div>
+          </div>
+          <p class="train-hint" id="dp-train-hint">Start a session to begin!</p>
+          <div style="display:flex;gap:.5rem;margin-top:.65rem">
+            <button class="btn btn-primary btn-sm" style="flex:1" id="dp-train-start" onclick="startTraining()">Start session</button>
+            <button class="btn btn-primary btn-sm" style="flex:1;display:none" id="dp-train-click" onclick="trainingClick()">NOW! 🐾</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Tricks -->
+    <div class="card">
+      <p class="dp-section">🌟 Tricks Learned</p>
+      <p style="font-size:.75rem;color:var(--text-muted);margin-bottom:.85rem">Tricks unlock as your dog gains XP through training and care.</p>
+      <div class="tricks-wrap" id="dp-tricks"></div>
+    </div>
+
+    <!-- Accessories -->
+    <div class="card">
+      <p class="dp-section">👗 Wardrobe</p>
+      <p style="font-size:.75rem;color:var(--text-muted);margin-bottom:.85rem">Click to equip or remove. Unlock accessories in the Merch Tent.</p>
+      <div class="acc-equip-grid" id="dp-acc-grid"></div>
+    </div>
+
+    <!-- Wellbeing tip -->
+    <div class="dog-tip" id="dp-tip"></div>
+
+    <!-- Journal -->
+    <div class="card">
+      <p class="dp-section">📓 Dog Journal</p>
+      <div class="dog-journal-list" id="dp-journal"></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <svg viewBox="0 0 800 55" class="treeline" aria-hidden>
+      <path d="M0 55 L20 18 L40 55 M30 55 L60 8 L90 55 M75 55 L110 3 L145 55 M130 55 L170 12 L210 55 M195 55 L240 6 L285 55 M270 55 L320 10 L370 55 M355 55 L405 4 L455 55 M440 55 L490 11 L540 55 M525 55 L575 7 L625 55 M610 55 L660 9 L710 55 M695 55 L745 3 L795 55 L800 55 L0 55Z"/>
+    </svg>
+    <div class="footer-cols">
+      <div><h4>The Busyhead Project</h4><p>A 501(c)(3) non-profit mental health foundation. Ending the stigma, one conversation at a time.</p><a href="https://busyheadproject.org" target="_blank" rel="noopener" style="margin-top:.35rem">busyheadproject.org ↗</a></div>
+      <div><h4>Crisis Resources</h4><a href="tel:988">988 Suicide &amp; Crisis Lifeline</a><a href="sms:741741?body=HOME">Text HOME to 741741</a><a href="https://crisistextline.org" target="_blank" rel="noopener">crisistextline.org ↗</a></div>
+      <div><h4>Support the Mission</h4><p>Every donation funds real conversations about mental health.</p><a href="https://givebutter.com/thebusyheadproject" target="_blank" rel="noopener" class="donate-pill">Donate ↗</a><p class="footer-copy">&copy; 2025 The Busyhead Project</p></div>
+    </div>
+  </div>
+</footer>
+
+<!-- Auth modal -->
+<div class="overlay" id="auth-overlay">
+  <div class="auth-box">
+    <div class="auth-header">
+      <div class="ah-icon">🌲</div>
+      <h2>The Busyhead Wall</h2>
+      <p>A safe, stigma-free space for honest voices.</p>
+    </div>
+    <div class="auth-tabs" style="margin-top:1.25rem">
+      <button class="auth-tab on" id="tab-signup" onclick="switchAuthTab('signup')">Create account</button>
+      <button class="auth-tab"   id="tab-signin" onclick="switchAuthTab('signin')">Sign in</button>
+    </div>
+    <div class="auth-body">
+      <!-- Sign up form -->
+      <form class="auth-form on" id="form-signup" onsubmit="doSignup(event)">
+        <div id="signup-error" class="auth-error" style="display:none"></div>
+        <div class="field"><label>Full name</label><input class="input" id="su-name" type="text" placeholder="Your name" required maxlength="60"></div>
+        <div class="field"><label>Email address</label><input class="input" id="su-email" type="email" placeholder="you@email.com" required></div>
+        <div class="field"><label>Password <span style="font-weight:400;opacity:.6">(min 6 characters)</span></label><input class="input" id="su-password" type="password" placeholder="Create a password" required minlength="6"></div>
+        <div class="field"><label>Phone number</label><input class="input" id="su-phone" type="tel" placeholder="+1 (555) 000-0000" required></div>
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top:.25rem">Create account →</button>
+        <p class="auth-footer">By joining, you agree to keep this a kind and honest space.</p>
+      </form>
+      <!-- Sign in form -->
+      <form class="auth-form" id="form-signin" onsubmit="doSignin(event)">
+        <div id="signin-error" class="auth-error" style="display:none"></div>
+        <div class="field"><label>Email address</label><input class="input" id="si-email" type="email" placeholder="you@email.com" required></div>
+        <div class="field"><label>Password</label><input class="input" id="si-password" type="password" placeholder="Your password" required></div>
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top:.25rem">Sign in →</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm modal -->
+<div class="overlay" id="confirm-overlay">
+  <div class="modal-box">
+    <h3>Confirm redemption</h3>
+    <p id="confirm-text"></p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick="confirmRedeem()">Yes, redeem</button>
+      <button class="btn btn-outline" onclick="document.getElementById('confirm-overlay').classList.remove('open')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Crisis modal -->
+<div class="overlay" id="crisis-overlay">
+  <div class="crisis-box">
+    <div class="ci">🤍</div>
+    <h2>We hear you.</h2>
+    <p>It sounds like you might be going through something really hard right now. You don't have to face it alone — there are people ready to listen.</p>
+    <div class="crisis-links">
+      <a href="tel:988" class="btn btn-primary">Call or text 988 — free, 24/7</a>
+      <a href="sms:741741?body=HOME" class="btn btn-outline">Text HOME to 741741</a>
+      <button class="btn btn-ghost" onclick="document.getElementById('crisis-overlay').classList.remove('open')">Continue to wall</button>
+    </div>
+  </div>
+</div>
+
+<!-- Level-up modal -->
+<div class="overlay" id="levelup-overlay">
+  <div class="levelup-box" id="levelup-box">
+    <span class="lu-icon" id="lu-icon">🌲</span>
+    <h2>Level Up!</h2>
+    <div class="lu-level" id="lu-level-name"></div>
+    <p id="lu-desc"></p>
+    <button class="btn btn-primary btn-full" onclick="document.getElementById('levelup-overlay').classList.remove('open')">Keep going →</button>
+  </div>
+</div>
+
+<!-- Floating BB -->
+<div class="bb-float" id="bb-float"></div>
+
+<!-- Toast -->
+<div id="toast" style="position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--forest);color:#fff;padding:.7rem 1.4rem;border-radius:99px;font-size:.83rem;font-weight:600;z-index:600;box-shadow:0 4px 20px rgba(0,0,0,.2);transition:transform .3s ease;pointer-events:none;white-space:nowrap"></div>
+
+<script>
+/* ─── Constants ─── */
+const PROMPTS = [
+  "One thing I wish people understood about my mental health is...",
+  "Something that has helped me in my darkest moments is...",
+  "A message I'd leave for someone who feels completely alone right now...",
+  "Something I'm still learning to forgive myself for...",
+  "The thing that keeps me going, even on the hardest days, is..."
+];
+const CARD_COLORS = ['nc-cream','nc-yellow','nc-blue','nc-green'];
+const MOOD_LABELS = ['Really struggling','A bit rough','Okay','Pretty good','Doing great'];
+const JOURNAL_QS  = ["What's one thing that felt heavy today?","What's one thing that was hard today?","What's one thing that felt okay today?","What's one thing you're grateful for?","What made today good?"];
+const REACTIONS   = [{type:'leaf',e:'🌿',l:'I feel this'},{type:'heart',e:'🤍',l:'Sending love'},{type:'lightbulb',e:'💡',l:'This helped me'},{type:'mountain',e:'🏔️',l:"You're not alone"}];
+const AVATARS     = [{k:'mountain',e:'🏔️'},{k:'tree',e:'🌲'},{k:'river',e:'🌊'},{k:'bird',e:'🦅'},{k:'leaf',e:'🍃'},{k:'sun',e:'☀️'},{k:'moon',e:'🌙'},{k:'cloud',e:'☁️'}];
+const BADGES = [
+  {slug:'from_the_woods',   name:'From The Woods',            icon:'🌲', desc:'Submitted your first card.'},
+  {slug:'stick_season',     name:'Stick Season Survivor',     icon:'🍂', desc:'7-day login streak.'},
+  {slug:'northern_attitude',name:'Northern Attitude',         icon:'🏔️', desc:'Reached 500 Busyhead Bucks.'},
+  {slug:'busyhead',         name:'Busyhead',                  icon:'🌿', desc:'Responded to all 5 prompts in one day.'},
+  {slug:'fully_present',    name:'Fully Present',             icon:'✨', desc:'Completed your profile.'},
+  {slug:'lantern_in_dark',  name:'Lantern in the Dark',       icon:'🕯️', desc:'Reached 1,000 Busyhead Bucks.'},
+  {slug:'daily_breath',     name:'Just Breathe',              icon:'🌬️', desc:'Completed a breathing exercise.'},
+  {slug:'week_checkin',     name:'Seven Days Present',        icon:'📅', desc:'Checked in 7 days total.'},
+  {slug:'dog_happy',        name:'Best Dog Parent',           icon:'🐕', desc:'Kept your dog at 80%+ happiness.'},
+  {slug:'dog_walk',         name:'Daily Walker',              icon:'🚶', desc:'Walked your dog 7 times.'},
+  {slug:'dog_loyal',        name:'Loyal Companion',           icon:'🦴', desc:'Cared for your dog 30 days total.'},
+  {slug:'streak_3',         name:'Three-Day Streak',          icon:'🔥', desc:'Logged in 3 days in a row.'},
+  {slug:'streak_7',         name:'Week of Showing Up',        icon:'🌟', desc:'Logged in 7 days in a row.'},
+  {slug:'streak_30',        name:"Thirty Days Alive",         icon:'🏆', desc:'Logged in 30 days in a row.'},
+];
+const STORE_ITEMS = [
+  {id:'wp1', name:'Busyhead Wallpaper — Vermont Mountains', desc:'Exclusive illustrated phone wallpaper. 4K resolution.', cost:150, cat:'digital',  catE:'🖼️', catL:'Digital Download'},
+  {id:'wp2', name:'Busyhead Wallpaper — The Wall',         desc:'Collage-style wallpaper inspired by the Community Wall.', cost:150, cat:'digital',  catE:'🖼️', catL:'Digital Download'},
+  {id:'gv1', name:'Monthly Draw — Signed Vinyl',           desc:"One entry into this month's draw for a vinyl signed by Noah Kahan.", cost:300, cat:'giveaway', catE:'🎁', catL:'Monthly Giveaway'},
+  {id:'gv2', name:'Monthly Draw — Show Tickets',           desc:'One entry for a pair of show tickets to an upcoming Noah Kahan tour date.', cost:500, cat:'giveaway', catE:'🎁', catL:'Monthly Giveaway'},
+  {id:'gv3', name:'Grand Draw — Meet & Greet',             desc:'One entry for a meet & greet experience with Noah at an upcoming show.', cost:750, cat:'giveaway', catE:'🎁', catL:'Monthly Giveaway'},
+  {id:'dc1', name:'15% Off Merch Store',                   desc:'A discount code for 15% off your next order at the official Busyhead Project merch store. Valid 30 days.', cost:200, cat:'discount', catE:'🏷️', catL:'Discount Code'},
+  {id:'wl1', name:'Permanent Card on the Digital Wall',    desc:'Your name pinned permanently at the top of the Community Wall.', cost:1000, cat:'wall',    catE:'📌', catL:'Wall Recognition'},
+  {id:'dog1',name:"Busyhead Bandana for your dog",         desc:"A tiny green Busyhead Project bandana for your companion. Shows up on their display.",   cost:50,  cat:'dog', catE:'🐾', catL:'Dog Accessory'},
+  {id:'dog2',name:'Vermont Mountain Collar',               desc:'A rugged, earthy collar fit for a Vermont adventure. Your dog will love it.',            cost:75,  cat:'dog', catE:'🐾', catL:'Dog Accessory'},
+  {id:'dog3',name:'Stick Season Scarf',                    desc:'A cozy autumn scarf for the stick season days when things feel bare.',                   cost:100, cat:'dog', catE:'🐾', catL:'Dog Accessory'},
+  {id:'dog4',name:'Mini Concert Tee',                      desc:'Because every dog deserves to rep their favorite tour. A tiny tee for a big personality.',cost:150, cat:'dog', catE:'🐾', catL:'Dog Accessory'},
+];
+const SAMPLE_CARDS = [
+  {id:'s1',promptIdx:0,content:"That it isn't about 'just being sad.' It's a heaviness that makes even the smallest tasks feel impossible. And that doesn't mean I'm not trying.",name:'Mara',reactions:{leaf:12,heart:8,lightbulb:3,mountain:5}},
+  {id:'s2',promptIdx:4,content:"Music. Specifically the moment a song puts words to something I've been feeling but couldn't name. That feeling of being understood without having to explain.",name:'a voice from the community',reactions:{leaf:7,heart:14,lightbulb:2,mountain:6}},
+  {id:'s3',promptIdx:2,content:"That it's okay if today was not the day you figured it out. You don't have to have it together right now. You just have to be here. The rest can wait.",name:'Jamie',reactions:{leaf:18,heart:22,lightbulb:0,mountain:15}},
+  {id:'s4',promptIdx:1,content:"Honestly? Walks. Just getting outside and letting my feet carry me somewhere without any plan. The rhythm of it quiets things down.",name:'a voice from the community',reactions:{leaf:5,heart:3,lightbulb:9,mountain:2}},
+  {id:'s5',promptIdx:3,content:"For the years I spent convincing myself I was fine. I lost time I could have spent getting better, because I was too proud to admit I needed help.",name:'Eli',reactions:{leaf:9,heart:11,lightbulb:4,mountain:8}},
+  {id:'s6',promptIdx:4,content:"My dog. She doesn't know what I'm carrying but she leans into me like she does. Some days that's the only thing that's gotten me out of bed.",name:'a voice from the community',reactions:{leaf:20,heart:19,lightbulb:1,mountain:11}},
+  {id:'s7',promptIdx:2,content:"That the person who reaches out is braver than you know. Sending one text, making one call — those things take more courage than most people realize.",name:'Taylor',reactions:{leaf:14,heart:16,lightbulb:6,mountain:12}},
+  {id:'s8',promptIdx:0,content:"That being high-functioning doesn't mean you're fine. I showed up to work every day. I laughed at things. Nobody knew. Invisible doesn't mean it isn't real.",name:'a voice from the community',reactions:{leaf:23,heart:17,lightbulb:8,mountain:13}},
+];
+const CRISIS_RE = /\b(kill\s*(my)?self|sui?cide|end\s*(my|it\s*all)|want\s*to\s*die|self[-\s]?harm|cut(ting)?\s*myself|don'?t\s*want\s*to\s*(live|be\s*here)|overdose)\b/i;
+
+/* ─── Level system ─── */
+const LEVELS = [
+  { min:0,    num:1, name:'Homesick',                   icon:'🌱', color:'#6B94A8', bg:'rgba(107,148,168,.12)', desc:'Just finding your way here. Every great journey starts with showing up.' },
+  { min:30,   num:2, name:'From the Woods',              icon:'🌲', color:'#4a7a23', bg:'rgba(74,122,35,.1)',    desc:'Your voice is starting to grow. The roots are there — keep going.' },
+  { min:100,  num:3, name:'Stick Season',                icon:'🍂', color:'#C4870A', bg:'rgba(196,135,10,.1)',   desc:'Learning to sit with it all. That takes more courage than people know.' },
+  { min:250,  num:4, name:'The View Between Villages',   icon:'🌄', color:'#8B6914', bg:'rgba(139,105,20,.1)',   desc:'You\'re starting to see the bigger picture. You belong to something real.' },
+  { min:500,  num:5, name:'Northern Attitude',           icon:'🏔️', color:'#2D5016', bg:'rgba(45,80,22,.1)',    desc:'Resilient and real. You\'ve shown up even when it was hard.' },
+  { min:1000, num:6, name:'Call Your Mom',               icon:'📞', color:'#4e862a', bg:'rgba(78,134,42,.1)',    desc:'Reaching out and holding on. This is what community looks like.' },
+  { min:2000, num:7, name:'Everywhere, Everything',      icon:'🌍', color:'#5e8fa3', bg:'rgba(94,143,163,.12)',  desc:'Connected to all of it. Your presence here changes the wall.' },
+  { min:5000, num:8, name:"We'll All Be Here Forever",   icon:'🕯️', color:'#6B4D2A', bg:'rgba(107,77,42,.1)',   desc:'Part of something lasting. The wall remembers every voice, including yours.' },
+];
+
+/* ─── Daily challenges (pool of 14, rotate by day of year) ─── */
+const DAILY_CHALLENGES = [
+  { id:'dc1',  icon:'✍️',  title:'Find Your Words',      desc:'Write a card on the Community Wall today.',                            type:'write',   goal:1, reward:15 },
+  { id:'dc2',  icon:'🌿',  title:'Show Up For Yourself', desc:'Complete your daily check-in.',                                        type:'checkin', goal:1, reward:20 },
+  { id:'dc3',  icon:'🌬️', title:'4-7-8',                desc:'Complete the breathing exercise in your check-in.',                    type:'breathe', goal:1, reward:25 },
+  { id:'dc4',  icon:'🤍',  title:'Be a Witness',         desc:'React to 5 cards on the Community Wall.',                             type:'react',   goal:5, reward:10 },
+  { id:'dc5',  icon:'🔄',  title:'Full Circle',          desc:'Write a card AND complete your check-in today.',                      type:'combo',   goal:1, reward:35 },
+  { id:'dc6',  icon:'📝',  title:'Two Voices',           desc:'Write responses to 2 different prompts today.',                       type:'write2',  goal:2, reward:20 },
+  { id:'dc7',  icon:'🏔️', title:'Community First',      desc:'React to 10 cards on the Wall.',                                      type:'react',   goal:10,reward:18 },
+  { id:'dc8',  icon:'💌',  title:'Leave a Light On',     desc:'Write a card for someone who feels alone tonight (Prompt 3).',       type:'prompt3', goal:1, reward:20 },
+  { id:'dc9',  icon:'🍂',  title:'Stick With It',        desc:'Keep your login streak alive — log in 3 days in a row.',             type:'streak3', goal:3, reward:30 },
+  { id:'dc10', icon:'🌅',  title:'Morning Voice',        desc:'Write your first card and check in — a full arrival.',                type:'combo',   goal:1, reward:25 },
+  { id:'dc11', icon:'👂',  title:'The Listener',         desc:'React to 8 different cards today.',                                   type:'react',   goal:8, reward:15 },
+  { id:'dc12', icon:'🌱',  title:'New Soil',             desc:'Complete your daily check-in with a journal entry.',                  type:'journal', goal:1, reward:20 },
+  { id:'dc13', icon:'🌿',  title:'Busyhead',             desc:'Respond to all 5 prompts on the wall today for a big reward.',        type:'write5',  goal:5, reward:50 },
+  { id:'dc14', icon:'🕯️', title:'Lantern Pass',         desc:'Write a card and react to 5 others — give and receive.',              type:'both',    goal:1, reward:30 },
+];
+
+/* ─── Song of the Day reflections (themes from Noah's catalogue — no lyrics) ─── */
+const DAILY_REFLECTIONS = [
+  { heading:'"Stick Season"', sub:'On what remains after things fall away', prompt:'After every hard season, something quieter begins. What is one thing you\'re ready to let fall — like leaves at the end of October?', note:'Stick season in Vermont is the raw weeks between fall color and first snow — stripped-down, honest, and unglamorous. Noah has spoken about finding something clarifying in that emptiness.' },
+  { heading:'"Homesick"', sub:'On longing and belonging', prompt:'Home isn\'t always a place. What does it feel like — and how close to it do you feel right now?', note:'Noah grew up in Vermont and his music wrestles with the complicated pull between where we come from and who we\'re becoming. You can be homesick for a feeling, a time, a version of yourself.' },
+  { heading:'"Northern Attitude"', sub:'On resilience and self-honesty', prompt:'What is one honest thing you could say about yourself today — not the polished version, the real one?', note:'Noah wrote about that particular blend of toughness and vulnerability that comes from somewhere cold and quiet. Being real about who you are is its own kind of strength.' },
+  { heading:'"Call Your Mom"', sub:'On reaching out', prompt:'Who in your life could you reach out to today — even just a message that says "I\'ve been thinking about you"?', note:'The song is about the simple, radical act of connection when things are hard. Reaching out is the thing we need most and often resist the most.' },
+  { heading:'"Everywhere, Everything"', sub:'On full presence', prompt:'What would it feel like to be fully present — not planning ahead, not looking back — just completely here?', note:'One of Noah\'s most expansive songs, it\'s about the ache of wanting to be wholly present. Presence is harder than it sounds and rarer than it should be.' },
+  { heading:'"The View Between Villages"', sub:'On being in-between', prompt:'What in-between are you sitting in right now — not finished, not yet started — and what would it look like to be at peace there?', note:'Noah often writes about liminal spaces — the drives between towns, the silences between conversations. There\'s something honest about being between things.' },
+  { heading:'"False Confidence"', sub:'On the gap between performance and truth', prompt:'Where are you performing "fine" when the truth is harder — and what would happen if you named it today?', note:'Noah has been open about the gap between how we present ourselves and what we actually feel. Naming that gap is the first step toward closing it.' },
+  { heading:'"Young Blood"', sub:'On who we used to be', prompt:'What did a younger version of you know that the current version might be forgetting?', note:'A recurring theme in Noah\'s music is this conversation with our past selves — the versions of us that hadn\'t yet learned to be guarded.' },
+  { heading:'"Paul Revere"', sub:'On what we run from', prompt:'What is one good thing in your life that you might be pulling away from — and why might distance feel safer than acceptance?', note:'Noah has written about the strange habit of fleeing from good things, self-sabotage dressed as restlessness. What are you moving away from that you could move toward?' },
+  { heading:'"Orange Juice"', sub:'On small acts of care', prompt:'What is the smallest, most specific thing someone could do for you right now that would make you feel truly seen?', note:'The song is about showing up for someone in concrete, ordinary ways — no grand gestures. What does showing up for yourself look like today?' },
+  { heading:'"Dial Drunk"', sub:'On the things left unsaid', prompt:'What is something you\'d want to say to someone but keep waiting for the right moment — and what would it take to stop waiting?', note:'Noah has written about the courage it takes to reach out at your most vulnerable. Sometimes the moment never arrives unless you make it.' },
+  { heading:'"Growing Sideways"', sub:'On non-linear healing', prompt:'What is one way you\'ve grown recently that doesn\'t look like what you thought growth was supposed to look like?', note:'Not all growth goes upward. Sometimes it spreads sideways, finding light at a different angle. That still counts. It counts a lot.' },
+  { heading:'"Moving On"', sub:'On letting go', prompt:'What is one thing you\'ve been carrying that you might actually be ready — or almost ready — to set down?', note:'Moving on is rarely as clean as the phrase suggests. Noah writes about it honestly — the messiness of release, the complicated guilt of starting to feel better.' },
+  { heading:'The Busyhead Project', sub:'A note from Noah', prompt:'What would it look like to accept today exactly as it is — without needing it to be different, better, or fixed?', note:'Noah founded The Busyhead Project because he believes in the power of honest conversation about mental health. You being here is part of that. Thank you for showing up.' },
+];
+
+/* ─── Storage helpers ─── */
+const ls = {
+  get:(k,d)=>{ try{const v=localStorage.getItem(k); return v===null?d:JSON.parse(v);}catch{return d;} },
+  set:(k,v)=>{ try{localStorage.setItem(k,JSON.stringify(v));}catch{} }
+};
+
+/* ─── App state ─── */
+let accounts       = ls.get('bw_accounts',{});   // keyed by email
+let currentEmail   = ls.get('bw_currentEmail','');
+let cards          = ls.get('bw_cards', SAMPLE_CARDS);
+let reactions      = ls.get('bw_reactions',{});   // key: cardId_type_email
+let wallFilter     = null;
+let selectedPrompt = null;
+let currentMood    = 3;
+let breathTimer    = null;
+
+function today(){ return new Date().toISOString().split('T')[0]; }
+function currentUser(){ return currentEmail ? accounts[currentEmail] : null; }
+
+function saveAccounts(){ ls.set('bw_accounts',accounts); }
+function saveSession(){  ls.set('bw_currentEmail',currentEmail); }
+function saveCards(){    ls.set('bw_cards',cards); }
+function saveReactions(){ ls.set('bw_reactions',reactions); }
+
+/* ─── Level helpers ─── */
+function getLevelInfo(bb){
+  let lv = LEVELS[0];
+  for(const l of LEVELS){ if(bb >= l.min) lv = l; else break; }
+  return lv;
+}
+function getNextLevel(bb){
+  for(let i=0;i<LEVELS.length;i++){ if(bb < LEVELS[i].min) return LEVELS[i]; }
+  return null;
+}
+
+/* ─── BB helpers ─── */
+function addHP(amount, desc){
+  const u = currentUser(); if(!u) return;
+  const oldBB = u.hp||0;
+  const oldLv = getLevelInfo(oldBB);
+  u.hp = oldBB + amount;
+  u.hpLog = u.hpLog || [];
+  u.hpLog.unshift({amount, desc, ts:Date.now()});
+  if(u.hpLog.length>60) u.hpLog.pop();
+  saveAccounts();
+  floatBB(amount);
+  refreshHPDisplays();
+  // Check level-up
+  const newLv = getLevelInfo(u.hp);
+  if(newLv.num > oldLv.num) showLevelUp(newLv);
+  checkBadges();
+}
+
+function floatBB(amount){
+  const el = document.getElementById('bb-float');
+  el.textContent = '+'+amount+' BB';
+  // anchor near nav HP badge
+  const nb = document.getElementById('nav-hp-badge');
+  if(nb){
+    const r = nb.getBoundingClientRect();
+    el.style.left = r.left + 'px';
+    el.style.top  = (r.top + window.scrollY) + 'px';
+  } else {
+    el.style.left='50%'; el.style.top='80px';
+  }
+  el.classList.remove('go');
+  void el.offsetWidth; // reflow
+  el.classList.add('go');
+}
+
+function showLevelUp(lv){
+  document.getElementById('lu-icon').textContent = lv.icon;
+  document.getElementById('lu-level-name').textContent = 'Level '+lv.num+' — '+lv.name;
+  document.getElementById('lu-level-name').style.color = lv.color;
+  document.getElementById('lu-desc').textContent = lv.desc;
+  // confetti
+  const box = document.getElementById('levelup-box');
+  for(let i=0;i<18;i++){
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*30}%;background:${['#2D5016','#C4870A','#6B94A8','#F5F0E8','#4a7a23'][i%5]};animation-delay:${Math.random()*.5}s;animation-duration:${.8+Math.random()*.6}s`;
+    box.appendChild(c);
+    setTimeout(()=>c.remove(), 1800);
+  }
+  document.getElementById('levelup-overlay').classList.add('open');
+}
+
+function refreshHPDisplays(){
+  const u = currentUser();
+  const hp = u ? (u.hp||0) : 0;
+  document.getElementById('store-hp').textContent = hp.toLocaleString();
+  const phb = document.getElementById('profile-hp-big');
+  if(phb) phb.textContent = hp.toLocaleString();
+  const nb = document.getElementById('nav-hp-badge');
+  if(nb) nb.querySelector('span').textContent = hp.toLocaleString();
+}
+
+function awardBadge(slug){
+  const u = currentUser(); if(!u) return;
+  u.badges = u.badges||[];
+  if(u.badges.includes(slug)) return;
+  u.badges.push(slug);
+  saveAccounts();
+  showToast('🏅 New badge: '+(BADGES.find(b=>b.slug===slug)?.name||slug));
+}
+
+function checkBadges(){
+  const u = currentUser(); if(!u) return;
+  const mine = cards.filter(c=>c.ownerEmail===currentEmail);
+  if(mine.length>=1)           awardBadge('from_the_woods');
+  if((u.hp||0)>=500)           awardBadge('northern_attitude');
+  if((u.hp||0)>=1000)          awardBadge('lantern_in_dark');
+  if(u.loginStreak>=7)         awardBadge('stick_season');
+  if((u.checkins||[]).length>=7) awardBadge('week_checkin');
+  if(getTodayResponded().length>=5) awardBadge('busyhead');
+  if(u.name)                   awardBadge('fully_present');
+}
+
+/* ─── Daily challenge ─── */
+function getDailyChallenge(){
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+  return DAILY_CHALLENGES[dayOfYear % DAILY_CHALLENGES.length];
+}
+function getChallengeProgress(){
+  const u = currentUser(); if(!u) return {done:false, progress:0};
+  const dc = u.dailyChallenge||{};
+  if(dc.date !== today()) return {done:false, progress:0};
+  return {done:dc.completed||false, progress:dc.progress||0};
+}
+function tickChallenge(type, amount=1){
+  const u = currentUser(); if(!u) return;
+  const ch = getDailyChallenge();
+  u.dailyChallenge = u.dailyChallenge||{};
+  if(u.dailyChallenge.date !== today()){
+    u.dailyChallenge = {date:today(), id:ch.id, progress:0, completed:false};
+  }
+  if(u.dailyChallenge.completed) return;
+  // Match challenge types
+  const t = ch.type;
+  const matches = t===type || (t==='combo'&&(type==='write'||type==='checkin')) ||
+                  (t==='both'&&(type==='write'||type==='react')) ||
+                  (t==='write2'&&type==='write') || (t==='write5'&&type==='write') ||
+                  (t==='prompt3'&&type==='prompt3') || (t==='journal'&&type==='journal') ||
+                  (t==='breathe'&&type==='breathe') || (t==='streak3'&&type==='streak');
+  if(!matches) return;
+  u.dailyChallenge.progress = (u.dailyChallenge.progress||0) + amount;
+  if(u.dailyChallenge.progress >= ch.goal){
+    u.dailyChallenge.completed = true;
+    saveAccounts();
+    addHP(ch.reward, 'Daily challenge: '+ch.title);
+    showToast('⭐ Challenge complete! +'+ch.reward+' BB');
+    renderDailyChallenge();
+  } else {
+    saveAccounts();
+    renderDailyChallenge();
+  }
+}
+function renderDailyChallenge(){
+  const wrap = document.getElementById('daily-challenge-wrap'); if(!wrap) return;
+  const u = currentUser();
+  if(!u){ wrap.innerHTML=''; return; }
+  const ch = getDailyChallenge();
+  const {done, progress} = getChallengeProgress();
+  const pct = ch.goal > 1 ? Math.min(100, Math.round((progress / ch.goal) * 100)) : (done ? 100 : 0);
+  const bar = ch.goal > 1
+    ? `<div style="height:4px;background:rgba(107,77,42,.12);border-radius:99px;margin-top:.55rem;overflow:hidden">
+         <div style="height:100%;width:${pct}%;background:${done?'var(--forest)':'var(--amber)'};border-radius:99px;transition:width .5s ease"></div>
+       </div>` : '';
+  wrap.innerHTML = `<div class="challenge-card${done?' done':''}">
+    <div class="ch-icon">${ch.icon}</div>
+    <div class="ch-body">
+      <h4>${ch.title}</h4>
+      <p>${ch.desc}</p>
+      ${bar}
+      <div class="ch-footer">
+        <span class="ch-reward">+${ch.reward} BB</span>
+        ${ch.goal>1&&!done ? `<span class="ch-progress-text">${progress}/${ch.goal} done</span>` : ''}
+        ${done ? '<span style="font-size:.72rem;font-weight:700;color:var(--forest)">✓ Completed today!</span>' : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ─── Song of the day (themes only — no lyrics) ─── */
+function renderSongBanner(){
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+  const r = DAILY_REFLECTIONS[dayOfYear % DAILY_REFLECTIONS.length];
+  document.getElementById('sb-lyric').textContent = r.prompt;
+  document.getElementById('sb-song').textContent  = r.heading + ' — ' + r.sub;
+  document.getElementById('sb-note').textContent  = r.note;
+}
+
+/* ─── Community stats ─── */
+function renderCommunityStats(){
+  const el = document.getElementById('comm-stats'); if(!el) return;
+  const totalCards = cards.length;
+  const totalVoices = Object.keys(accounts).length;
+  const totalRxns = Object.values(reactions).filter(Boolean).length +
+    cards.reduce((s,c)=>s+Object.values(c.reactions||{}).reduce((a,b)=>a+b,0),0);
+  el.innerHTML = [
+    {v:totalCards,  l:'Cards on the wall'},
+    {v:totalVoices, l:'Voices in the community'},
+    {v:totalRxns,   l:'Reactions shared'},
+  ].map(s=>`<div class="stat-tile"><div class="sv">${s.v.toLocaleString()}</div><div class="sl">${s.l}</div></div>`).join('');
+}
+
+/* ─── Profile level + stats ─── */
+function renderLevelBadge(){
+  const wrap = document.getElementById('profile-level-wrap'); if(!wrap) return;
+  const u = currentUser(); if(!u){ wrap.innerHTML=''; return; }
+  const bb = u.hp||0;
+  const lv = getLevelInfo(bb);
+  const next = getNextLevel(bb);
+  const pct = next ? Math.round(((bb-lv.min)/(next.min-lv.min))*100) : 100;
+  wrap.innerHTML = `
+    <div class="card" style="display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;padding:1.1rem 1.25rem">
+      <div class="level-badge" style="background:${lv.bg};border-color:${lv.color}40;color:${lv.color}">
+        <span class="lb-icon">${lv.icon}</span>
+        <div><div class="lb-name">${lv.name}</div><div class="lb-num">Level ${lv.num}</div></div>
+      </div>
+      <div style="flex:1;min-width:160px">
+        <div class="level-progress-label">
+          <span>${bb.toLocaleString()} BB</span>
+          <span>${next?next.min.toLocaleString()+' BB to '+next.name:'Max level reached'}</span>
+        </div>
+        <div class="level-progress-track">
+          <div class="level-progress-fill" style="width:${pct}%;background:${lv.color}"></div>
+        </div>
+        ${next?'':`<div class="level-maxed">${lv.icon} You've reached the highest level.</div>`}
+      </div>
+    </div>`;
+}
+function renderProfileStats(){
+  const grid = document.getElementById('profile-stats-grid'); if(!grid) return;
+  const u = currentUser(); if(!u){ grid.innerHTML=''; return; }
+  const mine = cards.filter(c=>c.ownerEmail===currentEmail);
+  const rxnsReceived = mine.reduce((s,c)=>{
+    const base = Object.values(c.reactions||{}).reduce((a,b)=>a+b,0);
+    const user = Object.keys(reactions).filter(k=>k.startsWith(c.id+'_')).length;
+    return s+base+user;
+  },0);
+  const daysActive = new Set([...(u.checkins||[]).map(c=>c.date), u.lastLogin].filter(Boolean)).size;
+  const stats = [
+    {v:mine.length,           l:'Cards written'},
+    {v:(u.checkins||[]).length,l:'Days checked in'},
+    {v:rxnsReceived,           l:'Reactions received'},
+    {v:u.loginStreak||0,       l:'Day streak 🔥'},
+  ];
+  grid.innerHTML = stats.map(s=>`<div class="ps-tile"><div class="pv">${s.v}</div><div class="pl">${s.l}</div></div>`).join('');
+}
+
+/* ─── Streak calendar (last 7 days) ─── */
+function renderStreakCalendar(){
+  const sd = document.getElementById('profile-streak'); if(!sd) return;
+  const u = currentUser(); if(!u){ sd.innerHTML=''; return; }
+  const checkinDates = new Set((u.checkins||[]).map(c=>c.date));
+  const dots = [];
+  for(let i=6;i>=0;i--){
+    const d = new Date(Date.now()-i*86400000).toISOString().split('T')[0];
+    const filled = checkinDates.has(d);
+    const isToday = d===today();
+    dots.push(`<div class="sc-dot${filled?' filled':''}${isToday?' today-dot':''}" title="${d}">${filled?'✓':''}</div>`);
+  }
+  sd.innerHTML = (u.loginStreak>1?`<span class="streak-tag">🔥 ${u.loginStreak}-day streak</span>`:'')
+    +'<div class="streak-cal" style="margin-top:.5rem">'+dots.join('')+'</div>';
+}
+
+/* ─── Daily response tracking ─── */
+function getTodayResponded(){
+  const u = currentUser(); if(!u) return [];
+  const dr = u.dailyResponses || {};
+  return dr.date === today() ? (dr.promptIdxs||[]) : [];
+}
+function markRespondedToday(promptIdx){
+  const u = currentUser(); if(!u) return;
+  u.dailyResponses = u.dailyResponses||{};
+  if(u.dailyResponses.date !== today()){
+    u.dailyResponses = {date:today(), promptIdxs:[]};
+  }
+  if(!u.dailyResponses.promptIdxs.includes(promptIdx)){
+    u.dailyResponses.promptIdxs.push(promptIdx);
+  }
+  saveAccounts();
+}
+
+/* ─── Daily login streak ─── */
+function handleLoginStreak(){
+  const u = currentUser(); if(!u) return;
+  const t = today();
+  if(u.lastLogin===t) return;
+  const yest = new Date(Date.now()-86400000).toISOString().split('T')[0];
+  const newStreak = (u.lastLogin===yest) ? (u.loginStreak||0)+1 : 1;
+  u.loginStreak = newStreak;
+  u.lastLogin = t;
+  saveAccounts();
+  addHP(10,'Daily login bonus');
+  if(STREAK_MILESTONES[newStreak]) setTimeout(()=>checkStreakMilestone(newStreak), 800);
+  // Decay dog happiness on login
+  const d = getDogData();
+  if(d) { d.happiness = getDogHappiness(); d.lastDecay = t; saveAccounts(); }
+}
+
+/* ─── Auth ─── */
+function openAuth(tab){
+  switchAuthTab(tab||'signup');
+  document.getElementById('auth-overlay').classList.add('open');
+}
+function closeAuth(){
+  document.getElementById('auth-overlay').classList.remove('open');
+}
+function switchAuthTab(tab){
+  document.getElementById('tab-signup').classList.toggle('on', tab==='signup');
+  document.getElementById('tab-signin').classList.toggle('on', tab==='signin');
+  document.getElementById('form-signup').classList.toggle('on', tab==='signup');
+  document.getElementById('form-signin').classList.toggle('on', tab==='signin');
+  document.getElementById('signup-error').style.display='none';
+  document.getElementById('signin-error').style.display='none';
+}
+function showAuthError(formId, msg){
+  const el = document.getElementById(formId+'-error');
+  el.textContent = msg; el.style.display='block';
+}
+function doSignup(e){
+  e.preventDefault();
+  const name  = document.getElementById('su-name').value.trim();
+  const email = document.getElementById('su-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('su-password').value;
+  const phone = document.getElementById('su-phone').value.trim();
+  if(!name||!email||!pass||!phone){ showAuthError('signup','Please fill in all fields.'); return; }
+  if(pass.length<6){ showAuthError('signup','Password must be at least 6 characters.'); return; }
+  if(accounts[email]){ showAuthError('signup','An account with that email already exists. Sign in instead.'); return; }
+  accounts[email] = {
+    name, email, password:pass, phone,
+    avatar:'mountain', hp:0, badges:[], redeemed:[], checkins:[],
+    hpLog:[],
+    dailyResponses:{}, loginStreak:0, lastLogin:'', createdAt:Date.now()
+  };
+  saveAccounts();
+  currentEmail = email;
+  saveSession();
+  closeAuth();
+  onLogin();
+  showToast('🌿 Welcome to the wall, '+name+'!');
+}
+function doSignin(e){
+  e.preventDefault();
+  const email = document.getElementById('si-email').value.trim().toLowerCase();
+  const pass  = document.getElementById('si-password').value;
+  const acct  = accounts[email];
+  if(!acct){ showAuthError('signin','No account found with that email.'); return; }
+  if(acct.password!==pass){ showAuthError('signin','Incorrect password. Please try again.'); return; }
+  currentEmail = email;
+  saveSession();
+  closeAuth();
+  onLogin();
+  showToast('Welcome back, '+acct.name+'! 🌿');
+}
+function signOut(){
+  currentEmail='';
+  saveSession();
+  onLogout();
+}
+function onLogin(){
+  handleLoginStreak();
+  renderNav();
+  renderWallSubmitPanel();
+  renderWall();
+  renderDailyChallenge();
+  renderCommunityStats();
+  renderDogPanel();
+  refreshHPDisplays();
+  checkBadges();
+  updateNotifDots();
+  renderTodayProgress();
+  renderCommunityPick();
+  if(currentUser()?.loginStreak >= 3) tickChallenge('streak');
+  // Dog neglect notice — delayed so it doesn't clash with welcome toast
+  setTimeout(()=>{
+    const h = getDogHappiness();
+    const d = getDogData();
+    if(h < 40) showToast('🐾 '+(d?.name||'Penny')+' misses you! Happiness: '+h+'%');
+  }, 1800);
+}
+function onLogout(){
+  renderNav();
+  renderWallSubmitPanel();
+  renderWall();
+  renderDogPanel();
+  renderDailyChallenge();
+  updateNotifDots();
+}
+
+/* ─── Nav ─── */
+function renderNav(){
+  const u = currentUser();
+  const nr = document.getElementById('nav-right');
+  if(!u){
+    nr.innerHTML = `<button class="btn btn-primary btn-sm" onclick="openAuth('signup')">Join the wall</button>`;
+  } else {
+    const initial = u.name.charAt(0).toUpperCase();
+    nr.innerHTML = `
+      <div class="nav-user">
+        <div class="hp-badge" id="nav-hp-badge">🌿 <span>${(u.hp||0).toLocaleString()}</span> BB</div>
+        <div class="nav-avatar">${initial}</div>
+        <span class="nav-username">${esc(u.name)}</span>
+        <button class="nav-signout btn-ghost btn btn-sm" onclick="signOut()">Sign out</button>
+      </div>`;
+  }
+}
+
+/* ─── Page navigation ─── */
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach((t,i)=>{
+    t.classList.toggle('active',['wall','learn','checkin','store','profile'][i]===id);
+    t.setAttribute('aria-selected',['wall','learn','checkin','store','profile'][i]===id);
+  });
+  if(id==='store')   renderStore();
+  if(id==='profile') renderProfile();
+}
+
+/* ─── Wall ─── */
+function renderWallSubmitPanel(){
+  const u = currentUser();
+  const notSignedIn = document.getElementById('not-signed-in-wall');
+  const promptList  = document.getElementById('prompt-list');
+  const writeArea   = document.getElementById('write-area');
+  if(!u){
+    notSignedIn.style.display='block';
+    promptList.style.display='none';
+    writeArea.classList.remove('open');
+    return;
+  }
+  notSignedIn.style.display='none';
+  promptList.style.display='flex';
+  const todayR = getTodayResponded();
+  promptList.innerHTML = PROMPTS.map((p,i)=>{
+    const done = todayR.includes(i);
+    return `<button class="prompt-option${done?' done':''}" onclick="${done?'':('selectPrompt('+i+',this)')}" ${done?'disabled':''} aria-label="${done?'Already responded today: ':'Select prompt: '}${p}">
+      <span class="prompt-radio" aria-hidden></span>
+      <span>
+        <span class="prompt-text">${esc(p)}</span>
+        ${done?'<br><span class="prompt-done-label">✓ Responded today · resets at midnight</span>':''}
+      </span>
+    </button>`;
+  }).join('');
+}
+
+function selectPrompt(idx, btn){
+  if(selectedPrompt===idx){
+    selectedPrompt=null;
+    document.querySelectorAll('.prompt-option').forEach(b=>b.classList.remove('selected'));
+    document.getElementById('write-area').classList.remove('open');
+    return;
+  }
+  document.querySelectorAll('.prompt-option').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedPrompt=idx;
+  document.getElementById('write-area').classList.add('open');
+  document.getElementById('card-content').focus();
+}
+
+function onContentInput(el){
+  document.getElementById('char-count').textContent = el.value.length+' / 500';
+  document.getElementById('pin-btn').disabled = !el.value.trim();
+}
+
+function initFilterPills(){
+  const row = document.getElementById('filter-row');
+  PROMPTS.forEach((_,i)=>{
+    const b = document.createElement('button');
+    b.id='fpill-'+i;
+    const count = cards.filter(c=>c.promptIdx===i).length;
+    b.className='fpill';
+    b.innerHTML=`<span>${i+1}</span><span style="opacity:.55;font-size:.62rem;margin-left:.2rem">${count>0?'('+count+')':''}</span>`;
+    b.title=PROMPTS[i];
+    b.onclick=()=>filterWall(i,b);
+    row.appendChild(b);
+  });
+}
+
+function filterWall(idx, btn){
+  document.querySelectorAll('.fpill').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  wallFilter=idx;
+  renderWall();
+}
+
+function shuffleWall(){
+  for(let i=cards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}
+  wallSort='newest';
+  document.querySelectorAll('.sort-btn').forEach((b,i)=>b.classList.toggle('on',i===0));
+  renderWall();
+}
+
+function cardColor(id){ return CARD_COLORS[[...id].reduce((a,c)=>a+c.charCodeAt(0),0)%4]; }
+function cardRot(id){ return (([...id].reduce((a,c)=>a+c.charCodeAt(0),0)%5)-2)*0.55; }
+
+function renderWall(){
+  const grid  = document.getElementById('wall-grid');
+  const empty = document.getElementById('wall-empty');
+  let list = wallFilter!==null ? cards.filter(c=>c.promptIdx===wallFilter) : [...cards];
+  if(wallSort==='loved'){
+    list.sort((a,b)=>{
+      const ta = Object.values(a.reactions||{}).reduce((s,v)=>s+v,0) + Object.keys(reactions).filter(k=>k.startsWith(a.id+'_')&&reactions[k]).length;
+      const tb = Object.values(b.reactions||{}).reduce((s,v)=>s+v,0) + Object.keys(reactions).filter(k=>k.startsWith(b.id+'_')&&reactions[k]).length;
+      return tb-ta;
+    });
+  }
+  if(!list.length){ grid.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  const userEmail = currentEmail;
+  grid.innerHTML = list.map((c,i)=>{
+    const rot = cardRot(c.id);
+    const totalRxns = Object.values(c.reactions||{}).reduce((a,b)=>a+b,0)
+      + Object.keys(reactions).filter(k=>k.startsWith(c.id+'_')&&reactions[k]).length;
+    const isHot = totalRxns >= 20;
+    const rxnHtml = REACTIONS.map(r=>{
+      const key=c.id+'_'+r.type+'_'+(userEmail||'');
+      const on = userEmail && reactions[key];
+      const base = (c.reactions?.[r.type]||0);
+      const count = base + (on?1:0);
+      return `<button class="rxn${on?' on':''}" onclick="toggleRxn('${c.id}','${r.type}',this)" title="${r.l}" aria-pressed="${on}" data-base="${base}">
+        <span>${r.e}</span>${count>0?`<span class="rc">${count}</span>`:''}
+      </button>`;
+    }).join('');
+    return `<div class="card-wrap" style="animation-delay:${i*25}ms">
+      <article class="notecard ${cardColor(c.id)} fade-up" style="transform:rotate(${rot}deg)">
+        ${isHot?'<div class="hot-badge">🔥 Community favorite</div>':''}
+        <p class="nc-prompt">${esc(PROMPTS[c.promptIdx])}</p>
+        <p class="nc-content">${esc(c.content)}</p>
+        <div class="nc-footer">
+          <span class="nc-name">${esc(c.name||'a voice from the community')}</span>
+          <button class="nc-share" onclick="shareCard('${c.id}')" title="Share">↗</button>
+        </div>
+        <div class="nc-reactions">${rxnHtml}</div>
+      </article>
+    </div>`;
+  }).join('');
+}
+
+function toggleRxn(cardId, type, btn){
+  if(!currentEmail){ openAuth('signin'); return; }
+  const key = cardId+'_'+type+'_'+currentEmail;
+  const wasOn = !!reactions[key];
+  reactions[key] = !wasOn;
+  saveReactions();
+  // Pop animation on the button
+  btn.classList.remove('pop');
+  void btn.offsetWidth;
+  if(!wasOn) btn.classList.add('pop');
+  setTimeout(()=>btn.classList.remove('pop'), 350);
+  // Update just this card's counts without full re-render
+  const card = btn.closest('.notecard');
+  if(card) {
+    card.querySelectorAll('.rxn').forEach(r=>{
+      const rt = r.getAttribute('onclick')?.match(/'([^']+)'\s*,\s*this\)/)?.[1];
+      if(!rt) return;
+      const k = cardId+'_'+rt+'_'+currentEmail;
+      const c = parseInt(r.dataset.base||0) + (reactions[k]?1:0);
+      const span = r.querySelector('.rc');
+      if(c>0){ if(!span){ const s=document.createElement('span'); s.className='rc'; r.appendChild(s); r.querySelector('.rc').textContent=c; } else span.textContent=c; }
+      else if(span) span.remove();
+      r.classList.toggle('on', !!reactions[k]);
+    });
+  }
+  updateNotifDots();
+  tickChallenge('react');
+}
+
+function submitCard(){
+  if(!currentUser()) { openAuth('signin'); return; }
+  const content = document.getElementById('card-content').value.trim();
+  if(!content || selectedPrompt===null) return;
+
+  if(CRISIS_RE.test(content)){
+    document.getElementById('crisis-overlay').classList.add('open');
+    return;
+  }
+
+  const u = currentUser();
+  const isFirst = !cards.some(c=>c.ownerEmail===currentEmail);
+  const id = 'u'+Date.now();
+  cards.unshift({
+    id, promptIdx:selectedPrompt,
+    content,
+    name: document.getElementById('card-display-name').value.trim() || u.name || 'a voice from the community',
+    ownerEmail: currentEmail,
+    reactions:{}
+  });
+  markRespondedToday(selectedPrompt);
+  saveCards();
+
+  addHP(5, 'Submitted a wall card');
+  checkBadges();
+  tickChallenge('write');
+  if(selectedPrompt === 2) tickChallenge('prompt3');
+  renderCommunityStats();
+  updateNotifDots();
+
+  // Reset form
+  document.getElementById('card-content').value='';
+  document.getElementById('card-display-name').value='';
+  document.getElementById('char-count').textContent='0 / 500';
+  document.getElementById('pin-btn').disabled=true;
+  selectedPrompt=null;
+  document.getElementById('write-area').classList.remove('open');
+  renderWallSubmitPanel();
+  renderWall();
+  // Update filter pill counts
+  PROMPTS.forEach((_,i)=>{
+    const pill=document.getElementById('fpill-'+i);
+    if(pill){ const c=cards.filter(x=>x.promptIdx===i).length; pill.innerHTML=`<span>${i+1}</span><span style="opacity:.55;font-size:.62rem;margin-left:.2rem">${c>0?'('+c+')':''}</span>`; }
+  });
+  renderCommunityPick();
+  renderTodayProgress();
+  showToast('🌿 Your card has been added to the wall');
+  setTimeout(()=>{
+    addDogHappiness(20,'feed');
+    showToast('🦴 '+(getDogData()?.name||'Penny')+' got a treat! +20 happiness');
+  }, 3100);
+}
+
+function shareCard(id){
+  const c = cards.find(x=>x.id===id); if(!c) return;
+  const text = `"${c.content}" — ${c.name||'a voice from the community'}\n\nFrom the Busyhead Community Wall`;
+  if(navigator.share){ navigator.share({title:'From the Busyhead Wall',text,url:location.href}).catch(()=>{}); }
+  else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>showToast('Card text copied!')); }
+}
+
+/* ─── Check-in ─── */
+function setMood(v){
+  currentMood=v;
+  document.getElementById('mood-slider').value=v;
+  document.getElementById('mood-label').textContent=MOOD_LABELS[v-1];
+  document.getElementById('journal-q').textContent=JOURNAL_QS[v-1];
+  document.querySelectorAll('.mood-emoji').forEach((e,i)=>e.classList.toggle('on',i===v-1));
+}
+function goStep(id){
+  document.querySelectorAll('.step-card').forEach(s=>s.classList.remove('on'));
+  document.getElementById('step-'+id).classList.add('on');
+}
+let breathIdx=0, breathSecs=0, breathLeft=2;
+const BPHASES=[{l:'Breathe in...',d:4,c:'inhale'},{l:'Hold...',d:7,c:'hold'},{l:'Breathe out...',d:8,c:'exhale'}];
+function startBreathing(){
+  document.getElementById('breath-start-btn').style.display='none';
+  breathIdx=0; breathLeft=2; runBreath();
+}
+function runBreath(){
+  const ph=BPHASES[breathIdx];
+  const ring=document.getElementById('breath-ring');
+  ring.className='breath-ring '+ph.c;
+  document.getElementById('breath-phase').textContent=ph.l;
+  document.getElementById('breath-cycles').textContent=breathLeft+' cycle'+(breathLeft!==1?'s':'')+' remaining';
+  breathSecs=ph.d; ring.textContent=ph.d;
+  if(breathTimer) clearInterval(breathTimer);
+  breathTimer=setInterval(()=>{
+    breathSecs--;
+    ring.textContent=breathSecs>0?breathSecs:'';
+    if(breathSecs<=0){
+      clearInterval(breathTimer);
+      breathIdx++;
+      if(breathIdx>=BPHASES.length){ breathIdx=0; breathLeft--; }
+      if(breathLeft<=0){
+        ring.className='breath-ring'; ring.textContent='🌿';
+        document.getElementById('breath-phase').textContent='Well done. Take a moment.';
+        document.getElementById('breath-cycles').textContent='';
+        const u=currentUser(); if(u){ awardBadge('daily_breath'); }
+        return;
+      }
+      runBreath();
+    }
+  },1000);
+}
+function finishCheckin(skipped){
+  if(breathTimer) clearInterval(breathTimer);
+  const u=currentUser();
+  if(!u){ goStep('done'); return; }
+  const t=today();
+  u.checkins=u.checkins||[];
+  const alreadyDone=u.checkins.find(c=>c.date===t);
+  document.getElementById('checkin-hp-label').textContent=alreadyDone?'Already checked in today.':'+25 Busyhead Bucks earned';
+  if(!alreadyDone){
+    u.checkins.push({date:t,mood:currentMood});
+    saveAccounts();
+    addHP(25,'Daily check-in');
+    checkBadges();
+    tickChallenge('checkin');
+    if(!skipped) tickChallenge('breathe');
+    if(document.getElementById('journal-text')?.value.trim()) tickChallenge('journal');
+    // Auto-walk dog on check-in
+    const dogD = getDogData();
+    if(dogD){ dogD.walkCount=(dogD.walkCount||0)+1; saveAccounts(); }
+    addDogHappiness(30,'walk');
+    updateNotifDots();
+    renderTodayProgress();
+    setTimeout(()=>showToast('🚶 '+(getDogData()?.name||'Penny')+' went for a walk! +30 happiness'),800);
+  }
+  goStep('done');
+  renderMoodGraph();
+  document.getElementById('mood-history-section').style.display=
+    (u.checkins||[]).length>1 ? 'block':'none';
+}
+function renderMoodGraph(){
+  const u=currentUser(); if(!u) return;
+  const data=(u.checkins||[]).slice(-30);
+  if(data.length<2) return;
+  const svg=document.getElementById('mood-graph');
+  const W=600,H=80,pL=10,pR=10,pT=6,pB=18;
+  const pW=W-pL-pR,pH=H-pT-pB;
+  const pts=data.map((d,i)=>({x:pL+(i/(data.length-1))*pW,y:pT+((5-d.mood)/4)*pH}));
+  const cols=['#ef4444','#f97316','#eab308','#84cc16','#22c55e'];
+  const path=pts.reduce((a,p,i)=>i===0?`M${p.x},${p.y}`:`${a} C${(pts[i-1].x+p.x)/2},${pts[i-1].y} ${(pts[i-1].x+p.x)/2},${p.y} ${p.x},${p.y}`,'');
+  svg.innerHTML=`<path d="${path} L${pts[pts.length-1].x},${H-pB} L${pts[0].x},${H-pB}Z" fill="rgba(45,80,22,.07)"/><path d="${path}" fill="none" stroke="var(--forest)" stroke-width="2" stroke-linecap="round"/>${pts.map((p,i)=>`<circle cx="${p.x}" cy="${p.y}" r="4" fill="${cols[data[i].mood-1]}" stroke="white" stroke-width="1.5"><title>${data[i].date}</title></circle>`).join('')}`;
+}
+
+/* ─── Check-in page init ─── */
+function initCheckinPage(){
+  const u=currentUser();
+  const t=today();
+  if(u && u.checkins && u.checkins.find(c=>c.date===t)){
+    goStep('done');
+    document.getElementById('checkin-hp-label').textContent='Already checked in today.';
+    renderMoodGraph();
+    document.getElementById('mood-history-section').style.display=
+      (u.checkins||[]).length>1?'block':'none';
+  }
+}
+
+/* ─── Store ─── */
+let pendingRedeem=null;
+function renderStore(){
+  refreshHPDisplays();
+  const u=currentUser();
+  const hp=u?(u.hp||0):0;
+  const redeemed=u?(u.redeemed||[]):[];
+  const cats=['digital','giveaway','discount','wall','dog'];
+  const catMeta={
+    digital:  {e:'🖼️',l:'Digital Downloads',    cls:'tag-tip'},
+    giveaway: {e:'🎁',l:'Monthly Giveaways',     cls:'tag-resource'},
+    discount: {e:'🏷️',l:'Discount Codes',        cls:'tag-fact'},
+    wall:     {e:'📌',l:'Wall Recognition',       cls:'tag-resource'},
+    dog:      {e:'🐾',l:'Dog Accessories',        cls:'tag-tip'},
+  };
+  const dogAcc = u ? (getDogData()?.accessories||[]) : [];
+  let html='';
+  cats.forEach(cat=>{
+    const items=STORE_ITEMS.filter(i=>i.cat===cat);
+    if(!items.length) return;
+    const m=catMeta[cat];
+    html+=`<h2 class="store-cat-label">${m.e} ${m.l}</h2>`;
+    if(cat==='dog') html+=`<p style="font-size:.8rem;color:var(--text-muted);margin-bottom:.75rem">Equip accessories on your companion — they show up on the wall page.</p>`;
+    html+=`<div class="store-grid">`;
+    items.forEach(item=>{
+      const red=redeemed.includes(item.id);
+      const can=hp>=item.cost;
+      const equipped = cat==='dog' && dogAcc.includes(item.id);
+      let action='';
+      if(cat==='dog' && red){
+        action = `<button class="btn btn-sm ${equipped?'btn-primary':'btn-outline'}" onclick="equipDogAcc('${item.id}')">${equipped?'✓ Equipped':'Equip'}</button>`;
+      } else if(red){
+        action = `<span class="store-redeemed">✓ Redeemed</span>`;
+      } else if(u){
+        action = `<button class="btn btn-primary btn-sm" onclick="openConfirm('${item.id}')" ${!can?'disabled title="Not enough Busyhead Bucks"':''}>Redeem</button>`;
+      } else {
+        action = `<button class="btn btn-outline btn-sm" onclick="openAuth('signin')">Sign in</button>`;
+      }
+      html+=`<div class="card store-card">
+        <span class="store-tag ${m.cls}">${m.e} ${item.catL}</span>
+        <h3>${esc(item.name)}</h3>
+        <p class="desc">${esc(item.desc)}</p>
+        <div class="store-footer">
+          <span class="hp-badge" style="font-size:.78rem">🌿 ${item.cost.toLocaleString()} BB</span>
+          ${action}
+        </div>
+      </div>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('store-content').innerHTML=html;
+}
+function openConfirm(id){
+  const item=STORE_ITEMS.find(i=>i.id===id); if(!item) return;
+  pendingRedeem=id;
+  document.getElementById('confirm-text').textContent=`Redeem "${item.name}" for ${item.cost.toLocaleString()} Busyhead Bucks?`;
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+function confirmRedeem(){
+  const item=STORE_ITEMS.find(i=>i.id===pendingRedeem); if(!item) return;
+  const u=currentUser(); if(!u||u.hp<item.cost) return;
+  u.hp-=item.cost;
+  u.hpLog=u.hpLog||[];
+  u.hpLog.unshift({amount:-item.cost,desc:`Redeemed: ${item.name}`,ts:Date.now()});
+  u.redeemed=u.redeemed||[];
+  u.redeemed.push(item.id);
+  saveAccounts();
+  document.getElementById('confirm-overlay').classList.remove('open');
+  refreshHPDisplays();
+  renderStore();
+  showToast('✓ Redeemed! Check your email for details.');
+}
+
+/* ─── Profile ─── */
+function renderProfile(){
+  const u=currentUser();
+  if(!u){
+    document.getElementById('ppanel-badges').innerHTML='<p style="color:var(--text-muted);font-size:.85rem;padding:1rem 0">Sign in to view your profile.</p>';
+    return;
+  }
+  renderLevelBadge();
+  renderProfileStats();
+  document.getElementById('profile-name-input').value=u.name||'';
+  const av=AVATARS.find(a=>a.k===(u.avatar||'mountain'));
+  document.getElementById('profile-avatar-big').textContent=av?av.e:'🏔️';
+  document.getElementById('profile-hp-big').textContent=(u.hp||0).toLocaleString();
+  renderStreakCalendar();
+  // avatar picker
+  const ap=document.getElementById('avatar-picker');
+  ap.innerHTML=AVATARS.map(a=>`<button class="av-opt${a.k===(u.avatar||'mountain')?' on':''}" onclick="pickAvatar('${a.k}',this)" title="${a.k}">${a.e}</button>`).join('');
+  renderBadges();
+  renderCardHistory();
+  renderHPLog();
+}
+function pickAvatar(k,btn){
+  const u=currentUser(); if(!u) return;
+  u.avatar=k;
+  document.querySelectorAll('.av-opt').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  const av=AVATARS.find(a=>a.k===k);
+  document.getElementById('profile-avatar-big').textContent=av?av.e:'🏔️';
+}
+function saveProfile(){
+  const u=currentUser(); if(!u) return;
+  u.name=document.getElementById('profile-name-input').value.trim()||u.name;
+  saveAccounts();
+  checkBadges();
+  renderNav();
+  const ok=document.getElementById('save-ok');
+  ok.textContent='✓ Saved!'; ok.style.opacity='1';
+  setTimeout(()=>ok.style.opacity='0',2200);
+}
+function renderBadges(){
+  const u=currentUser(); if(!u) return;
+  const earned=u.badges||[];
+  document.getElementById('badge-grid').innerHTML=BADGES.map(b=>{
+    const e=earned.includes(b.slug);
+    return `<div class="badge-tile ${e?'earned':'locked'}" title="${b.desc}">
+      <div class="bi">${b.icon}</div>
+      <div class="bn">${b.name}</div>
+      <div class="bd">${b.desc}</div>
+    </div>`;
+  }).join('');
+}
+function renderCardHistory(){
+  const mine=cards.filter(c=>c.ownerEmail===currentEmail);
+  const el=document.getElementById('card-history');
+  el.innerHTML=mine.length?mine.map(c=>`<div class="hcard">
+    <div class="hc-prompt">${esc(PROMPTS[c.promptIdx])}</div>
+    <div class="hc-content">"${esc(c.content)}"</div>
+  </div>`).join(''):'<p style="color:var(--text-muted);font-size:.85rem">You haven\'t added any cards yet.</p>';
+}
+function renderHPLog(){
+  const u=currentUser(); if(!u) return;
+  const log=u.hpLog||[];
+  document.getElementById('hp-log-list').innerHTML=log.length?log.slice(0,25).map(tx=>`
+    <div class="hp-row">
+      <span class="hr-desc">${esc(tx.desc||'')}</span>
+      <span class="hr-amt ${tx.amount>0?'hr-pos':'hr-neg'}">${tx.amount>0?'+':''}${tx.amount} BB</span>
+    </div>`).join(''):'<p style="color:var(--text-muted);font-size:.85rem">No activity yet.</p>';
+}
+function switchPTab(tab,btn){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.ppanel').forEach(p=>p.classList.remove('on'));
+  document.getElementById('ppanel-'+tab).classList.add('on');
+  if(tab==='badges') renderBadges();
+  if(tab==='cards')  renderCardHistory();
+  if(tab==='activity') renderHPLog();
+}
+
+/* ─── Toast queue (prevents messages clobbering each other) ─── */
+let _toastQ=[], _toastBusy=false;
+function showToast(msg, duration=2600){
+  _toastQ.push({msg,duration});
+  if(!_toastBusy) _nextToast();
+}
+function _nextToast(){
+  if(!_toastQ.length){ _toastBusy=false; return; }
+  _toastBusy=true;
+  const {msg,duration}=_toastQ.shift();
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.transform='translateX(-50%) translateY(0)';
+  setTimeout(()=>{ t.style.transform='translateX(-50%) translateY(80px)'; setTimeout(_nextToast,350); }, duration);
+}
+
+/* ─── Escape HTML ─── */
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+/* ════════════════════════════════════════════ DOG PAGE CONSTANTS */
+const DOG_LEVELS = [
+  { min:0,   num:1, name:'Tiny Pup',    icon:'🐶', desc:'Just starting out — and already loved.' },
+  { min:50,  num:2, name:'Young Dog',   icon:'🐕', desc:'Growing fast, full of energy.' },
+  { min:150, num:3, name:'Good Dog',    icon:'🐕‍🦺',desc:'Dependable, kind, always there.' },
+  { min:350, num:4, name:'Best Friend', icon:'🦮', desc:'The real thing — through everything.' },
+  { min:700, num:5, name:'Legend Pup',  icon:'🌟', desc:'Once in a lifetime. Never forgotten.' },
+];
+const DOG_TRICKS = [
+  {id:'sit',      name:'Sit',        icon:'🐾', xp:0  },
+  {id:'paw',      name:'Shake paws', icon:'🤝', xp:30 },
+  {id:'stay',     name:'Stay',       icon:'✋', xp:60 },
+  {id:'rollover', name:'Roll over',  icon:'🔄', xp:100},
+  {id:'fetch',    name:'Fetch',      icon:'🎾', xp:150},
+  {id:'playdead', name:'Play dead',  icon:'😴', xp:200},
+  {id:'spin',     name:'Spin',       icon:'🌀', xp:270},
+  {id:'highfive', name:'High five',  icon:'🙌', xp:350},
+  {id:'dance',    name:'Dance',      icon:'💃', xp:450},
+  {id:'speak',    name:'Speak!',     icon:'🗣️',xp:600},
+];
+const ALL_ACCESSORIES = [
+  {id:'dog1', name:'Busyhead Bandana',  icon:'🎀', desc:'A tiny green Busyhead bandana.'},
+  {id:'dog2', name:'Vermont Collar',    icon:'💚', desc:'Rugged collar, Vermont-made.'},
+  {id:'dog3', name:'Stick Season Scarf',icon:'🧣', desc:'Cozy scarf for the bare season.'},
+  {id:'dog4', name:'Mini Concert Tee',  icon:'👕', desc:'Every dog deserves a show tee.'},
+];
+const DOG_TIPS = [
+  {bold:'Did you know?',       text:'Studies show that petting a dog for as little as 10 minutes can significantly reduce cortisol — the body\'s primary stress hormone.'},
+  {bold:'Research finding:',   text:'Pet owners have lower blood pressure, lower cholesterol, and lower rates of cardiovascular disease than non-pet owners.'},
+  {bold:'Mental health link:',  text:'Caring for a pet provides structure and routine — two things that are deeply helpful during low periods.'},
+  {bold:'Connection matters:',  text:'Penny doesn\'t care what you achieved today. They\'re just glad you\'re here. So are we.'},
+  {bold:'Walk it out:',         text:'Dog owners walk an average of 22 more minutes per day than non-pet owners. Movement is one of the most powerful mood regulators we have.'},
+  {bold:'You\'re not alone:',   text:'Penny can\'t reply to your wall cards, but they\'re part of your daily rhythm here — a small anchor to keep showing up for.'},
+];
+
+/* ════════════════════════════════════════════ DOG PAGE FUNCTIONS */
+
+function initDogState(){
+  const u = currentUser(); if(!u) return null;
+  if(!u.dog) u.dog = { happiness:70, lastDecay:today(), actions:{}, walkCount:0, name:'Penny', accessories:[] };
+  const d = u.dog;
+  if(d.hunger      === undefined) d.hunger      = 80;
+  if(d.energy      === undefined) d.energy      = 80;
+  if(d.cleanliness === undefined) d.cleanliness = 90;
+  if(d.xp          === undefined) d.xp          = 0;
+  if(!d.journal)    d.journal    = [];
+  if(!d.fetchToday) d.fetchToday = { date:'', throws:0, caught:0, bb:0 };
+  if(!d.trainToday) d.trainToday = { date:'', sessions:0 };
+  if(!d.lastBath)   d.lastBath   = '';
+  const t = today();
+  const daysMissed = Math.max(0, Math.floor((Date.now()-new Date(d.lastDecay||t).getTime())/86400000));
+  if(daysMissed > 0){
+    d.happiness   = Math.max(5,  d.happiness   - daysMissed * 12);
+    d.hunger      = Math.max(0,  d.hunger      - daysMissed * 18);
+    d.energy      = Math.max(10, d.energy      - daysMissed * 6);
+    d.cleanliness = Math.max(0,  d.cleanliness - daysMissed * 10);
+    d.lastDecay   = t;
+  }
+  if(d.fetchToday.date !== t) d.fetchToday = { date:t, throws:0, caught:0, bb:0 };
+  if(d.trainToday.date !== t) d.trainToday = { date:t, sessions:0 };
+  return d;
+}
+
+function getDogLevel(xp){
+  let lv = DOG_LEVELS[0];
+  for(const l of DOG_LEVELS){ if(xp >= l.min) lv = l; else break; }
+  return lv;
+}
+function getNextDogLevel(xp){ return DOG_LEVELS.find(l => l.min > xp) || null; }
+
+function addDogXP(amount){
+  const u = currentUser(); if(!u) return;
+  const d = initDogState(); if(!d) return;
+  const oldLv = getDogLevel(d.xp||0);
+  d.xp = (d.xp||0) + amount;
+  const newLv = getDogLevel(d.xp);
+  saveAccounts();
+  if(newLv.num > oldLv.num){
+    showToast('🌟 '+(d.name||'Penny')+' levelled up to '+newLv.name+'!');
+    dogLog('🌟 '+(d.name||'Penny')+' reached Level '+newLv.num+': '+newLv.name+'!');
+  }
+}
+
+function dogLog(msg){
+  const u = currentUser(); if(!u) return;
+  const d = u.dog; if(!d) return;
+  d.journal = d.journal||[];
+  d.journal.unshift({ msg, ts:Date.now() });
+  if(d.journal.length > 40) d.journal.pop();
+  saveAccounts();
+}
+
+function dogCare(action){
+  const u = currentUser(); if(!u){ openAuth('signin'); return; }
+  const d = initDogState(); if(!d) return;
+  const t = today();
+  const nm = d.name||'Penny';
+  switch(action){
+    case 'feed': {
+      if(d.actions?.feed===t) return;
+      d.actions.feed=t; d.hunger=Math.min(100,(d.hunger||50)+40); d.happiness=Math.min(100,d.happiness+15); d.lastDecay=t;
+      addDogXP(8); dogLog(nm+' had their dinner! 🦴'); showToast('🦴 '+nm+' enjoyed their dinner! +15 ❤️'); break;
+    }
+    case 'walk': {
+      if(d.actions?.walk===t) return;
+      d.actions.walk=t; d.energy=Math.max(0,(d.energy||80)-15); d.happiness=Math.min(100,d.happiness+25); d.cleanliness=Math.max(0,(d.cleanliness||90)-5); d.walkCount=(d.walkCount||0)+1; d.lastDecay=t;
+      addDogXP(15); dogLog(nm+' went on a walk! 🚶'); showToast('🚶 Great walk with '+nm+'! +25 ❤️'); break;
+    }
+    case 'play': {
+      if(d.actions?.play===t) return;
+      d.actions.play=t; d.energy=Math.max(0,(d.energy||80)-10); d.happiness=Math.min(100,d.happiness+20); d.lastDecay=t;
+      addDogXP(10); dogLog(nm+' had a play session! 🎾'); showToast('🎾 '+nm+' loved playing! +20 ❤️'); break;
+    }
+    case 'cuddle': {
+      d.actions=d.actions||{};
+      if(d.actions.cuddle_date!==t){ d.actions.cuddle_count=0; d.actions.cuddle_date=t; }
+      if((d.actions.cuddle_count||0)>=3){ showToast(nm+' is cuddle-max\'d for today! 🤗'); return; }
+      d.actions.cuddle_count=(d.actions.cuddle_count||0)+1; d.happiness=Math.min(100,d.happiness+8); d.lastDecay=t;
+      addDogXP(3); dogLog(nm+' got cuddles! 🤗'); showToast('🤗 Cuddle session! '+nm+' loves you.'); break;
+    }
+    case 'bath': {
+      const days = d.lastBath ? Math.floor((Date.now()-new Date(d.lastBath).getTime())/86400000) : 7;
+      if(days<5){ showToast(nm+' is still clean — come back in '+(5-days)+' day(s)!'); return; }
+      d.lastBath=t; d.cleanliness=100; d.happiness=Math.min(100,d.happiness+10); d.lastDecay=t;
+      addDogXP(12); dogLog(nm+' had a bath! Squeaky clean 🛁'); showToast('🛁 Squeaky clean! +10 ❤️'); break;
+    }
+    case 'nap': {
+      if(d.actions?.nap===t) return;
+      d.actions.nap=t; d.energy=Math.min(100,(d.energy||70)+35); d.happiness=Math.min(100,d.happiness+5); d.lastDecay=t;
+      addDogXP(5); dogLog(nm+' had a nap and recharged 💤'); showToast('💤 '+nm+' is fully rested!'); break;
+    }
+    case 'treat': {
+      if(d.actions?.treat===t) return;
+      d.actions.treat=t; d.hunger=Math.min(100,(d.hunger||50)+15);
+      const boost=Math.floor(Math.random()*8)+5; d.happiness=Math.min(100,d.happiness+boost); d.lastDecay=t;
+      addDogXP(4); dogLog(nm+' got a surprise treat! 🍪 +'+boost+' happiness'); showToast('🍪 Surprise treat! +'+boost+' ❤️'); break;
+    }
+    case 'groom': {
+      if(d.actions?.groom===t) return;
+      d.actions.groom=t; d.cleanliness=Math.min(100,(d.cleanliness||60)+35); d.happiness=Math.min(100,d.happiness+6); d.lastDecay=t;
+      addDogXP(7); dogLog(nm+' got groomed! Looking great 💇'); showToast('💇 Looking great, '+nm+'!'); break;
+    }
+  }
+  saveAccounts(); checkDogBadges(); renderDogPage(); renderDogPanel();
+}
+
+function renderDogPage(){
+  const u = currentUser();
+  const signedOut = document.getElementById('dog-page-signed-out');
+  const content   = document.getElementById('dog-page-content');
+  if(!signedOut||!content) return;
+  if(!u){ signedOut.style.display='block'; content.style.display='none'; return; }
+  signedOut.style.display='none'; content.style.display='flex';
+  const d = initDogState(); if(!d) return;
+  const t = today();
+  const h = getDogHappiness();
+  const mood = getDogMoodKey(h);
+  const xp = d.xp||0;
+  const lv = getDogLevel(xp);
+  const nextLv = getNextDogLevel(xp);
+  const xpPct = nextLv ? Math.min(100,Math.round(((xp-lv.min)/(nextLv.min-lv.min))*100)) : 100;
+  const nm = d.name||'Penny';
+
+  // Subtitle
+  const subEl = document.getElementById('dp-subtitle');
+  if(subEl) subEl.textContent = h>=80?'Life is good. 🌿':h>=60?'Doing great — keep showing up.':h>=40?'Could use a little extra love today.':h>=20?'Really needs you right now.':'Please spend some time with them. 🐾';
+  const titleEl = document.getElementById('dp-title');
+  if(titleEl) titleEl.textContent = nm+"'s Place";
+
+  // Level row
+  const lvRow = document.getElementById('dp-level-row');
+  if(lvRow) lvRow.innerHTML=`
+    <div class="dp-level-badge">${lv.icon} Level ${lv.num} — ${lv.name}</div>
+    <div class="dp-xp-wrap">
+      <div class="dp-xp-labels"><span>${xp} XP</span><span>${nextLv?nextLv.min+' XP → '+nextLv.name:'Max level reached!'}</span></div>
+      <div class="dp-xp-track"><div class="dp-xp-fill" style="width:${xpPct}%"></div></div>
+    </div>
+    <span class="dp-bb-today">🌿 ${(u.hp||0).toLocaleString()} BB</span>`;
+
+  // Dog display
+  const anim={thriving:'anim-bounce',happy:'anim-wag',okay:'anim-breathe',needs:'anim-breathe',sad:''}[mood];
+  const emojiEl=document.getElementById('dp-dog-emoji'); if(emojiEl){emojiEl.textContent=DOG_EMOJIS[mood]; emojiEl.className='dp-dog-emoji '+anim;}
+  const dpAccEl=document.getElementById('dp-acc-display'); if(dpAccEl) dpAccEl.innerHTML=(d.accessories||[]).map(id=>DOG_ACC_MAP[id]||'').join('');
+  const nameEl=document.getElementById('dp-dog-name'); if(nameEl) nameEl.textContent=nm;
+  const moodEl=document.getElementById('dp-dog-mood');
+  const lastChk=(u.checkins||[]).slice(-1)[0];
+  const comfortMsg=lastChk?.mood<=2&&lastChk?.date===t?nm+' senses you\'re having a hard day. They lean right into you. 🐾':DOG_MESSAGES[mood][Math.floor(Date.now()/60000)%DOG_MESSAGES[mood].length];
+  if(moodEl) moodEl.textContent=comfortMsg;
+
+  // Stats
+  const statsEl=document.getElementById('dp-stats');
+  if(statsEl) statsEl.innerHTML=[
+    {icon:'❤️',l:'Happiness',v:h,               c:h>=70?'#22c55e':h>=40?'var(--amber)':'#ef4444'},
+    {icon:'🍖',l:'Hunger',   v:d.hunger||50,     c:(d.hunger||50)>=50?'var(--forest)':'#ea580c'},
+    {icon:'⚡',l:'Energy',   v:d.energy||60,     c:(d.energy||60)>=50?'var(--sky)':'var(--amber)'},
+    {icon:'🛁',l:'Clean',    v:d.cleanliness||80,c:(d.cleanliness||80)>=50?'var(--forest-l)':'var(--earth)'},
+  ].map(s=>`<div class="dp-stat">
+    <div class="dp-stat-top"><span class="dp-stat-name">${s.icon} ${s.l}</span><span class="dp-stat-val" style="color:${s.c}">${Math.round(s.v)}%</span></div>
+    <div class="dp-stat-bar"><div class="dp-stat-fill" style="width:${Math.round(s.v)}%;background:${s.c}"></div></div>
+  </div>`).join('');
+
+  // Care actions
+  const bathDays=d.lastBath?Math.floor((Date.now()-new Date(d.lastBath).getTime())/86400000):7;
+  const cuddles=d.actions?.cuddle_date===t?(d.actions.cuddle_count||0):0;
+  const actEl=document.getElementById('dp-actions');
+  if(actEl) actEl.innerHTML=[
+    {key:'feed',  icon:'🦴',name:'Feed',  gain:'+15❤️ +8XP', done:d.actions?.feed===t,  stat:d.actions?.feed===t?'Fed ✓':'Hungry!'},
+    {key:'walk',  icon:'🚶',name:'Walk',  gain:'+25❤️ +15XP',done:d.actions?.walk===t,  stat:d.actions?.walk===t?'Walked ✓':'Needs a walk'},
+    {key:'play',  icon:'🎾',name:'Play',  gain:'+20❤️ +10XP',done:d.actions?.play===t,  stat:d.actions?.play===t?'Played ✓':"Let's go!"},
+    {key:'cuddle',icon:'🤗',name:'Cuddle',gain:'+8❤️ +3XP',  done:cuddles>=3,            stat:cuddles>=3?'Max today!':cuddles+'/3 today'},
+    {key:'bath',  icon:'🛁',name:'Bath',  gain:'+Clean +12XP',done:bathDays<5,           stat:bathDays<5?'Clean ✓':'Needs bath'},
+    {key:'nap',   icon:'💤',name:'Nap',   gain:'+35⚡ +5XP', done:d.actions?.nap===t,   stat:d.actions?.nap===t?'Rested ✓':'Sleepy...'},
+    {key:'treat', icon:'🍪',name:'Treat', gain:'Surprise! +4XP',done:d.actions?.treat===t,stat:d.actions?.treat===t?'Had treat ✓':'Surprise!'},
+    {key:'groom', icon:'💇',name:'Groom', gain:'+35🛁 +7XP', done:d.actions?.groom===t, stat:d.actions?.groom===t?'Groomed ✓':'Needs brush'},
+  ].map(a=>`<button class="dp-act${a.done?' done':''}" onclick="dogCare('${a.key}')" ${a.done?'disabled':''}>
+    <span class="dp-act-icon">${a.icon}</span>
+    <span class="dp-act-name">${a.name}</span>
+    <span class="dp-act-gain">${a.gain}</span>
+    <span class="dp-act-stat">${a.stat}</span>
+  </button>`).join('');
+
+  // Fetch scores
+  const fT=document.getElementById('dp-fetch-throws'); if(fT) fT.textContent=d.fetchToday.throws;
+  const fC=document.getElementById('dp-fetch-caught'); if(fC) fC.textContent=d.fetchToday.caught;
+  const fB=document.getElementById('dp-fetch-bb');     if(fB) fB.textContent=d.fetchToday.bb||0;
+  const tC=document.getElementById('dp-train-count');  if(tC) tC.textContent=d.trainToday.sessions;
+
+  // Tricks
+  const tricksEl=document.getElementById('dp-tricks');
+  if(tricksEl) tricksEl.innerHTML=DOG_TRICKS.map(tr=>{
+    const unlocked=xp>=tr.xp;
+    return `<div class="trick-tile ${unlocked?'unlocked':'locked'}" title="${unlocked?'Learned!':'Unlocks at '+tr.xp+' XP'}">
+      <div class="trick-icon">${tr.icon}</div>
+      <div class="trick-name">${tr.name}</div>
+      <div class="trick-xp">${unlocked?'<span style="color:var(--forest);font-weight:700">✓</span>':tr.xp+' XP'}</div>
+    </div>`;
+  }).join('');
+
+  // Accessories
+  const accGridEl=document.getElementById('dp-acc-grid');
+  if(accGridEl) accGridEl.innerHTML=ALL_ACCESSORIES.map(acc=>{
+    const owned=(u.redeemed||[]).includes(acc.id);
+    const equipped=(d.accessories||[]).includes(acc.id);
+    return `<div class="acc-tile${owned?(' owned'+(equipped?' equipped':'')):'locked'}" onclick="${owned?`equipDogAcc('${acc.id}')`:"showPage('store')"}">
+      <div class="acc-tile-icon">${acc.icon}</div>
+      <div class="acc-tile-name">${acc.name}</div>
+      <div class="acc-tile-status">${owned?(equipped?'Equipped ✓':'Tap to equip'):'🔒 Unlock in store'}</div>
+    </div>`;
+  }).join('');
+
+  // Wellbeing tip
+  const tipEl=document.getElementById('dp-tip');
+  const tip=DOG_TIPS[Math.floor(Date.now()/86400000)%DOG_TIPS.length];
+  if(tipEl) tipEl.innerHTML=`<strong>${tip.bold}</strong> ${tip.text}`;
+
+  // Journal
+  const journalEl=document.getElementById('dp-journal');
+  if(journalEl){
+    const log=d.journal||[];
+    journalEl.innerHTML=log.length?log.map(e=>{
+      const ago=Math.floor((Date.now()-e.ts)/60000);
+      return `<div class="dj-row"><span class="dj-time">${ago<60?ago+'m':Math.floor(ago/60)+'h'}</span><span class="dj-msg">${esc(e.msg)}</span></div>`;
+    }).join(''):'<p style="color:var(--text-muted);font-size:.8rem;padding:.5rem 0">Care for '+nm+' to start your journal!</p>';
+  }
+}
+
+/* ─── Fetch Minigame ─── */
+let _fetchActive=false, _fetchTimer=null, _fetchMoveTimer=null;
+
+function throwBall(e){
+  if(e) e.stopPropagation();
+  const u=currentUser(); if(!u) return;
+  const d=initDogState(); if(!d) return;
+  if(d.fetchToday.throws>=5){ showToast((d.name||'Penny')+' is tired from fetch! Come back tomorrow.'); return; }
+  if(_fetchActive) return;
+  d.fetchToday.throws=(d.fetchToday.throws||0)+1; saveAccounts();
+  const throws=document.getElementById('dp-fetch-throws'); if(throws) throws.textContent=d.fetchToday.throws;
+
+  const arena=document.getElementById('dp-fetch-arena');
+  const ball=document.getElementById('dp-fetch-ball');
+  const prompt=document.getElementById('dp-fetch-prompt');
+  const timerBar=document.getElementById('dp-fetch-timer');
+  if(!arena||!ball||!prompt) return;
+
+  prompt.style.display='none'; _fetchActive=true;
+  const W=Math.max(50,arena.clientWidth-50), H=Math.max(30,arena.clientHeight-50);
+  const rx=Math.random()*W, ry=Math.random()*H;
+  ball.style.left=rx+'px'; ball.style.top=ry+'px'; ball.style.display='block'; ball.classList.remove('pop');
+
+  if(timerBar){ timerBar.style.transition='none'; timerBar.style.width='100%'; requestAnimationFrame(()=>{ timerBar.style.transition='width 3s linear'; timerBar.style.width='0%'; }); }
+
+  _fetchMoveTimer=setTimeout(()=>{
+    if(!_fetchActive) return;
+    ball.style.transition='left .4s ease, top .4s ease';
+    ball.style.left=Math.random()*W+'px'; ball.style.top=Math.random()*H+'px';
+    setTimeout(()=>ball.style.transition='',450);
+  }, 1400);
+
+  _fetchTimer=setTimeout(()=>{
+    clearTimeout(_fetchMoveTimer); _fetchActive=false; ball.style.display='none';
+    if(timerBar){ timerBar.style.transition='none'; timerBar.style.width='100%'; }
+    const rem=5-(d.fetchToday.throws||0);
+    prompt.innerHTML=rem>0?`<button class="btn btn-primary btn-sm" onclick="throwBall(event)">Again! (${rem} left)</button>`:'<span style="font-size:.78rem;color:rgba(255,255,255,.8)">All done today!</span>';
+    prompt.style.display='flex';
+    const msgEl=document.getElementById('dp-fetch-msg'); if(msgEl) msgEl.textContent=(d.name||'Penny')+' missed it! Try again.';
+  }, 3000);
+}
+
+function catchBall(e){
+  if(e){ e.preventDefault(); e.stopPropagation(); }
+  if(!_fetchActive) return;
+  clearTimeout(_fetchTimer); clearTimeout(_fetchMoveTimer); _fetchActive=false;
+  const ball=document.getElementById('dp-fetch-ball');
+  const prompt=document.getElementById('dp-fetch-prompt');
+  const timerBar=document.getElementById('dp-fetch-timer');
+  if(ball){ ball.classList.add('pop'); setTimeout(()=>{ ball.style.display='none'; ball.classList.remove('pop'); },380); }
+  if(timerBar){ timerBar.style.transition='none'; timerBar.style.width='100%'; }
+
+  const u=currentUser(); if(!u) return;
+  const d=initDogState(); if(!d) return;
+  d.fetchToday.caught=(d.fetchToday.caught||0)+1; d.fetchToday.bb=(d.fetchToday.bb||0)+2;
+  d.happiness=Math.min(100,getDogHappiness()+6); d.lastDecay=today(); saveAccounts();
+  addDogXP(6); addHP(2,'Fetch catch! 🎾');
+  dogLog((d.name||'Penny')+' caught the ball! 🎾 Great fetch!');
+  const fC=document.getElementById('dp-fetch-caught'); if(fC) fC.textContent=d.fetchToday.caught;
+  const fB=document.getElementById('dp-fetch-bb');     if(fB) fB.textContent=d.fetchToday.bb;
+  const rem=5-(d.fetchToday.throws||0);
+  if(prompt){ prompt.innerHTML=rem>0?`<button class="btn btn-primary btn-sm" onclick="throwBall(event)">Again! (${rem} left)</button>`:'<span style="font-size:.78rem;color:rgba(255,255,255,.8)">All done today!</span>'; prompt.style.display='flex'; }
+  const msgEl=document.getElementById('dp-fetch-msg'); if(msgEl) msgEl.textContent='Caught it! +6 XP, +2 BB 🎉';
+  showToast('🎾 '+(d.name||'Penny')+' caught it! +2 BB');
+  renderDogPage();
+}
+
+/* ─── Training Rhythm Game ─── */
+let _trainActive=false, _trainPos=0, _trainDir=1, _trainRAF=null, _trainSpeed=0.7;
+
+function startTraining(){
+  const u=currentUser(); if(!u) return;
+  const d=initDogState(); if(!d) return;
+  if((d.trainToday.sessions||0)>=3){ showToast('Training done for today! Come back tomorrow.'); return; }
+  if(_trainActive) return;
+  _trainActive=true; _trainPos=0; _trainDir=1;
+  _trainSpeed=0.55+getDogLevel(d.xp||0).num*0.18;
+  const startBtn=document.getElementById('dp-train-start');
+  const clickBtn=document.getElementById('dp-train-click');
+  if(startBtn) startBtn.style.display='none';
+  if(clickBtn) clickBtn.style.display='block';
+  const hintEl=document.getElementById('dp-train-hint'); if(hintEl) hintEl.textContent='Click NOW! when the marker hits the green zone!';
+  function animate(){
+    _trainPos+=_trainDir*_trainSpeed;
+    if(_trainPos>=100){_trainPos=100;_trainDir=-1;}
+    if(_trainPos<=0)  {_trainPos=0;  _trainDir=1;}
+    const marker=document.getElementById('dp-train-marker');
+    if(marker) marker.style.left=_trainPos+'%';
+    if(_trainActive) _trainRAF=requestAnimationFrame(animate);
+  }
+  animate();
+}
+
+function trainingClick(){
+  if(!_trainActive){ startTraining(); return; }
+  cancelAnimationFrame(_trainRAF); _trainActive=false;
+  const hit=_trainPos>=58&&_trainPos<=80;
+  const clickBtn=document.getElementById('dp-train-click'); if(clickBtn) clickBtn.style.display='none';
+  const hintEl=document.getElementById('dp-train-hint');
+  const marker=document.getElementById('dp-train-marker');
+  if(marker) marker.style.background=hit?'#22c55e':'#ef4444';
+  const u=currentUser(); if(!u) return;
+  const d=initDogState(); if(!d) return;
+  d.trainToday.sessions=(d.trainToday.sessions||0)+1; d.trainToday.date=today();
+  if(hit){
+    d.happiness=Math.min(100,getDogHappiness()+12); d.lastDecay=today(); saveAccounts();
+    addDogXP(20); dogLog((d.name||'Penny')+' nailed training! 🎓 Perfect!');
+    if(hintEl) hintEl.textContent='🌟 Perfect! '+(d.name||'Penny')+' is a star!';
+    showToast('🎓 Perfect! +'+(d.name||'Penny')+' loved it! +20 XP');
+  } else {
+    saveAccounts(); addDogXP(5); dogLog((d.name||'Penny')+' practiced training 🐾 Keep going!');
+    if(hintEl) hintEl.textContent='Good try! Hit the green zone next time.';
+    showToast('Keep practicing! +5 XP');
+  }
+  setTimeout(()=>{
+    if(marker){ marker.style.background='var(--forest)'; marker.style.left='0%'; }
+    const sessLeft=3-(d.trainToday.sessions||0);
+    const startBtn=document.getElementById('dp-train-start');
+    if(startBtn){ startBtn.textContent=sessLeft>0?`Another session (${sessLeft} left)`:'All done today! 🌟'; startBtn.style.display='block'; }
+    if(hintEl) hintEl.textContent='Click when the marker is in the green zone!';
+    renderDogPage();
+  }, 1400);
+}
+
+/* ════════════════════════════════════════════ DOG COMPANION SYSTEM */
+const DOG_DECAY   = 12;   // happiness lost per missed day
+const DOG_EMOJIS  = { thriving:'🐕', happy:'🐕', okay:'🐶', needs:'🐾', sad:'🥺' };
+const DOG_ACC_MAP = { dog1:'🎀', dog2:'💚', dog3:'🧣', dog4:'👕' };
+
+const DOG_MESSAGES = {
+  thriving:["Tail wagging — ready for anything!","Living their best life.","Could not be happier right now.","Absolutely thriving today."],
+  happy:   ["Content and cozy.","Having a great day.","Tail gently wagging.","All is well."],
+  okay:    ["A little sleepy...","Napping in the afternoon sun.","Doing okay, could use some love.","Just chilling."],
+  needs:   ["Could use some attention.","Wondering where you've been.","Give me a walk?","A little lonely."],
+  sad:     ["Really needs you right now.","Please spend some time with me.","Missing you a lot.","Come back soon."]
+};
+
+function getDogData() {
+  const u = currentUser(); if(!u) return null;
+  if(!u.dog) u.dog = { happiness:70, lastDecay:today(), actions:{}, walkCount:0, name:'Penny', accessories:[] };
+  return u.dog;
+}
+function getDogHappiness() {
+  const d = getDogData(); if(!d) return 70;
+  const daysMissed = Math.max(0, Math.floor((Date.now() - new Date(d.lastDecay||today()).getTime()) / 86400000));
+  return Math.max(5, d.happiness - daysMissed * DOG_DECAY);
+}
+function getDogMoodKey(h) {
+  if(h>=80) return 'thriving'; if(h>=60) return 'happy'; if(h>=40) return 'okay'; if(h>=20) return 'needs'; return 'sad';
+}
+function getDogHappinessColor(h) {
+  if(h>=80) return '#22c55e'; if(h>=60) return '#4a7a23'; if(h>=40) return '#C4870A'; if(h>=20) return '#ea580c'; return '#ef4444';
+}
+function addDogHappiness(amount, actionKey) {
+  const u = currentUser(); if(!u) return;
+  const d = getDogData();
+  if(actionKey) d.actions[actionKey] = today();
+  d.happiness = Math.min(100, getDogHappiness() + amount);
+  d.lastDecay = today();
+  saveAccounts();
+  renderDogPanel();
+  checkDogBadges();
+}
+function checkDogBadges() {
+  const d = getDogData(); if(!d) return;
+  if(getDogHappiness()>=80)  awardBadge('dog_happy');
+  if((d.walkCount||0)>=7)    awardBadge('dog_walk');
+  const careCount = Object.values(d.actions||{}).length;
+  if(careCount>=30)          awardBadge('dog_loyal');
+}
+function renderDogPanel() {
+  const panel = document.getElementById('penny-panel'); if(!panel) return;
+  const u = currentUser();
+  if(!u){ panel.style.display='none'; return; }
+  panel.style.display='block';
+  const d = getDogData();
+  const h = getDogHappiness();
+  const mood = getDogMoodKey(h);
+  const color = getDogHappinessColor(h);
+  const msgs = DOG_MESSAGES[mood];
+  const msg = msgs[Math.floor(Date.now()/60000) % msgs.length];
+  const anim = {thriving:'anim-bounce', happy:'anim-wag', okay:'anim-breathe', needs:'anim-breathe', sad:''}[mood];
+  const moodLabels = {thriving:'Thriving 🌟', happy:'Happy 🐾', okay:'Okay 😴', needs:'Needs love 🥺', sad:'Sad 😢'};
+  const moodColors = {thriving:'#dcfce7', happy:'rgba(45,80,22,.1)', okay:'rgba(196,135,10,.1)', needs:'rgba(234,88,12,.1)', sad:'rgba(239,68,68,.1)'};
+  const moodTxtColors = {thriving:'#16a34a', happy:'var(--forest)', okay:'var(--amber)', needs:'#ea580c', sad:'#ef4444'};
+
+  // accessories
+  const acc = (d.accessories||[]).map(id=>DOG_ACC_MAP[id]||'').join('');
+
+  // actions
+  const t = today();
+  const fedToday   = d.actions?.feed  === t;
+  const walkedToday= d.actions?.walk  === t;
+  const playedToday= d.actions?.play  === t;
+  const cuddleCount= d.actions?.cuddle_count && d.actions?.cuddle_date===t ? d.actions.cuddle_count : 0;
+
+  document.getElementById('dog-name-display').textContent = d.name||'Penny';
+  document.getElementById('dog-emoji-main').textContent   = DOG_EMOJIS[mood];
+  document.getElementById('dog-emoji-main').className     = 'dog-main '+anim;
+  document.getElementById('dog-acc-display').textContent  = acc;
+  document.getElementById('dog-message').textContent      = msg;
+  document.getElementById('dog-hp-fill').style.width      = h+'%';
+  document.getElementById('dog-hp-fill').style.background = color;
+  document.getElementById('dog-hp-pct').textContent       = h+'%';
+  document.getElementById('dog-hp-pct').style.color       = color;
+
+  const pill = document.getElementById('dog-mood-pill');
+  pill.textContent = moodLabels[mood];
+  pill.style.background = moodColors[mood];
+  pill.style.color = moodTxtColors[mood];
+
+  // Check if mood is sad and user has low check-in mood
+  const lastCheckin = (u.checkins||[]).slice(-1)[0];
+  const comfortMsg = lastCheckin?.mood <= 2 && lastCheckin?.date===t
+    ? `${d.name||'Penny'} senses you're having a hard day. They're leaning right into you. 🐾` : msg;
+  document.getElementById('dog-message').textContent = comfortMsg;
+
+  document.getElementById('dog-actions-grid').innerHTML = [
+    { key:'feed',  icon:'🦴', label:'Feed',       done:fedToday,    title:'Write a card to auto-feed' },
+    { key:'walk',  icon:'🚶', label:'Walk',        done:walkedToday, title:'Complete check-in to auto-walk' },
+    { key:'play',  icon:'🎾', label:'Play fetch',  done:playedToday, title:'' },
+    { key:'cuddle',icon:'🤗', label:`Cuddle${cuddleCount>0?' ('+cuddleCount+'/3)':''}`, done:cuddleCount>=3, title:'' },
+  ].map(a=>`<button class="dog-act${a.done?' done':''}" onclick="doDogAction('${a.key}')" ${a.done?'disabled':''} title="${a.title}">
+    <span class="di">${a.icon}</span>${a.label}
+  </button>`).join('');
+}
+function doDogAction(key) {
+  const d = getDogData(); if(!d) return;
+  const t = today();
+  if(key==='play') {
+    if(d.actions?.play===t) return;
+    addDogHappiness(15,'play');
+    showToast('🎾 Fetch! +15 happiness for '+(d.name||'Penny'));
+  } else if(key==='cuddle') {
+    d.actions = d.actions||{};
+    if(d.actions.cuddle_date!==t){ d.actions.cuddle_count=0; d.actions.cuddle_date=t; }
+    if((d.actions.cuddle_count||0)>=3) return;
+    d.actions.cuddle_count = (d.actions.cuddle_count||0)+1;
+    d.happiness = Math.min(100, getDogHappiness()+5);
+    d.lastDecay = t;
+    saveAccounts();
+    renderDogPanel();
+    showToast('🤗 '+(d.name||'Penny')+' feels the love!');
+  }
+}
+function toggleDogRename() {
+  const inp = document.getElementById('dog-name-input');
+  const d = getDogData(); if(!d) return;
+  inp.value = d.name||'Penny';
+  inp.style.display = inp.style.display==='none'?'block':'none';
+  if(inp.style.display==='block') inp.focus();
+}
+function saveDogName() {
+  const inp = document.getElementById('dog-name-input');
+  const v = inp.value.trim();
+  if(!v) return;
+  const u = currentUser(); if(!u) return;
+  getDogData().name = v;
+  saveAccounts();
+  inp.style.display='none';
+  renderDogPanel();
+  showToast('🐾 Name saved! Hello, '+v+'!');
+}
+
+/* ════════════════════════════════════════════ WALL SORT */
+let wallSort = 'newest';
+function sortWall(type, btn) {
+  wallSort = type;
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderWall();
+}
+
+/* ════════════════════════════════════════════ NOTIFICATION DOTS */
+function updateNotifDots() {
+  const u = currentUser();
+  const checkinDone  = u && (u.checkins||[]).some(c=>c.date===today());
+  const challengeDone= u && getChallengeProgress().done;
+  const dogNeedsLove = u && getDogHappiness()<40;
+  document.getElementById('ntab-checkin')?.classList.toggle('has-notif', !!u && !checkinDone);
+  document.getElementById('ntab-wall')?.classList.toggle('has-notif', !!u && (!challengeDone || dogNeedsLove));
+}
+
+/* ════════════════════════════════════════════ RESET COUNTDOWN */
+function startResetCountdown() {
+  function tick() {
+    const el = document.getElementById('reset-tag'); if(!el) return;
+    const now = new Date();
+    const midnight = new Date(now); midnight.setHours(24,0,0,0);
+    const diff = midnight - now;
+    const h = Math.floor(diff/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    const s = Math.floor((diff%60000)/1000);
+    const u = currentUser();
+    const done = getTodayResponded().length;
+    if(u && done > 0) {
+      el.textContent = `${done}/5 prompts answered · resets in ${h}h ${m}m ${s}s`;
+    } else if(u) {
+      el.textContent = `Prompts reset in ${h}h ${m}m ${s}s`;
+    } else {
+      el.textContent = '';
+    }
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+/* ════════════════════════════════════════════ STREAK MILESTONES */
+const STREAK_MILESTONES = { 3:{bb:15,emoji:'🔥',msg:'3-day streak!'}, 7:{bb:30,emoji:'🌟',msg:'Week streak!'}, 14:{bb:60,emoji:'💫',msg:'2-week streak!'}, 30:{bb:150,emoji:'🏆',msg:'30-day legend!'} };
+function checkStreakMilestone(streak) {
+  const m = STREAK_MILESTONES[streak]; if(!m) return;
+  // Show banner
+  const wrap = document.getElementById('streak-banner-wrap');
+  if(wrap) {
+    wrap.innerHTML = `<div class="streak-banner">
+      <span class="sb2-icon">${m.emoji}</span>
+      <div class="sb2-text"><h4>${m.msg}</h4><p>You showed up ${streak} days in a row. That's real.</p></div>
+      <span class="sb2-bb">+${m.bb} BB</span>
+    </div>`;
+    setTimeout(()=>{ if(wrap) wrap.innerHTML=''; }, 8000);
+  }
+  addHP(m.bb, `Streak milestone: ${streak} days`);
+  if(streak===3)  awardBadge('streak_3');
+  if(streak===7)  awardBadge('streak_7');
+  if(streak===30) awardBadge('streak_30');
+}
+
+/* ════════════════════════════════════════════ STORE — dog category */
+// Wire dog accessory equip/unequip
+function equipDogAcc(itemId) {
+  const u = currentUser(); if(!u) return;
+  const d = getDogData();
+  d.accessories = d.accessories||[];
+  if(d.accessories.includes(itemId)) {
+    d.accessories = d.accessories.filter(a=>a!==itemId);
+    showToast('Accessory removed.');
+  } else {
+    d.accessories.push(itemId);
+    showToast('🐾 Accessory equipped! Check on '+(d.name||'Penny')+'!');
+  }
+  saveAccounts();
+  renderDogPanel();
+  renderStore();
+}
+
+/* ─── Today's Progress strip ─── */
+function renderTodayProgress(){
+  const el = document.getElementById('today-progress'); if(!el) return;
+  const u = currentUser(); if(!u){ el.style.display='none'; return; }
+  const checkedIn  = (u.checkins||[]).some(c=>c.date===today());
+  const cardsToday = cards.filter(c=>c.ownerEmail===currentEmail && c.id.startsWith('u') && Date.now()-parseInt(c.id.slice(1)) < 86400000).length;
+  const chDone     = getChallengeProgress().done;
+  const dogH       = getDogHappiness();
+  const dogName    = getDogData()?.name||'Penny';
+  const items = [
+    { icon:'🌿', label:'Card posted',     done: cardsToday>0,  detail: cardsToday>0?cardsToday+' card'+(cardsToday>1?'s':''):'not yet' },
+    { icon:'🌬️',label:'Check-in',        done: checkedIn,     detail: checkedIn?'done':'not yet' },
+    { icon:'⭐', label:'Challenge',       done: chDone,        detail: chDone?'complete':'in progress' },
+    { icon:'🐾', label:dogName,          done: dogH>=70,      detail: dogH+'% happy' },
+  ];
+  el.style.display='flex';
+  el.innerHTML = items.map(i=>`
+    <div style="display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:${i.done?'var(--forest)':'var(--text-muted)'}">
+      <span>${i.icon}</span>
+      <span style="font-weight:${i.done?'600':'400'}">${i.label}</span>
+      <span style="opacity:.55;font-size:.68rem">${i.detail}</span>
+      ${i.done?'<span style="color:var(--forest);font-weight:700">✓</span>':''}
+    </div>`).join('<span style="color:var(--line);font-size:.8rem">·</span>');
+}
+
+/* ─── Community Pick (top card of the session) ─── */
+function renderCommunityPick(){
+  const el = document.getElementById('community-pick'); if(!el) return;
+  if(!cards.length){ el.style.display='none'; return; }
+  const top = [...cards].sort((a,b)=>{
+    const ta=Object.values(a.reactions||{}).reduce((s,v)=>s+v,0)+Object.keys(reactions).filter(k=>k.startsWith(a.id+'_')&&reactions[k]).length;
+    const tb=Object.values(b.reactions||{}).reduce((s,v)=>s+v,0)+Object.keys(reactions).filter(k=>k.startsWith(b.id+'_')&&reactions[k]).length;
+    return tb-ta;
+  })[0];
+  const total=Object.values(top.reactions||{}).reduce((s,v)=>s+v,0)+Object.keys(reactions).filter(k=>k.startsWith(top.id+'_')&&reactions[k]).length;
+  if(total<3){ el.style.display='none'; return; }
+  el.style.display='block';
+  el.innerHTML=`<div style="display:flex;align-items:flex-start;gap:1rem">
+    <div style="flex-shrink:0;text-align:center">
+      <div style="font-size:1.5rem">🏅</div>
+      <div style="font-size:.6rem;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;margin-top:.1rem">Top card</div>
+    </div>
+    <div style="flex:1;min-width:0">
+      <p style="font-family:'Playfair Display',serif;font-size:.9rem;color:var(--text);line-height:1.55;margin-bottom:.4rem">"${esc(top.content)}"</p>
+      <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+        <span style="font-size:.7rem;font-style:italic;color:var(--text-muted)">${esc(top.name||'a voice from the community')}</span>
+        <span style="font-size:.68rem;color:var(--amber);font-weight:600">· ${total} reactions</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ─── Boot ─── */
+function init(){
+  setMood(3);
+  initFilterPills();
+  renderSongBanner();
+  renderCommunityStats();
+  renderNav();
+  renderWallSubmitPanel();
+  renderWall();
+  renderCommunityPick();
+  renderDailyChallenge();
+  renderDogPanel();
+  updateNotifDots();
+  startResetCountdown();
+  initCheckinPage();
+  if(!currentEmail) openAuth('signup');
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

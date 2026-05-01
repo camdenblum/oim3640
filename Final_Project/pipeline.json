@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "id": "6e17a215",
+    "name": "Babson College",
+    "contact": "Steve",
+    "status": "Active Partner",
+    "foundations": [
+      "busyhead"
+    ],
+    "notes": "Outreach letter generated (To Dean of Students / VP of Student Affairs).",
+    "date_added": "2026-04-30",
+    "last_updated": "2026-04-30"
+  }
+]
