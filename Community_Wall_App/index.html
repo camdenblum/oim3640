@@ -522,29 +522,44 @@ footer { background:var(--forest); color:rgba(246,241,233,.75); padding:2.75rem 
 .ch-reward  { font-size:.72rem; font-weight:700; color:var(--amber); background:rgba(196,135,10,.1); padding:.18rem .55rem; border-radius:99px; }
 .ch-progress-text { font-size:.7rem; color:var(--text-muted); }
 
-/* ── Song of the day ── */
-.song-banner {
-  background:var(--forest); border-radius:16px; padding:1.25rem 1.5rem;
-  display:flex; align-items:center; gap:1.25rem; margin-bottom:2rem;
-  position:relative; overflow:hidden; cursor:pointer;
-  transition:opacity .15s;
+/* ── Noah banner ── */
+.noah-banner {
+  background:var(--forest); border-radius:18px; padding:1.4rem 1.6rem;
+  margin-bottom:2rem; position:relative; overflow:hidden; cursor:pointer;
+  transition:box-shadow .2s;
+  box-shadow:0 4px 20px rgba(45,80,22,.18);
 }
-.song-banner:hover { opacity:.95; }
-.song-banner::after {
-  content:''; position:absolute; right:-20px; top:-20px;
-  width:120px; height:120px; border-radius:50%;
-  background:rgba(255,255,255,.04);
+.noah-banner:hover { box-shadow:0 6px 28px rgba(45,80,22,.25); }
+.noah-banner::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse at 80% 0%,rgba(255,255,255,.06),transparent 55%);
 }
-.sb-vinyl { font-size:2.2rem; flex-shrink:0; animation:spin 8s linear infinite; }
-@keyframes spin { to { transform:rotate(360deg); } }
-.sb-text { flex:1; min-width:0; }
-.sb-label { font-size:.65rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(246,241,233,.4); margin-bottom:.3rem; }
-.sb-lyric { font-family:'Playfair Display',serif; font-style:italic; font-size:.95rem; color:rgba(246,241,233,.92); line-height:1.45; }
-.sb-song  { font-size:.7rem; color:rgba(246,241,233,.38); margin-top:.3rem; }
-.sb-note  { font-size:.75rem; color:rgba(246,241,233,.55); margin-top:.4rem; line-height:1.4; display:none; }
-.song-banner.expanded .sb-note { display:block; }
-.sb-arrow { font-size:.85rem; color:rgba(246,241,233,.35); transition:transform .2s; flex-shrink:0; }
-.song-banner.expanded .sb-arrow { transform:rotate(180deg); }
+.nb-eyebrow {
+  font-size:.65rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  color:rgba(246,241,233,.4); margin-bottom:.55rem;
+  display:flex; align-items:center; gap:.55rem;
+}
+.nb-eyebrow::after { content:''; flex:1; height:1px; background:rgba(246,241,233,.1); }
+.nb-topic { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:600; color:rgba(246,241,233,.95); margin-bottom:.5rem; }
+.nb-statement {
+  font-size:.83rem; color:rgba(246,241,233,.72); line-height:1.65;
+  border-left:2px solid rgba(196,135,10,.5); padding-left:.85rem;
+  margin-bottom:.6rem;
+}
+.nb-source { font-size:.67rem; color:rgba(246,241,233,.32); }
+.nb-expand { display:none; }
+.noah-banner.open .nb-expand { display:block; }
+.nb-prompt {
+  margin-top:.85rem; padding-top:.85rem;
+  border-top:1px solid rgba(246,241,233,.12);
+  font-family:'Playfair Display',serif; font-style:italic;
+  font-size:.88rem; color:rgba(246,241,233,.78); line-height:1.6;
+}
+.nb-prompt::before { content:'Reflect: '; font-style:normal; font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(196,135,10,.7); display:block; margin-bottom:.3rem; }
+.nb-footer { display:flex; align-items:center; justify-content:space-between; margin-top:.7rem; }
+.nb-toggle { font-size:.72rem; color:rgba(246,241,233,.38); display:flex; align-items:center; gap:.3rem; }
+.nb-arrow { display:inline-block; transition:transform .2s; }
+.noah-banner.open .nb-arrow { transform:rotate(180deg); }
 
 /* ── Community stats ── */
 .comm-stats { display:flex; gap:.75rem; flex-wrap:wrap; margin-bottom:1.75rem; }
@@ -686,6 +701,18 @@ footer { background:var(--forest); color:rgba(246,241,233,.75); padding:2.75rem 
 .sb2-text p  { font-size:.75rem; color:rgba(255,255,255,.7); }
 .sb2-bb { font-size:.78rem; font-weight:700; color:rgba(255,255,255,.9); background:rgba(255,255,255,.15); padding:.2rem .6rem; border-radius:99px; margin-left:auto; flex-shrink:0; }
 
+/* ── Dog pet animation ── */
+@keyframes heartFloat{0%{opacity:1;transform:translate(-50%,0) scale(.7)}70%{opacity:1;transform:translate(-50%,-45px) scale(1.1)}100%{opacity:0;transform:translate(-50%,-60px) scale(.9)}}
+.heart-pop{position:absolute;font-size:1.5rem;pointer-events:none;animation:heartFloat .85s ease forwards;left:50%;top:10px;z-index:10}
+@keyframes warnPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.stat-warn .dp-stat-fill{animation:warnPulse 1.1s ease-in-out infinite}
+.dp-dog-wrap{position:relative;display:inline-block;cursor:pointer;transition:transform .15s}
+.dp-dog-wrap:active{transform:scale(.93)}
+.care-score{display:flex;align-items:center;gap:.4rem;margin-top:.85rem;padding-top:.75rem;border-top:1px solid var(--line);flex-wrap:wrap}
+.cs-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;transition:background .3s}
+.cs-label{font-size:.7rem;color:var(--text-muted)}
+.cs-grade{font-size:.8rem;font-weight:800;margin-left:auto}
+.dp-adoption{font-size:.67rem;color:rgba(107,77,42,.32);margin-top:.5rem}
 /* ══════════════ DOG PAGE ══════════════ */
 .dog-page-wrap { max-width:820px; margin:0 auto; display:flex; flex-direction:column; gap:1.25rem; }
 
@@ -881,16 +908,18 @@ footer { background:var(--forest); color:rgba(246,241,233,.75); padding:2.75rem 
     <p>Over 11,000 handwritten cards. One shared truth: you are not alone.<br>Add your voice. Read theirs.</p>
   </div>
 
-  <!-- Song of the Day -->
-  <div class="song-banner" id="song-banner" onclick="this.classList.toggle('expanded')">
-    <span class="sb-vinyl" aria-hidden>🎵</span>
-    <div class="sb-text">
-      <div class="sb-label">Noah's words today</div>
-      <div class="sb-lyric" id="sb-lyric"></div>
-      <div class="sb-song" id="sb-song"></div>
-      <div class="sb-note" id="sb-note"></div>
+  <!-- Noah interview banner -->
+  <div class="noah-banner" id="noah-banner" onclick="this.classList.toggle('open')">
+    <div class="nb-eyebrow">Noah Kahan — in his own words</div>
+    <div class="nb-topic" id="nb-topic"></div>
+    <div class="nb-statement" id="nb-statement"></div>
+    <div class="nb-source" id="nb-source"></div>
+    <div class="nb-expand">
+      <div class="nb-prompt" id="nb-prompt"></div>
     </div>
-    <span class="sb-arrow">▾</span>
+    <div class="nb-footer">
+      <span class="nb-toggle">Read reflection prompt <span class="nb-arrow">▾</span></span>
+    </div>
   </div>
 
   <!-- Community Stats -->
@@ -1163,12 +1192,29 @@ footer { background:var(--forest); color:rgba(246,241,233,.75); padding:2.75rem 
       <div class="dp-level-row" id="dp-level-row"></div>
       <!-- Accessories -->
       <div class="dp-dog-accessories" id="dp-acc-display"></div>
-      <!-- Big dog -->
-      <span class="dp-dog-emoji" id="dp-dog-emoji">🐕</span>
-      <p class="dp-dog-name" id="dp-dog-name">Penny</p>
+      <!-- Big dog (click to pet) -->
+      <div class="dp-dog-wrap" onclick="petDog(this)" id="dp-dog-wrap" title="Click to pet!">
+        <span class="dp-dog-emoji" id="dp-dog-emoji">🐕</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.15rem">
+        <p class="dp-dog-name" id="dp-dog-name" style="cursor:pointer" onclick="toggleDogPageRename()" title="Click to rename">Penny</p>
+        <button onclick="toggleDogPageRename()" style="background:none;border:none;font-size:.8rem;color:rgba(107,77,42,.35);cursor:pointer;padding:.1rem" title="Rename dog">✏️</button>
+      </div>
+      <div id="dp-rename-wrap" style="display:none;margin-bottom:.5rem">
+        <div style="display:flex;gap:.4rem;justify-content:center;max-width:220px;margin:0 auto">
+          <input class="input" id="dp-name-input" type="text" maxlength="20" placeholder="New name..." style="padding:.45rem .7rem;font-size:.85rem;text-align:center" onkeydown="if(event.key==='Enter')saveDogPageName()">
+          <button class="btn btn-primary btn-sm" onclick="saveDogPageName()">Save</button>
+        </div>
+      </div>
       <p class="dp-dog-mood" id="dp-dog-mood"></p>
+      <div id="dp-personality" style="margin-bottom:.75rem"></div>
       <!-- Stats -->
       <div class="dp-stats" id="dp-stats"></div>
+      <!-- Care score + adoption -->
+      <div id="dp-care-score"></div>
+      <div id="dp-sparkline" style="display:none;margin-top:.6rem"></div>
+      <p class="dp-adoption" id="dp-adoption-date"></p>
+      <button class="btn btn-ghost btn-sm" onclick="shareDogCard()" style="margin-top:.5rem;font-size:.72rem">↗ Share my dog's card</button>
     </div>
 
     <!-- Daily care -->
@@ -1424,22 +1470,205 @@ const DAILY_CHALLENGES = [
 ];
 
 /* ─── Song of the Day reflections (themes from Noah's catalogue — no lyrics) ─── */
+/*
+ * NOAH KAHAN — INTERVIEW REFLECTIONS
+ * Paraphrased from documented public interviews & statements.
+ * To add a verified verbatim quote, set `verbatim: true` and put the
+ * exact text in `statement`. Otherwise leave `verbatim: false` and
+ * the UI will label it "In his own words" without quote marks.
+ *
+ * Format:
+ *   topic    — headline subject
+ *   statement — what Noah said / paraphrase of what he described
+ *   source   — interview / context (year where known)
+ *   prompt   — reflection question for the community
+ *   verbatim — true = show in quotes; false = paraphrased framing
+ */
 const DAILY_REFLECTIONS = [
-  { heading:'"Stick Season"', sub:'On what remains after things fall away', prompt:'After every hard season, something quieter begins. What is one thing you\'re ready to let fall — like leaves at the end of October?', note:'Stick season in Vermont is the raw weeks between fall color and first snow — stripped-down, honest, and unglamorous. Noah has spoken about finding something clarifying in that emptiness.' },
-  { heading:'"Homesick"', sub:'On longing and belonging', prompt:'Home isn\'t always a place. What does it feel like — and how close to it do you feel right now?', note:'Noah grew up in Vermont and his music wrestles with the complicated pull between where we come from and who we\'re becoming. You can be homesick for a feeling, a time, a version of yourself.' },
-  { heading:'"Northern Attitude"', sub:'On resilience and self-honesty', prompt:'What is one honest thing you could say about yourself today — not the polished version, the real one?', note:'Noah wrote about that particular blend of toughness and vulnerability that comes from somewhere cold and quiet. Being real about who you are is its own kind of strength.' },
-  { heading:'"Call Your Mom"', sub:'On reaching out', prompt:'Who in your life could you reach out to today — even just a message that says "I\'ve been thinking about you"?', note:'The song is about the simple, radical act of connection when things are hard. Reaching out is the thing we need most and often resist the most.' },
-  { heading:'"Everywhere, Everything"', sub:'On full presence', prompt:'What would it feel like to be fully present — not planning ahead, not looking back — just completely here?', note:'One of Noah\'s most expansive songs, it\'s about the ache of wanting to be wholly present. Presence is harder than it sounds and rarer than it should be.' },
-  { heading:'"The View Between Villages"', sub:'On being in-between', prompt:'What in-between are you sitting in right now — not finished, not yet started — and what would it look like to be at peace there?', note:'Noah often writes about liminal spaces — the drives between towns, the silences between conversations. There\'s something honest about being between things.' },
-  { heading:'"False Confidence"', sub:'On the gap between performance and truth', prompt:'Where are you performing "fine" when the truth is harder — and what would happen if you named it today?', note:'Noah has been open about the gap between how we present ourselves and what we actually feel. Naming that gap is the first step toward closing it.' },
-  { heading:'"Young Blood"', sub:'On who we used to be', prompt:'What did a younger version of you know that the current version might be forgetting?', note:'A recurring theme in Noah\'s music is this conversation with our past selves — the versions of us that hadn\'t yet learned to be guarded.' },
-  { heading:'"Paul Revere"', sub:'On what we run from', prompt:'What is one good thing in your life that you might be pulling away from — and why might distance feel safer than acceptance?', note:'Noah has written about the strange habit of fleeing from good things, self-sabotage dressed as restlessness. What are you moving away from that you could move toward?' },
-  { heading:'"Orange Juice"', sub:'On small acts of care', prompt:'What is the smallest, most specific thing someone could do for you right now that would make you feel truly seen?', note:'The song is about showing up for someone in concrete, ordinary ways — no grand gestures. What does showing up for yourself look like today?' },
-  { heading:'"Dial Drunk"', sub:'On the things left unsaid', prompt:'What is something you\'d want to say to someone but keep waiting for the right moment — and what would it take to stop waiting?', note:'Noah has written about the courage it takes to reach out at your most vulnerable. Sometimes the moment never arrives unless you make it.' },
-  { heading:'"Growing Sideways"', sub:'On non-linear healing', prompt:'What is one way you\'ve grown recently that doesn\'t look like what you thought growth was supposed to look like?', note:'Not all growth goes upward. Sometimes it spreads sideways, finding light at a different angle. That still counts. It counts a lot.' },
-  { heading:'"Moving On"', sub:'On letting go', prompt:'What is one thing you\'ve been carrying that you might actually be ready — or almost ready — to set down?', note:'Moving on is rarely as clean as the phrase suggests. Noah writes about it honestly — the messiness of release, the complicated guilt of starting to feel better.' },
-  { heading:'The Busyhead Project', sub:'A note from Noah', prompt:'What would it look like to accept today exactly as it is — without needing it to be different, better, or fixed?', note:'Noah founded The Busyhead Project because he believes in the power of honest conversation about mental health. You being here is part of that. Thank you for showing up.' },
+  {
+    topic:    'On anxiety',
+    statement:'He has described living with anxiety as something that was present long before his career — not a phase, not something fame fixed. He has talked openly about panic attacks being part of his reality, and about learning that managing anxiety is ongoing work, not something you solve once.',
+    source:   'Various interviews, 2022–2024',
+    prompt:   'What is one thing about your mental health that you have learned to manage rather than "fix" — and what has that shift in thinking felt like?',
+    verbatim: false,
+  },
+  {
+    topic:    'On therapy',
+    statement:'He has spoken about therapy being one of the most important things he has done for himself, and has encouraged others to seek it without shame. He has said that getting help is not a sign of weakness but an act of self-respect.',
+    source:   'Multiple interviews & fan Q&As',
+    prompt:   'Is there one kind of support — professional, personal, or otherwise — that you have been putting off asking for? What is in the way?',
+    verbatim: false,
+  },
+  {
+    topic:    'On Vermont and home',
+    statement:'He has described growing up in Strafford, Vermont — a town of roughly 1,000 people — as both formative and suffocating. He has talked about loving it deeply and also needing desperately to leave, and about how those two things can coexist without one cancelling the other out.',
+    source:   'Rolling Stone, NPR interviews',
+    prompt:   'What place, person, or time in your life do you hold both love and complicated feelings toward — and what does it say about you that you can hold both?',
+    verbatim: false,
+  },
+  {
+    topic:    'On the Community Wall',
+    statement:'He has described starting the physical Community Wall at shows as a response to realising how many people in his audiences were carrying things silently. He wanted to create a space where people could put something down — literally write it on a card — and feel less alone in carrying it.',
+    source:   'The Busyhead Project / show documentation',
+    prompt:   'If you could write one thing down and pin it to a wall — something you have been carrying alone — what would it say?',
+    verbatim: false,
+  },
+  {
+    topic:    'On success and mental health',
+    statement:'He has been candid that achieving the level of success he dreamed of did not resolve his internal struggles the way he expected. He has talked about the gap between external circumstances improving and the internal work still needing to happen — that one does not automatically follow the other.',
+    source:   'Zane Lowe / Apple Music interview, 2023',
+    prompt:   'Is there something you believe will finally make you feel okay once you have it — and what would it mean if the work was actually already available to you right now?',
+    verbatim: false,
+  },
+  {
+    topic:    'On mental health stigma in rural communities',
+    statement:'He has spoken about how the stigma around mental health can be especially pronounced in small, rural communities — where strength is performed as silence and asking for help is seen as weakness. He has talked about wanting to push back against that specifically.',
+    source:   'Various interviews, 2023',
+    prompt:   'Where in your life have you been taught — explicitly or implicitly — that struggling is something to hide? And what would it feel like to stop hiding it?',
+    verbatim: false,
+  },
+  {
+    topic:    'On writing as processing',
+    statement:'He has described songwriting as the primary way he understands his own feelings — that he often does not know what he is going through until he writes it. He has said that the songs are less performances and more reports from the inside.',
+    source:   'Variety, NME interviews',
+    prompt:   'What is one feeling you have been carrying that you have not yet found words for? What would it mean to try, even imperfectly, right now?',
+    verbatim: false,
+  },
+  {
+    topic:    'On not being alone',
+    statement:'He has said — in multiple contexts — that the most powerful part of the Community Wall is watching people realise that what they wrote is also what the person next to them wrote. That the isolation we feel is often not as total as it seems from the inside.',
+    source:   'The Busyhead Project founding interviews',
+    prompt:   'What is something you have assumed only you feel — and what would it mean to discover that someone else in this community wrote the exact same thing?',
+    verbatim: false,
+  },
+  {
+    topic:    'On vulnerability in public',
+    statement:'He has talked about making a deliberate choice to be honest in public about his struggles — that performing invulnerability felt dishonest to him and dishonest to the people in his audience who were also struggling. He has said that honesty is the only thing that has ever made him feel genuinely connected to other people.',
+    source:   'Various press interviews, 2022–2024',
+    prompt:   'When was the last time being honest about something difficult actually brought you closer to someone rather than pushing them away?',
+    verbatim: false,
+  },
+  {
+    topic:    'On the meaning of the Busyhead Project',
+    statement:'He has described the name "Busyhead" as referring to that state of having a mind that will not quiet down — the constant noise of anxiety, self-doubt, and overthinking that he has lived with. He started the project because he wanted that experience to be seen and named rather than suffered through in silence.',
+    source:   'The Busyhead Project documentation',
+    prompt:   'What does your busyhead say to you most often — and when did it start saying it?',
+    verbatim: false,
+  },
+  {
+    topic:    'On the importance of showing up',
+    statement:'He has spoken about the value of simply continuing to show up — to shows, to relationships, to the work of getting better — even when it does not feel like enough. He has talked about showing up as an act of hope even when you do not feel hopeful.',
+    source:   'Various fan interactions & interviews',
+    prompt:   'What is one place in your life where just showing up — even imperfectly — is more than enough for today?',
+    verbatim: false,
+  },
+  {
+    topic:    'On asking for help',
+    statement:'He has been consistently open about the difficulty of asking for help and about how important it was when he finally did. He has said he hopes his openness makes it even slightly easier for someone else to make the call, send the text, or say the words out loud.',
+    source:   'Multiple interviews & social media',
+    prompt:   'Is there one ask you have been putting off — from a friend, a professional, or yourself — that you could take one small step toward today?',
+    verbatim: false,
+  },
+  {
+    topic:    'On the connection between place and emotion',
+    statement:'He has talked about how Vermont is woven into how he experiences emotions — that the landscape, the seasons, and the quiet of where he grew up are inseparable from how he understands sadness, beauty, and belonging. He has said he cannot separate the music from the place.',
+    source:   'NPR, BBC interviews',
+    prompt:   'What place holds the most complicated feelings for you — and what does that place still give you, even now?',
+    verbatim: false,
+  },
+  {
+    topic:    'On the Busyhead Project\'s mission',
+    statement:'He has described the project\'s core mission as ending the stigma around mental health — one conversation at a time. He has said he does not think art alone changes things, but that art can start the conversation that changes things.',
+    source:   'busyheadproject.org & founding interviews',
+    prompt:   'What conversation about mental health have you been afraid to start — with someone else, or with yourself?',
+    verbatim: false,
+  },
 ];
+
+/* ══════════════════════════════════════════ SERVER MODE API LAYER
+ * When the HTML is served by server.js the app switches from
+ * localStorage to real shared API data.  Falls back gracefully
+ * to the original localStorage behaviour when opened as a file.
+ * ═══════════════════════════════════════════════════════════════ */
+let SERVER_MODE   = false;
+let _serverUserId = null;
+
+async function _api(method, url, body) {
+  const opts = { method, credentials:'same-origin', headers:{'Content-Type':'application/json'} };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(url, opts);
+  const d = await r.json().catch(()=>({}));
+  if (!r.ok) throw new Error(d.error || 'Request failed');
+  return d;
+}
+
+async function initServerMode() {
+  try {
+    const status = await Promise.race([
+      _api('GET', '/api/status'),
+      new Promise((_,rej) => setTimeout(()=>rej(new Error('timeout')), 2000)),
+    ]);
+    if (!status.serverMode) return;
+    SERVER_MODE = true;
+
+    // Restore session if already logged in
+    const { user } = await _api('GET', '/api/auth/me');
+    if (user) {
+      _serverUserId = user.id;
+      currentEmail  = user.email;
+      _injectServerUser(user);
+    }
+    await _refreshServerCards();
+  } catch(_) { SERVER_MODE = false; }
+}
+
+function _injectServerUser(user) {
+  if (!accounts[user.email]) {
+    accounts[user.email] = {
+      name: user.name, email: user.email, phone: user.phone || '',
+      avatar: user.avatar || 'mountain',
+      hp: user.healing_points || 0,
+      badges: [], redeemed: [], checkins: [], hpLog: [],
+      dailyResponses: {}, loginStreak: user.login_streak || 0,
+      lastLogin: '', createdAt: new Date(user.created_at||Date.now()).getTime(),
+    };
+  } else {
+    accounts[user.email].hp            = user.healing_points || 0;
+    accounts[user.email].login_streak  = user.login_streak   || 0;
+    accounts[user.email].name          = user.name;
+    accounts[user.email].avatar        = user.avatar || accounts[user.email].avatar;
+  }
+  saveAccounts(); saveSession();
+}
+
+async function _refreshServerCards() {
+  if (!SERVER_MODE) return;
+  const { cards: sc } = await _api('GET', '/api/cards');
+  cards = sc.map(c => ({
+    id:        c.id,
+    promptIdx: c.prompt_idx,
+    content:   c.content,
+    name:      c.display_name,
+    ownerEmail:c.isMine ? currentEmail : null,
+    reactions: c.reactions  || {},
+    _userRxns: c.userReactions || [],
+    _server:   true,
+  }));
+  saveCards();
+}
+
+async function _syncCommunityStats() {
+  if (!SERVER_MODE) return;
+  try {
+    const s = await _api('GET', '/api/community/stats');
+    const el = document.getElementById('comm-stats'); if(!el) return;
+    el.innerHTML = [
+      {v:s.totalCards,  l:'Cards on the wall'},
+      {v:s.totalUsers,  l:'Voices in the community'},
+      {v:s.totalReacts, l:'Reactions shared'},
+    ].map(s=>`<div class="stat-tile"><div class="sv">${(s.v||0).toLocaleString()}</div><div class="sl">${s.l}</div></div>`).join('');
+  } catch(_) {}
+}
 
 /* ─── Storage helpers ─── */
 const ls = {
@@ -1624,13 +1853,18 @@ function renderDailyChallenge(){
   </div>`;
 }
 
-/* ─── Song of the day (themes only — no lyrics) ─── */
+/* ─── Noah interview banner ─── */
 function renderSongBanner(){
   const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000);
   const r = DAILY_REFLECTIONS[dayOfYear % DAILY_REFLECTIONS.length];
-  document.getElementById('sb-lyric').textContent = r.prompt;
-  document.getElementById('sb-song').textContent  = r.heading + ' — ' + r.sub;
-  document.getElementById('sb-note').textContent  = r.note;
+  const topicEl     = document.getElementById('nb-topic');
+  const statementEl = document.getElementById('nb-statement');
+  const sourceEl    = document.getElementById('nb-source');
+  const promptEl    = document.getElementById('nb-prompt');
+  if(topicEl)     topicEl.textContent     = r.topic;
+  if(statementEl) statementEl.textContent = r.statement;
+  if(sourceEl)    sourceEl.textContent    = 'Source: ' + r.source;
+  if(promptEl)    promptEl.textContent    = r.prompt;
 }
 
 /* ─── Community stats ─── */
@@ -1763,7 +1997,7 @@ function showAuthError(formId, msg){
   const el = document.getElementById(formId+'-error');
   el.textContent = msg; el.style.display='block';
 }
-function doSignup(e){
+async function doSignup(e){
   e.preventDefault();
   const name  = document.getElementById('su-name').value.trim();
   const email = document.getElementById('su-email').value.trim().toLowerCase();
@@ -1771,37 +2005,48 @@ function doSignup(e){
   const phone = document.getElementById('su-phone').value.trim();
   if(!name||!email||!pass||!phone){ showAuthError('signup','Please fill in all fields.'); return; }
   if(pass.length<6){ showAuthError('signup','Password must be at least 6 characters.'); return; }
+
+  if(SERVER_MODE){
+    try {
+      const {user} = await _api('POST','/api/auth/register',{name,email,password:pass,phone});
+      _serverUserId = user.id; currentEmail = user.email;
+      _injectServerUser(user);
+      closeAuth(); await _refreshServerCards(); onLogin();
+      showToast('🌿 Welcome to the wall, '+user.name+'!');
+    } catch(err){ showAuthError('signup', err.message); }
+    return;
+  }
+  // localStorage path
   if(accounts[email]){ showAuthError('signup','An account with that email already exists. Sign in instead.'); return; }
-  accounts[email] = {
-    name, email, password:pass, phone,
-    avatar:'mountain', hp:0, badges:[], redeemed:[], checkins:[],
-    hpLog:[],
-    dailyResponses:{}, loginStreak:0, lastLogin:'', createdAt:Date.now()
-  };
-  saveAccounts();
-  currentEmail = email;
-  saveSession();
-  closeAuth();
-  onLogin();
+  accounts[email] = { name, email, password:pass, phone, avatar:'mountain', hp:0, badges:[], redeemed:[], checkins:[], hpLog:[], dailyResponses:{}, loginStreak:0, lastLogin:'', createdAt:Date.now() };
+  saveAccounts(); currentEmail=email; saveSession(); closeAuth(); onLogin();
   showToast('🌿 Welcome to the wall, '+name+'!');
 }
-function doSignin(e){
+async function doSignin(e){
   e.preventDefault();
   const email = document.getElementById('si-email').value.trim().toLowerCase();
   const pass  = document.getElementById('si-password').value;
-  const acct  = accounts[email];
+
+  if(SERVER_MODE){
+    try {
+      const {user} = await _api('POST','/api/auth/login',{email,password:pass});
+      _serverUserId = user.id; currentEmail = user.email;
+      _injectServerUser(user);
+      closeAuth(); await _refreshServerCards(); onLogin();
+      showToast('Welcome back, '+user.name+'! 🌿');
+    } catch(err){ showAuthError('signin', err.message); }
+    return;
+  }
+  // localStorage path
+  const acct = accounts[email];
   if(!acct){ showAuthError('signin','No account found with that email.'); return; }
   if(acct.password!==pass){ showAuthError('signin','Incorrect password. Please try again.'); return; }
-  currentEmail = email;
-  saveSession();
-  closeAuth();
-  onLogin();
+  currentEmail=email; saveSession(); closeAuth(); onLogin();
   showToast('Welcome back, '+acct.name+'! 🌿');
 }
-function signOut(){
-  currentEmail='';
-  saveSession();
-  onLogout();
+async function signOut(){
+  if(SERVER_MODE){ try{ await _api('POST','/api/auth/logout'); }catch(_){} }
+  _serverUserId=null; currentEmail=''; saveSession(); onLogout();
 }
 function onLogin(){
   handleLoginStreak();
@@ -1811,6 +2056,7 @@ function onLogin(){
   renderDailyChallenge();
   renderCommunityStats();
   renderDogPanel();
+  renderDogPage();
   refreshHPDisplays();
   checkBadges();
   updateNotifDots();
@@ -1829,6 +2075,7 @@ function onLogout(){
   renderWallSubmitPanel();
   renderWall();
   renderDogPanel();
+  renderDogPage();
   renderDailyChallenge();
   updateNotifDots();
 }
@@ -1844,8 +2091,8 @@ function renderNav(){
     nr.innerHTML = `
       <div class="nav-user">
         <div class="hp-badge" id="nav-hp-badge">🌿 <span>${(u.hp||0).toLocaleString()}</span> BB</div>
-        <div class="nav-avatar">${initial}</div>
-        <span class="nav-username">${esc(u.name)}</span>
+        <div class="nav-avatar" onclick="showPage('profile')" style="cursor:pointer" title="Go to profile">${initial}</div>
+        <span class="nav-username" onclick="showPage('profile')" style="cursor:pointer" title="Go to profile">${esc(u.name)}</span>
         <button class="nav-signout btn-ghost btn btn-sm" onclick="signOut()">Sign out</button>
       </div>`;
   }
@@ -1855,12 +2102,14 @@ function renderNav(){
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
+  const PAGE_ORDER = ['wall','learn','checkin','store','profile','dog'];
   document.querySelectorAll('.nav-tab').forEach((t,i)=>{
-    t.classList.toggle('active',['wall','learn','checkin','store','profile'][i]===id);
-    t.setAttribute('aria-selected',['wall','learn','checkin','store','profile'][i]===id);
+    t.classList.toggle('active', PAGE_ORDER[i]===id);
+    t.setAttribute('aria-selected', PAGE_ORDER[i]===id);
   });
   if(id==='store')   renderStore();
   if(id==='profile') renderProfile();
+  if(id==='dog'){ maybeDogFirstVisit(); renderDogPage(); setTimeout(maybeZoomies, 800); }
 }
 
 /* ─── Wall ─── */
@@ -1983,12 +2232,20 @@ function renderWall(){
   }).join('');
 }
 
-function toggleRxn(cardId, type, btn){
+async function toggleRxn(cardId, type, btn){
   if(!currentEmail){ openAuth('signin'); return; }
   const key = cardId+'_'+type+'_'+currentEmail;
   const wasOn = !!reactions[key];
-  reactions[key] = !wasOn;
-  saveReactions();
+
+  if(SERVER_MODE){
+    try{
+      const {toggled} = await _api('POST','/api/reactions',{cardId,type});
+      reactions[key] = toggled === 'added';
+    } catch(_){ return; }
+  } else {
+    reactions[key] = !wasOn;
+    saveReactions();
+  }
   // Pop animation on the button
   btn.classList.remove('pop');
   void btn.offsetWidth;
@@ -2023,46 +2280,45 @@ function submitCard(){
   }
 
   const u = currentUser();
-  const isFirst = !cards.some(c=>c.ownerEmail===currentEmail);
+  const displayName = document.getElementById('card-display-name').value.trim() || u?.name || 'a voice from the community';
+
+  if(SERVER_MODE){
+    try{
+      const {card} = await _api('POST','/api/cards',{promptIdx:selectedPrompt,content,displayName});
+      cards.unshift({id:card.id,promptIdx:card.prompt_idx,content:card.content,name:card.display_name,ownerEmail:currentEmail,reactions:{leaf:0,heart:0,lightbulb:0,mountain:0},_server:true});
+      markRespondedToday(selectedPrompt);
+      _finishCardSubmit();
+      _syncCommunityStats();
+    } catch(err){ showToast('Error posting card: '+err.message); }
+    return;
+  }
+  // localStorage path
   const id = 'u'+Date.now();
-  cards.unshift({
-    id, promptIdx:selectedPrompt,
-    content,
-    name: document.getElementById('card-display-name').value.trim() || u.name || 'a voice from the community',
-    ownerEmail: currentEmail,
-    reactions:{}
-  });
+  cards.unshift({id, promptIdx:selectedPrompt, content, name:displayName, ownerEmail:currentEmail, reactions:{}});
   markRespondedToday(selectedPrompt);
   saveCards();
 
-  addHP(5, 'Submitted a wall card');
+  _finishCardSubmit();
+}
+
+// Shared cleanup after card submission (both server + local paths)
+function _finishCardSubmit(){
+  addHP(5,'Submitted a wall card');
   checkBadges();
   tickChallenge('write');
-  if(selectedPrompt === 2) tickChallenge('prompt3');
-  renderCommunityStats();
+  if(selectedPrompt===2) tickChallenge('prompt3');
   updateNotifDots();
-
-  // Reset form
   document.getElementById('card-content').value='';
   document.getElementById('card-display-name').value='';
   document.getElementById('char-count').textContent='0 / 500';
   document.getElementById('pin-btn').disabled=true;
   selectedPrompt=null;
   document.getElementById('write-area').classList.remove('open');
-  renderWallSubmitPanel();
-  renderWall();
-  // Update filter pill counts
-  PROMPTS.forEach((_,i)=>{
-    const pill=document.getElementById('fpill-'+i);
-    if(pill){ const c=cards.filter(x=>x.promptIdx===i).length; pill.innerHTML=`<span>${i+1}</span><span style="opacity:.55;font-size:.62rem;margin-left:.2rem">${c>0?'('+c+')':''}</span>`; }
-  });
-  renderCommunityPick();
-  renderTodayProgress();
+  renderWallSubmitPanel(); renderWall();
+  PROMPTS.forEach((_,i)=>{ const pill=document.getElementById('fpill-'+i); if(pill){ const c=cards.filter(x=>x.promptIdx===i).length; pill.innerHTML=`<span>${i+1}</span><span style="opacity:.55;font-size:.62rem;margin-left:.2rem">${c>0?'('+c+')':''}</span>`; } });
+  renderCommunityPick(); renderTodayProgress();
   showToast('🌿 Your card has been added to the wall');
-  setTimeout(()=>{
-    addDogHappiness(20,'feed');
-    showToast('🦴 '+(getDogData()?.name||'Penny')+' got a treat! +20 happiness');
-  }, 3100);
+  setTimeout(()=>{ addDogHappiness(20,'feed'); showToast('🦴 '+(getDogData()?.name||'Penny')+' got a treat! +20 happiness'); }, 3100);
 }
 
 function shareCard(id){
@@ -2298,10 +2554,31 @@ function renderBadges(){
 function renderCardHistory(){
   const mine=cards.filter(c=>c.ownerEmail===currentEmail);
   const el=document.getElementById('card-history');
-  el.innerHTML=mine.length?mine.map(c=>`<div class="hcard">
+  el.innerHTML=mine.length?mine.map(c=>`<div class="hcard" id="hcard-${c.id}">
     <div class="hc-prompt">${esc(PROMPTS[c.promptIdx])}</div>
     <div class="hc-content">"${esc(c.content)}"</div>
+    <div style="display:flex;justify-content:flex-end;margin-top:.55rem">
+      <button onclick="deleteCard('${c.id}')" style="font-size:.7rem;color:var(--red);background:rgba(185,28,28,.07);border:1px solid rgba(185,28,28,.18);border-radius:7px;padding:.22rem .65rem;cursor:pointer;font-family:inherit;transition:all .15s" onmouseover="this.style.background='rgba(185,28,28,.14)'" onmouseout="this.style.background='rgba(185,28,28,.07)'">🗑 Delete card</button>
+    </div>
   </div>`).join(''):'<p style="color:var(--text-muted);font-size:.85rem">You haven\'t added any cards yet.</p>';
+}
+
+async function deleteCard(id){
+  if(!confirm('Remove this card from the wall?')) return;
+  if(SERVER_MODE){
+    try{ await _api('DELETE','/api/cards/'+id); } catch(err){ showToast('Error: '+err.message); return; }
+  }
+  cards = cards.filter(c => c.id !== id);
+  saveCards();
+  renderCardHistory();
+  renderWall();
+  renderCommunityStats();
+  renderCommunityPick();
+  PROMPTS.forEach((_,i)=>{
+    const pill=document.getElementById('fpill-'+i);
+    if(pill){ const c=cards.filter(x=>x.promptIdx===i).length; pill.innerHTML=`<span>${i+1}</span><span style="opacity:.55;font-size:.62rem;margin-left:.2rem">${c>0?'('+c+')':''}</span>`; }
+  });
+  showToast('Card removed from the wall.');
 }
 function renderHPLog(){
   const u=currentUser(); if(!u) return;
@@ -2414,10 +2691,12 @@ function getNextDogLevel(xp){ return DOG_LEVELS.find(l => l.min > xp) || null; }
 function addDogXP(amount){
   const u = currentUser(); if(!u) return;
   const d = initDogState(); if(!d) return;
-  const oldLv = getDogLevel(d.xp||0);
-  d.xp = (d.xp||0) + amount;
+  const oldXP = d.xp||0;
+  const oldLv = getDogLevel(oldXP);
+  d.xp = oldXP + amount;
   const newLv = getDogLevel(d.xp);
   saveAccounts();
+  checkTrickUnlocks(oldXP, d.xp);
   if(newLv.num > oldLv.num){
     showToast('🌟 '+(d.name||'Penny')+' levelled up to '+newLv.name+'!');
     dogLog('🌟 '+(d.name||'Penny')+' reached Level '+newLv.num+': '+newLv.name+'!');
@@ -2529,6 +2808,10 @@ function renderDogPage(){
   const lastChk=(u.checkins||[]).slice(-1)[0];
   const comfortMsg=lastChk?.mood<=2&&lastChk?.date===t?nm+' senses you\'re having a hard day. They lean right into you. 🐾':DOG_MESSAGES[mood][Math.floor(Date.now()/60000)%DOG_MESSAGES[mood].length];
   if(moodEl) moodEl.textContent=comfortMsg;
+  renderDogPersonality();
+  renderCareScore();
+  renderAdoptionDate();
+  renderDogSparkline();
 
   // Stats
   const statsEl=document.getElementById('dp-stats');
@@ -2537,10 +2820,13 @@ function renderDogPage(){
     {icon:'🍖',l:'Hunger',   v:d.hunger||50,     c:(d.hunger||50)>=50?'var(--forest)':'#ea580c'},
     {icon:'⚡',l:'Energy',   v:d.energy||60,     c:(d.energy||60)>=50?'var(--sky)':'var(--amber)'},
     {icon:'🛁',l:'Clean',    v:d.cleanliness||80,c:(d.cleanliness||80)>=50?'var(--forest-l)':'var(--earth)'},
-  ].map(s=>`<div class="dp-stat">
-    <div class="dp-stat-top"><span class="dp-stat-name">${s.icon} ${s.l}</span><span class="dp-stat-val" style="color:${s.c}">${Math.round(s.v)}%</span></div>
+  ].map(s=>{
+    const warn = s.v < 25;
+    return `<div class="dp-stat${warn?' stat-warn':''}">
+    <div class="dp-stat-top"><span class="dp-stat-name">${s.icon} ${s.l}${warn?' ⚠️':''}</span><span class="dp-stat-val" style="color:${s.c}">${Math.round(s.v)}%</span></div>
     <div class="dp-stat-bar"><div class="dp-stat-fill" style="width:${Math.round(s.v)}%;background:${s.c}"></div></div>
-  </div>`).join('');
+  </div>`;
+  }).join('');
 
   // Care actions
   const bathDays=d.lastBath?Math.floor((Date.now()-new Date(d.lastBath).getTime())/86400000):7;
@@ -2886,8 +3172,15 @@ function updateNotifDots() {
   const checkinDone  = u && (u.checkins||[]).some(c=>c.date===today());
   const challengeDone= u && getChallengeProgress().done;
   const dogNeedsLove = u && getDogHappiness()<40;
+  const dogActionsLeft = u && (() => {
+    const d = u.dog; if(!d) return false;
+    const t = today();
+    return !d.actions?.feed || d.actions.feed !== t ||
+           !d.actions?.walk || d.actions.walk !== t;
+  })();
   document.getElementById('ntab-checkin')?.classList.toggle('has-notif', !!u && !checkinDone);
-  document.getElementById('ntab-wall')?.classList.toggle('has-notif', !!u && (!challengeDone || dogNeedsLove));
+  document.getElementById('ntab-wall')?.classList.toggle('has-notif', !!u && (!challengeDone));
+  document.getElementById('ntab-dog')?.classList.toggle('has-notif', !!u && (dogNeedsLove || dogActionsLeft));
 }
 
 /* ════════════════════════════════════════════ RESET COUNTDOWN */
@@ -3004,11 +3297,219 @@ function renderCommunityPick(){
   </div>`;
 }
 
+/* ─── Pet the dog ─── */
+function petDog(wrap){
+  const u = currentUser(); if(!u) return;
+  // Tiny happiness boost (max 5x/session, not saved)
+  const d = initDogState(); if(!d) return;
+  const hearts = ['❤️','🤍','🧡','💚','💙'];
+  const heart = document.createElement('span');
+  heart.className = 'heart-pop';
+  heart.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+  wrap.appendChild(heart);
+  setTimeout(() => heart.remove(), 900);
+  // Small happiness nudge (cosmetic, no XP)
+  d.happiness = Math.min(100, d.happiness + 1);
+  d.lastDecay = today();
+  saveAccounts();
+  const moodEl = document.getElementById('dp-dog-mood');
+  const reactions = ["loves the attention!","leans into your hand 🐾","tail is going crazy!","gives you puppy eyes ❤️","softly headbutts your hand.","is SO happy right now."];
+  if(moodEl) moodEl.textContent = (d.name||'Penny')+' '+ reactions[Math.floor(Math.random()*reactions.length)];
+  setTimeout(()=>{ const el=document.getElementById('dp-dog-mood'); if(el) el.textContent=DOG_MESSAGES[getDogMoodKey(getDogHappiness())][0]; }, 2200);
+}
+
+/* ─── Care score ─── */
+function getCareScore(){
+  const d = getDogData(); if(!d) return {score:0, label:'No data', color:'#9ca3af', dots:[]};
+  const t = today();
+  const checks = [
+    d.actions?.feed  === t,
+    d.actions?.walk  === t,
+    d.actions?.play  === t,
+    (d.actions?.cuddle_date===t && (d.actions.cuddle_count||0)>=1),
+    d.actions?.nap   === t || d.actions?.treat === t || d.actions?.groom === t,
+  ];
+  const done = checks.filter(Boolean).length;
+  const grades = [
+    {min:5, label:'Perfect day! 🌟', color:'#22c55e'},
+    {min:4, label:'Excellent 🐾',    color:'#4a7a23'},
+    {min:3, label:'Good job 👍',     color:'var(--amber)'},
+    {min:2, label:'Getting there',   color:'#f97316'},
+    {min:1, label:'Needs more love', color:'#ef4444'},
+    {min:0, label:'Not started',     color:'#9ca3af'},
+  ];
+  const grade = grades.find(g => done >= g.min) || grades[grades.length-1];
+  return { score:done, total:5, label:grade.label, color:grade.color, dots:checks };
+}
+
+function renderCareScore(){
+  const el = document.getElementById('dp-care-score'); if(!el) return;
+  const {score, total, label, color, dots} = getCareScore();
+  el.innerHTML = `<div class="care-score">
+    ${dots.map((d,i)=>`<div class="cs-dot" style="background:${d?color:'rgba(107,77,42,.12)'}" title="${['Fed','Walked','Played','Cuddled','Extra care'][i]}"></div>`).join('')}
+    <span class="cs-label">${score}/${total} today</span>
+    <span class="cs-grade" style="color:${color}">${label}</span>
+  </div>`;
+}
+
+/* ─── Dog adoption date ─── */
+function renderAdoptionDate(){
+  const el = document.getElementById('dp-adoption-date'); if(!el) return;
+  const u = currentUser(); if(!u) return;
+  const created = u.createdAt;
+  if(!created){ el.textContent=''; return; }
+  const days = Math.floor((Date.now()-created)/86400000);
+  const nm = getDogData()?.name||'Penny';
+  el.textContent = days===0 ? 'You just adopted '+nm+' today! 🐾' : 'You\'ve had '+nm+' for '+days+' day'+(days!==1?'s':'')+' 🐾';
+}
+
+/* ─── Dog happiness sparkline ─── */
+function renderDogSparkline(){
+  const el = document.getElementById('dp-sparkline'); if(!el) return;
+  const d = getDogData(); if(!d || !(d.happinessLog||[]).length){ el.style.display='none'; return; }
+  el.style.display='block';
+  const log = (d.happinessLog||[]).slice(-14);
+  if(log.length<2){ el.style.display='none'; return; }
+  const W=280,H=40,pL=4,pR=4,pT=4,pB=4;
+  const pW=W-pL-pR, pH=H-pT-pB;
+  const pts=log.map((v,i)=>({ x:pL+(i/(log.length-1))*pW, y:pT+((100-v)/100)*pH }));
+  const path=pts.reduce((a,p,i)=>i===0?`M${p.x},${p.y}`:`${a} L${p.x},${p.y}`,'');
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:40px" aria-label="Happiness over last 14 visits"><path d="${path} L${pts[pts.length-1].x},${H-pB} L${pts[0].x},${H-pB}Z" fill="rgba(45,80,22,.07)"/><path d="${path}" fill="none" stroke="var(--forest)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>${pts.map((p,i)=>i===pts.length-1?`<circle cx="${p.x}" cy="${p.y}" r="3" fill="var(--forest)"/>`:'').join('')}</svg>`;
+}
+
+/* ─── Dog zoomies event ─── */
+function maybeZoomies(){
+  const u=currentUser(); if(!u) return;
+  const d=getDogData(); if(!d) return;
+  if(getDogHappiness()<60) return;
+  if(Math.random()>0.12) return; // 12% chance per page visit
+  const t=today();
+  if(d.lastZoomies===t) return;
+  d.lastZoomies=t;
+  d.energy=Math.max(0,(d.energy||80)-10); d.happiness=Math.min(100,getDogHappiness()+8); d.lastDecay=t;
+  saveAccounts();
+  dogLog((d.name||'Penny')+' got the ZOOMIES! 💨 Running laps around the room!');
+  showToast('💨 ZOOMIES! '+(d.name||'Penny')+' is sprinting everywhere!');
+  // Animate the dog emoji
+  const emojiEl=document.getElementById('dp-dog-emoji');
+  if(emojiEl){ emojiEl.style.transition='transform .15s'; let t2=0; const bounce=setInterval(()=>{ emojiEl.style.transform=t2%2?'rotate(-8deg) scale(1.1)':'rotate(8deg) scale(1.1)'; t2++; if(t2>10){ clearInterval(bounce); emojiEl.style.transform=''; } },120); }
+}
+
+/* ─── Dog daily first-visit log ─── */
+function maybeDogFirstVisit(){
+  const u=currentUser(); if(!u) return;
+  const d=getDogData(); if(!d) return;
+  const t=today();
+  if(d.lastPageVisit===t) return;
+  d.lastPageVisit=t;
+  // Log happiness to history
+  d.happinessLog=d.happinessLog||[];
+  d.happinessLog.push(Math.round(getDogHappiness()));
+  if(d.happinessLog.length>14) d.happinessLog.shift();
+  saveAccounts();
+  const h=getDogHappiness();
+  const greetings = h>=80?['So happy to see you! 🌟',"Tail's going crazy!","Best day ever (again)!"]
+    :h>=60?['Happy to see you 🐾','Looking forward to seeing you.','Tail wagging!']
+    :h>=40?['Glad you came by.','Needed this visit.','Perked up as you arrived.']
+    :['Really missed you.','Needed some attention.','So relieved you\'re here.'];
+  dogLog((d.name||'Penny')+' — '+greetings[Math.floor(Math.random()*greetings.length)]);
+}
+
+/* ─── Share dog card ─── */
+function shareDogCard(){
+  const u=currentUser(); if(!u) return;
+  const d=getDogData(); if(!d) return;
+  const h=getDogHappiness();
+  const lv=getDogLevel(d.xp||0);
+  const nm=d.name||'Penny';
+  const text=`Meet ${nm}! 🐾\n${DOG_EMOJIS[getDogMoodKey(h)]} Level ${lv.num} ${lv.name} · ${h}% happiness\n${(d.xp||0)} XP · ${DOG_TRICKS.filter(t=>t.xp<=(d.xp||0)).length} tricks learned\n\nMy companion on The Busyhead Community Wall — a safe space for honest conversations about mental health.`;
+  if(navigator.share){ navigator.share({title:nm+"'s Dog Card",text}).catch(()=>{}); }
+  else if(navigator.clipboard){ navigator.clipboard.writeText(text).then(()=>showToast('🐾 Dog card copied to clipboard!')); }
+}
+
+/* ─── Dog page rename ─── */
+function toggleDogPageRename(){
+  const wrap = document.getElementById('dp-rename-wrap');
+  if(!wrap) return;
+  const open = wrap.style.display === 'none' || !wrap.style.display;
+  wrap.style.display = open ? 'block' : 'none';
+  if(open){
+    const inp = document.getElementById('dp-name-input');
+    if(inp){ inp.value = getDogData()?.name || 'Penny'; inp.focus(); inp.select(); }
+  }
+}
+function saveDogPageName(){
+  const inp = document.getElementById('dp-name-input');
+  const v = inp?.value.trim();
+  if(!v) return;
+  const u = currentUser(); if(!u) return;
+  const d = getDogData() || initDogState();
+  d.name = v;
+  saveAccounts();
+  document.getElementById('dp-rename-wrap').style.display = 'none';
+  showToast('🐾 Name saved! Hello, '+v+'!');
+  dogLog('Got a new name: '+v+'! 🐾');
+  renderDogPage();
+  renderDogPanel();
+}
+
+/* ─── Dog personality system ─── */
+function getDogPersonality(){
+  const d = getDogData(); if(!d) return null;
+  // Count action types across journal
+  const journal = d.journal || [];
+  const counts = { cuddle:0, walk:0, play:0, train:0, feed:0, bath:0 };
+  journal.forEach(e => {
+    if(e.msg.includes('cuddles'))     counts.cuddle++;
+    if(e.msg.includes('walk'))        counts.walk++;
+    if(e.msg.includes('play'))        counts.play++;
+    if(e.msg.includes('training'))    counts.train++;
+    if(e.msg.includes('dinner') || e.msg.includes('treat')) counts.feed++;
+    if(e.msg.includes('bath'))        counts.bath++;
+  });
+  const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
+  const personalities = {
+    cuddle: { name:'Cuddly',       icon:'🤗', desc:'Loves snuggles above all else.' },
+    walk:   { name:'Adventurous',  icon:'🏔️', desc:'Happiest when exploring the world.' },
+    play:   { name:'Playful',      icon:'🎾', desc:'Always ready for the next game.' },
+    train:  { name:'Clever',       icon:'🎓', desc:'Sharp, eager to learn, shows off tricks.' },
+    feed:   { name:'Foodie',       icon:'🍖', desc:'Food-motivated and very easy to please.' },
+    bath:   { name:'Pristine',     icon:'✨', desc:'The cleanest dog on the block.' },
+  };
+  if(!top || top[1] === 0) return null;
+  return personalities[top[0]] || null;
+}
+
+function renderDogPersonality(){
+  const el = document.getElementById('dp-personality'); if(!el) return;
+  const p = getDogPersonality();
+  if(!p){ el.innerHTML=''; return; }
+  el.innerHTML = `<span style="display:inline-flex;align-items:center;gap:.3rem;background:rgba(45,80,22,.08);border:1px solid rgba(45,80,22,.18);border-radius:99px;padding:.22rem .7rem;font-size:.72rem;font-weight:600;color:var(--forest)">${p.icon} ${p.name} — <em style="font-weight:400;font-style:italic;opacity:.75">${p.desc}</em></span>`;
+}
+
+/* ─── Trick unlock celebration ─── */
+function checkTrickUnlocks(oldXP, newXP){
+  DOG_TRICKS.forEach(tr => {
+    if(oldXP < tr.xp && newXP >= tr.xp){
+      const nm = getDogData()?.name || 'Penny';
+      showToast('🌟 '+nm+' unlocked a new trick: '+tr.name+'! '+tr.icon);
+      dogLog('🌟 New trick unlocked: '+tr.name+'! '+tr.icon);
+      // Flash the tricks section
+      const el = document.getElementById('dp-tricks');
+      if(el){ el.style.transition='background .2s'; el.style.background='rgba(45,80,22,.08)'; setTimeout(()=>el.style.background='',600); }
+    }
+  });
+}
+
 /* ─── Boot ─── */
-function init(){
+async function init(){
   setMood(3);
   initFilterPills();
   renderSongBanner();
+
+  // Try to connect to the real server (if served by server.js)
+  await initServerMode();
+
   renderCommunityStats();
   renderNav();
   renderWallSubmitPanel();
@@ -3016,9 +3517,11 @@ function init(){
   renderCommunityPick();
   renderDailyChallenge();
   renderDogPanel();
+  renderDogPage();
   updateNotifDots();
   startResetCountdown();
   initCheckinPage();
+  if(SERVER_MODE) _syncCommunityStats();
   if(!currentEmail) openAuth('signup');
 }
 document.addEventListener('DOMContentLoaded', init);
