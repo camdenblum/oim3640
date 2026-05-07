@@ -1,7 +1,7 @@
 
 ## What I'm Building
 
-I'm building a Flask-based web application that helps users locate the nearest MBTA transit stop from any address or place name they enter. The app works by taking a user's text input and first sending it to the Mapbox Geocoding API to convert the location into geographic coordinates (latitude and longitude). Those coordinates are then passed to the MBTA V3 API, which returns the closest transit stop. The final result — the stop name, distance, and ideally a map rendering the location — is displayed back to the user through a clean web interface. The full stack runs on Python and Flask, with API calls handled server-side and results surfaced through rendered HTML templates.
+I'm building a Flask-based web application that helps users locate the nearest MBTA transit stop from any address or place name they enter. The app works by taking a user's text input and first sending it to the Mapbox Geocoding API to convert the location into geographic coordinates (latitude and longitude). Those coordinates are then passed to the MBTA V3 API, which returns the closest transit stop along with its route and distance. The final result — the stop name, the line it serves, the distance from the searched location, and ideally an interactive map — is displayed back to the user through a clean web interface. The full stack runs on Python and Flask, with all API calls handled server-side and results surfaced through rendered HTML templates.
 
 
 ## Why I Chose This
@@ -11,7 +11,7 @@ I chose this project because it combines everything I've been learning in a way 
 
 ## Core Features
 
-The app will include a homepage with a simple text input form where users can type any place name or address in the Greater Boston area. On submission, the Flask backend will call the Mapbox Geocoding API to resolve the input into coordinates, then query the MBTA V3 API with those coordinates to retrieve the nearest stop. The results page will display the stop name, the MBTA line or route it serves, and the approximate distance from the searched location. As a stretch goal, I plan to embed an interactive Mapbox map on the results page that shows both the searched location and the nearest stop with a pin. All API keys will be managed securely using a .env file that is excluded from version control via .gitignore.
+The app will include a homepage with a simple text input form where users can type any place name or address in the Greater Boston area. On submission, the Flask backend will call the Mapbox Geocoding API to resolve the input into coordinates, then query the MBTA V3 API with those coordinates to retrieve the nearest stop. The results page will display the stop name, the MBTA line or route it serves, the transit mode (subway, bus, or commuter rail), and the approximate walking distance from the searched location. As a stretch goal, I plan to embed an interactive Mapbox map on the results page that shows both the searched location and the nearest stop with labeled pins and a line connecting them. All API keys will be managed securely using a .env file that is excluded from version control via .gitignore.
 
 
 ## What I Don't Know Yet
